@@ -5,7 +5,7 @@ import { cleaning, returning, washing, drying, f25Cleaning, ecovacsCleaning, eco
 
 export const shots = [
   { file: "card", type: "vacuum-card", theme: "light", width: 460, config: {} },
-  { file: "card-dark", type: "vacuum-card", theme: "dark", width: 460, config: { crop: { top: 10, bottom: 10, left: 10, right: 10 } }, overrides: cleaning },
+  { file: "card-dark", type: "vacuum-card", theme: "dark", width: 460, config: {} },
   { file: "card-rooms", type: "vacuum-card", theme: "light", width: 460, config: { show_routines: false, show_dock: false, show_consumables: false, show_stats: false },
     clicks: ['[data-action="open_rooms"]', '[data-room="2"]', '[data-room="11"]', '[data-room="9"]'] },
   { file: "card-rooms-dark", type: "vacuum-card", theme: "dark", width: 460, config: { show_routines: false, show_dock: false, show_consumables: false, show_stats: false },
@@ -15,7 +15,7 @@ export const shots = [
   { file: "card-xiaomi", type: "vacuum-card", theme: "light", width: 460, config: { device: "Robot vacuum", show_map: "always", map_entity: "camera.dustbusters_map" } },
   { file: "card-xiaomi-dark", type: "vacuum-card", theme: "dark", width: 460, config: { device: "Robot vacuum", show_map: "always", map_entity: "camera.dustbusters_map" } },
   { file: "mini-card", type: "vacuum-mini-card", theme: "light", width: 380, config: {} },
-  { file: "mini-card-dark", type: "vacuum-mini-card", theme: "dark", width: 380, config: {}, overrides: cleaning },
+  { file: "mini-card-dark", type: "vacuum-mini-card", theme: "dark", width: 380, config: {} },
   { file: "mini-card-f25", type: "vacuum-mini-card", theme: "light", width: 380, config: { device: "Roborock F25 Ultra" } },
   { file: "mini-card-f25-dark", type: "vacuum-mini-card", theme: "dark", width: 380, config: { device: "Roborock F25 Ultra" } },
   { file: "mini-card-xiaomi", type: "vacuum-mini-card", theme: "light", width: 380, config: { device: "Robot vacuum" } },
@@ -41,7 +41,7 @@ export const shots = [
   { file: "mini-card-braava", type: "vacuum-mini-card", theme: "dark", width: 380, config: { device: "Washroom robot" } },
   { file: "mini-card-braava-light", type: "vacuum-mini-card", theme: "light", width: 380, config: { device: "Washroom robot" } },
   { file: "mini-card-zoom", type: "vacuum-mini-card", theme: "light", width: 460, config: {}, clicks: [".zoom"] },
-  { file: "mini-card-zoom-dark", type: "vacuum-mini-card", theme: "dark", width: 460, config: {}, overrides: cleaning, clicks: [".zoom"] },
+  { file: "mini-card-zoom-dark", type: "vacuum-mini-card", theme: "dark", width: 460, config: {}, clicks: [".zoom"] },
 ];
 
 // One looping GIF per distinct animated state the card shows (each plays different keyframes):

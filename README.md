@@ -250,14 +250,14 @@ A wet-dry vacuum (F25 Ultra) rocks on its handle and its floor roller turns whil
 
 Saros 20 with its dock, set up with the Roborock integration:
 
-| Light | Dark (cleaning: the map is shown) |
+| Light | Dark |
 |---|---|
 | ![card](screenshots/card.png) | ![card dark](screenshots/card-dark.png) |
 | ![mini card](screenshots/mini-card.png) | ![mini card dark](screenshots/mini-card-dark.png) |
 
 Mini card zoomed in with its detail button (top right, click it again or anywhere outside the card to go back):
 
-| Light | Dark (cleaning) |
+| Light | Dark |
 |---|---|
 | ![mini card zoomed in](screenshots/mini-card-zoom.png) | ![mini card zoomed in dark](screenshots/mini-card-zoom-dark.png) |
 
