@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.4.4
+### Fixes
+- Keyboard: the section titles (Station, Statistics, Consumables, Routines) can now be reached with Tab and folded or unfolded with Enter or Space, so the dock actions (empty the bin, wash and dry the mops) are no longer out of reach of keyboard users. The same goes for every other clickable part of the cards (status chip, picture, battery, tiles, consumables, map…), and the focus stays on the element when the card updates.
+- Text in a status or brand color (status chip, warnings and errors, worn consumables, primary buttons, selected rooms, running dock action) is now readable on light and dark themes (contrast of at least 4.5:1); dots, bars and icons keep their color.
+- With "reduce motion" turned on in the system, the folding chevron and the battery bar no longer animate.
+
 ## 2.4.3
 ### Fixes
 - Dreame Vacuum: vacuums whose entity has the `dreame_vacuum` translation key are now discovered (thanks @nvcs, #42).

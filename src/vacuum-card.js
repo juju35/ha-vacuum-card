@@ -1425,15 +1425,20 @@ const findDevice = (hass, config) => {
 
 const BASE_STYLE = `
   :host { --vc-accent: #ea0029; --vc-ok: var(--success-color, #43a047); --vc-warn: var(--warning-color, #ffa600);
-          --vc-crit: var(--error-color, #db4437); --vc-idle: var(--disabled-text-color, #9e9e9e); --vc-active: var(--info-color, #039be5); }
+          --vc-crit: var(--error-color, #db4437); --vc-idle: var(--disabled-text-color, #9e9e9e); --vc-active: var(--info-color, #039be5);
+          /* Text in a state or brand color is mixed with the text color (darker on a light theme, lighter on a dark
+             one) so that it reads at 4.5:1 at least; dots, bars and icons keep the plain color. */
+          --vc-accent-text: color-mix(in srgb, var(--vc-accent) 50%, var(--primary-text-color)); }
   ha-card { overflow: hidden; }
   .icon { width: 18px; height: 18px; fill: currentColor; flex: none; }
   .muted { color: var(--secondary-text-color); }
   .clickable { cursor: pointer; }
+  [role="button"]:focus-visible { outline: 2px solid var(--primary-color, var(--vc-accent)); outline-offset: 2px; border-radius: 4px; }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
   .ok { --c: var(--vc-ok); } .warn { --c: var(--vc-warn); } .crit { --c: var(--vc-crit); } .idle { --c: var(--vc-idle); } .active { --c: var(--vc-active); }
   .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--c, var(--vc-ok)); flex: none; display: inline-block; }
   .chip { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; white-space: nowrap;
-          background: color-mix(in srgb, var(--c, var(--vc-ok)) 15%, transparent); color: var(--c, var(--vc-ok)); flex: none; }
+          background: color-mix(in srgb, var(--c, var(--vc-ok)) 15%, transparent); color: color-mix(in srgb, var(--c, var(--vc-ok)) 50%, var(--primary-text-color)); flex: none; }
   .bar { height: 4px; border-radius: 3px; background: var(--divider-color, rgba(127,127,127,.25)); overflow: hidden; }
   .bar > div { height: 100%; border-radius: 3px; background: var(--c, var(--vc-ok)); transition: width .6s ease; }
   .header { display: flex; align-items: center; gap: 10px; padding: 12px 12px 0; }
@@ -1442,19 +1447,20 @@ const BASE_STYLE = `
   .titles { flex: 1; min-width: 0; }
   .name { font-size: 16px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .sub { font-size: 12px; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .warning { padding: 16px; color: var(--vc-warn); }
+  .warning { padding: 16px; color: color-mix(in srgb, var(--vc-warn) 50%, var(--primary-text-color)); }
   .picture { flex: none; display: flex; align-items: center; justify-content: center; }
   .picture img { max-width: 100%; max-height: 100%; object-fit: contain; }
   .info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
   .line { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--secondary-text-color); min-width: 0; }
   .line span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .alert-line { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--c, var(--vc-crit)); }
-  .alert-line .icon { width: 16px; height: 16px; }
+  .alert-line { display: flex; align-items: center; gap: 6px; font-size: 13px; color: color-mix(in srgb, var(--c, var(--vc-crit)) 50%, var(--primary-text-color)); }
+  .alert-line .icon { width: 16px; height: 16px; color: var(--c, var(--vc-crit)); }
   .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: none; cursor: pointer; font: inherit; font-size: 13px;
          font-weight: 500; padding: 6px 12px; border-radius: 18px; background: var(--secondary-background-color, rgba(127,127,127,.12));
          color: var(--primary-text-color); min-width: 0; }
   .btn:hover { background: color-mix(in srgb, var(--vc-accent) 12%, var(--secondary-background-color, rgba(127,127,127,.12))); }
-  .btn.primary { background: color-mix(in srgb, var(--vc-accent) 16%, transparent); color: var(--vc-accent); }
+  .btn.primary { background: color-mix(in srgb, var(--vc-accent) 16%, transparent); color: var(--vc-accent-text); }
+  .btn.primary .icon { color: var(--vc-accent); }
   .btn.primary:hover { background: color-mix(in srgb, var(--vc-accent) 24%, transparent); }
   .btn .icon { width: 18px; height: 18px; }
   .btn.round { width: 36px; height: 36px; padding: 0; border-radius: 50%; }
@@ -1467,10 +1473,10 @@ const BASE_STYLE = `
   .room-list { display: flex; flex-wrap: wrap; gap: 6px; }
   .room { font: inherit; font-size: 13px; padding: 6px 12px; border-radius: 16px; cursor: pointer; color: var(--primary-text-color);
           background: var(--secondary-background-color, rgba(127,127,127,.12)); border: 1px solid transparent; }
-  .room.on { background: color-mix(in srgb, var(--vc-accent) 16%, transparent); color: var(--vc-accent); font-weight: 500; }
+  .room.on { background: color-mix(in srgb, var(--vc-accent) 16%, transparent); color: var(--vc-accent-text); font-weight: 500; }
   .room.on:hover { background: color-mix(in srgb, var(--vc-accent) 24%, transparent); }
   .room.all { color: var(--secondary-text-color); }
-  .room.all.on { color: var(--vc-accent); }
+  .room.all.on { color: var(--vc-accent-text); }
   .rooms-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
   .zoom { all: unset; flex: none; cursor: pointer; width: 24px; height: 24px; margin: -4px -4px -4px 0; border-radius: 50%;
           display: grid; place-items: center; color: var(--secondary-text-color); }
@@ -1521,12 +1527,26 @@ const imgTag = (src, attrs) => {
   return `<img data-img="${id}" ${attrs}>`;
 };
 
+// Elements a click acts on, and how one is told from the others across renders (see _focusedSpot).
+const FOCUS_SELECTOR = "[data-action], [data-entity]";
+const focusKey = (el) => {
+  const data = Object.entries({ ...el.dataset });
+  return data.length ? `${el.tagName}|${JSON.stringify(data)}` : "";
+};
+
 class VacuumBase extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
     this._html = "";
     this.shadowRoot.addEventListener("click", (ev) => this._onClick(ev));
+    // Enter / Space on an element with the button role (tile, section title, chip…) acts as a click, as on a <button>
+    // (which clicks on its own: left alone).
+    this.shadowRoot.addEventListener("keydown", (ev) => {
+      if ((ev.key !== "Enter" && ev.key !== " ") || ev.target?.getAttribute?.("role") !== "button") return;
+      ev.preventDefault();
+      ev.target.click();
+    });
     // Escape closes the confirmation popup (as Cancel). Listened on the window while the popup is open: a re-render
     // or a click on its text takes the focus out of the card.
     this._onKey = (ev) => {
@@ -1621,9 +1641,12 @@ class VacuumBase extends HTMLElement {
     if (html !== this._html) {
       // The popup keeps its focus across the rewrite (OK, or Cancel when the user moved to it).
       const focused = this._confirm && this.shadowRoot.activeElement?.dataset?.action;
+      // Otherwise, the element of the card that has the focus (keyboard user) gets it back once rewritten.
+      const kept = this._confirm ? null : this._focusedSpot();
       this._html = html;
       this.shadowRoot.innerHTML = html;
       this._placeImages();
+      if (kept) this._restoreFocus(kept);
       if (this._confirm) {
         const sel = focused === "confirm_cancel" ? '[data-action="confirm_cancel"]' : ".modal .primary";
         // preventScroll: an update while the popup is open must not bring a scrolled page back to the card.
@@ -1635,6 +1658,27 @@ class VacuumBase extends HTMLElement {
         else img.addEventListener("load", (ev) => this._onLoad(ev), { once: true });
       }
     }
+  }
+
+  // The focused element of the card, as what identifies it in the next render: its tag and data attributes, and its
+  // rank among the elements that share them (the label and the value of a consumable open the same entity). null: the
+  // focus is elsewhere (more-info dialog, another card) or on an element that cannot be found again.
+  _focusedSpot() {
+    const el = this.shadowRoot.activeElement;
+    if (!el?.dataset) return null;
+    const key = focusKey(el);
+    if (!key) return null;
+    const index = this._focusables(key).indexOf(el);
+    return index < 0 ? null : { key, index };
+  }
+
+  _focusables(key) {
+    return [...this.shadowRoot.querySelectorAll(FOCUS_SELECTOR)].filter((n) => focusKey(n) === key);
+  }
+
+  // preventScroll: a state update must not bring a scrolled page back to the card.
+  _restoreFocus({ key, index }) {
+    this._focusables(key)[index]?.focus({ preventScroll: true });
   }
 
   // Moves the inlined pictures kept from the previous render into the new one, or gives them their src once.
@@ -1838,7 +1882,7 @@ class VacuumBase extends HTMLElement {
   _roomLine(dev) {
     const room = this._s(dev.entities.current_room);
     return valid(room)
-      ? `<div class="line clickable" data-entity="${esc(room.entity_id)}">${svgIcon(ICONS.room)}<span>${esc(room.state)}</span></div>`
+      ? `<div class="line clickable" role="button" tabindex="0" data-entity="${esc(room.entity_id)}">${svgIcon(ICONS.room)}<span>${esc(room.state)}</span></div>`
       : "";
   }
 
@@ -1846,7 +1890,7 @@ class VacuumBase extends HTMLElement {
   _errorLine(dev) {
     const err = this._error(dev);
     return err
-      ? `<div class="alert-line crit clickable" data-entity="${esc(err.entity)}">${svgIcon(ICONS.alert)}<span>${esc(err.text)}</span></div>`
+      ? `<div class="alert-line crit clickable" role="button" tabindex="0" data-entity="${esc(err.entity)}">${svgIcon(ICONS.alert)}<span>${esc(err.text)}</span></div>`
       : "";
   }
 
@@ -1854,7 +1898,7 @@ class VacuumBase extends HTMLElement {
   _pictureBlock(dev, status) {
     const pic = this._picture(dev, status);
     return pic
-      ? `<div class="picture clickable" data-entity="${esc(dev.vacuum || status?.entity || "")}">${imgTag(pic, 'alt=""')}</div>`
+      ? `<div class="picture clickable" role="button" tabindex="0" aria-label="${esc(this._config.title || dev.name || "")}" data-entity="${esc(dev.vacuum || status?.entity || "")}">${imgTag(pic, 'alt=""')}</div>`
       : "";
   }
 
@@ -1899,7 +1943,7 @@ class VacuumBase extends HTMLElement {
         </div>
         ${
           status
-            ? `<span class="chip clickable ${statusClass(status.state)}" data-entity="${esc(status.entity)}"><span class="dot"></span>${esc(status.text)}</span>`
+            ? `<span class="chip clickable ${statusClass(status.state)}" role="button" tabindex="0" data-entity="${esc(status.entity)}"><span class="dot"></span>${esc(status.text)}</span>`
             : ""
         }
         ${this._zoomButton()}
@@ -2086,17 +2130,17 @@ const FULL_STYLE = `
   .tile .k { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .tile .k .icon { width: 14px; height: 14px; color: var(--c, var(--secondary-text-color)); }
   .tile .v { font-size: 14px; font-weight: 500; line-height: 1.3; overflow-wrap: anywhere; }
-  .tile.warn .v, .tile.crit .v { color: var(--c); }
+  .tile.warn .v, .tile.crit .v { color: color-mix(in srgb, var(--c) 50%, var(--primary-text-color)); }
   .cons { display: grid; grid-template-columns: 18px minmax(0, 1fr) 90px 56px; align-items: center; gap: 2px 8px; font-size: 12px; }
   .cons .icon { color: var(--secondary-text-color); }
   .cons .lbl { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .cons .v { text-align: right; font-weight: 500; white-space: nowrap; }
-  .cons .v.warn, .cons .v.crit { color: var(--c); }
+  .cons .v.warn, .cons .v.crit { color: color-mix(in srgb, var(--c) 50%, var(--primary-text-color)); }
   .cons .nobar { height: 6px; }
   .cons.with-reset { grid-template-columns: 18px minmax(0, 1fr) 90px 56px 28px; }
   .reset { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border: none; border-radius: 50%;
            background: transparent; color: var(--secondary-text-color); cursor: pointer; padding: 0; }
-  .reset:hover { background: var(--secondary-background-color, rgba(127,127,127,.12)); color: var(--vc-accent); }
+  .reset:hover { background: var(--secondary-background-color, rgba(127,127,127,.12)); color: var(--vc-accent-text); }
   .reset .icon { width: 18px; height: 18px; }
   .map img { width: 100%; border-radius: 10px; display: block; background: var(--secondary-background-color, rgba(127,127,127,.08)); }
   .map .crop { overflow: hidden; border-radius: 10px; }
@@ -2104,7 +2148,7 @@ const FULL_STYLE = `
   .dock-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
   .dock-actions .btn { flex: 1 1 auto; }
   .dock-actions .btn .icon { color: var(--vc-accent); }
-  .dock-actions .btn.running { background: color-mix(in srgb, var(--vc-active) 16%, transparent); color: var(--vc-active); }
+  .dock-actions .btn.running { background: color-mix(in srgb, var(--vc-active) 16%, transparent); color: color-mix(in srgb, var(--vc-active) 50%, var(--primary-text-color)); }
   .dock-actions .btn.running .icon { color: var(--vc-active); }
   .map .crop img { max-width: none; border-radius: 0; background: none; }
 `;
@@ -2170,18 +2214,18 @@ class VacuumCard extends VacuumBase {
       const time = hours(this._s(e.cleaning_time)) ?? (Number.isFinite(va.cleaning_time) && va.cleaning_time > 0 ? va.cleaning_time / 60 : null);
       const bits = [pct ? `${this._t("progress")} ${Math.round(pct)} %` : null, area !== null ? `${fmtNum(area, 1, this._locale())} ${areaUnit}` : null, time !== null ? fmtHours(time) : null];
       if (bits.some(Boolean))
-        lines.push(`<div class="line clickable" data-entity="${esc(e.clean_percent || e.cleaning_area || dev.vacuum || "")}">${svgIcon(ICONS.clock)}<span>${esc(bits.filter(Boolean).join(" · "))}</span></div>`);
+        lines.push(`<div class="line clickable" role="button" tabindex="0" data-entity="${esc(e.clean_percent || e.cleaning_area || dev.vacuum || "")}">${svgIcon(ICONS.clock)}<span>${esc(bits.filter(Boolean).join(" · "))}</span></div>`);
     }
 
     lines.push(this._errorLine(dev));
     // iRobot Braava / Combo: water tank of the robot, in percent.
     const tank = this._s(e.tank_level);
     if (valid(tank) && num(tank) !== null)
-      lines.push(`<div class="line clickable" data-entity="${esc(tank.entity_id)}">${svgIcon(ICONS.water)}<span>${esc(`${this._t("robot_tank")} · ${Math.round(num(tank))} %`)}</span></div>`);
+      lines.push(`<div class="line clickable" role="button" tabindex="0" data-entity="${esc(tank.entity_id)}">${svgIcon(ICONS.water)}<span>${esc(`${this._t("robot_tank")} · ${Math.round(num(tank))} %`)}</span></div>`);
 
     if (this._config.show_modes !== false) {
       const tags = [];
-      const tag = (id, icon, text) => (text ? `<span class="tag clickable" data-entity="${esc(id)}">${svgIcon(icon)}${esc(text)}</span>` : "");
+      const tag = (id, icon, text) => (text ? `<span class="tag clickable" role="button" tabindex="0" data-entity="${esc(id)}">${svgIcon(icon)}${esc(text)}</span>` : "");
       const mode = this._s(e.cleaning_mode);
       if (valid(mode)) tags.push(tag(mode.entity_id, ICONS.mode, this._fmt(mode)));
       const vac = this._s(dev.vacuum);
@@ -2199,7 +2243,7 @@ class VacuumCard extends VacuumBase {
       <div class="info">
         ${
           batt
-            ? `<div class="batt clickable ${cls}" data-entity="${esc(batt.entity_id)}">
+            ? `<div class="batt clickable ${cls}" role="button" tabindex="0" data-entity="${esc(batt.entity_id)}">
                  ${svgIcon(ICONS.battery)}<span class="pct">${v === null ? "—" : Math.round(v)}<small>%</small></span>
                  ${charging ? svgIcon(ICONS.bolt, "bolt") : ""}
                </div>
@@ -2249,13 +2293,13 @@ class VacuumCard extends VacuumBase {
 
   _sectionTitle(key, icon, label) {
     const closed = this._isCollapsed(key);
-    return `<div class="section-title toggle" data-action="toggle_section" data-section="${key}" aria-expanded="${!closed}">${svgIcon(icon)}${esc(
+    return `<div class="section-title toggle" role="button" tabindex="0" data-action="toggle_section" data-section="${key}" aria-expanded="${!closed}">${svgIcon(icon)}${esc(
       label
     )}${svgIcon(ICONS.chevron_down, "chevron")}</div>`;
   }
 
   _tile(id, icon, label, value, cls = "") {
-    return `<div class="tile clickable ${cls}" data-entity="${esc(id || "")}"><div class="k">${svgIcon(icon)}${esc(label)}</div><div class="v">${esc(value)}</div></div>`;
+    return `<div class="tile clickable ${cls}" role="button" tabindex="0" data-entity="${esc(id || "")}"><div class="k">${svgIcon(icon)}${esc(label)}</div><div class="v">${esc(value)}</div></div>`;
   }
 
   _dock(dev) {
@@ -2344,9 +2388,9 @@ class VacuumCard extends VacuumBase {
         cls = h === null ? "" : h <= 0 ? "crit" : (pct !== null ? pct < 10 : h < 10) ? "warn" : "ok";
       }
       rows.push(`
-        ${svgIcon(icon)}<span class="lbl clickable" data-entity="${esc(s.entity_id)}">${esc(this._t(label))}</span>
+        ${svgIcon(icon)}<span class="lbl clickable" role="button" tabindex="0" data-entity="${esc(s.entity_id)}">${esc(this._t(label))}</span>
         ${pct !== null ? `<div class="bar ${cls}"><div style="width:${Math.max(0, Math.min(100, pct))}%"></div></div>` : `<div class="nobar"></div>`}
-        <span class="v clickable ${cls}" data-entity="${esc(s.entity_id)}">${esc(text)}</span>
+        <span class="v clickable ${cls}" role="button" tabindex="0" data-entity="${esc(s.entity_id)}">${esc(text)}</span>
         ${resets ? this._resetButton(dev, resetKey, label) : ""}`);
     }
     if (!rows.length) return "";
@@ -2409,7 +2453,7 @@ class VacuumCard extends VacuumBase {
     const url = map.attributes.entity_picture;
     const img = `<img src="${esc(url)}" alt="${esc(this._t("map"))}" data-map="${esc(map.entity_id)}"`;
     const crop = this._mapCrop(map.entity_id);
-    const attrs = `class="map clickable" data-action="zoom_map" data-entity="${esc(map.entity_id)}" title="${esc(this._t("map"))}"`;
+    const attrs = `class="map clickable" role="button" tabindex="0" data-action="zoom_map" data-entity="${esc(map.entity_id)}" title="${esc(this._t("map"))}"`;
     if (!crop) return `<div ${attrs}>${img}></div>`;
     return `<div ${attrs}><div class="crop" style="aspect-ratio:${crop.ratio}">${img} style="${crop.img}"></div></div>`;
   }
@@ -2565,7 +2609,7 @@ class VacuumMiniCard extends VacuumCard {
           <div class="info">
             ${
               batt
-                ? `<div class="batt clickable ${cls}" data-entity="${esc(batt.entity_id)}">${svgIcon(ICONS.battery)}<div class="bar ${cls}"><div style="width:${Math.max(
+                ? `<div class="batt clickable ${cls}" role="button" tabindex="0" data-entity="${esc(batt.entity_id)}">${svgIcon(ICONS.battery)}<div class="bar ${cls}"><div style="width:${Math.max(
                     0,
                     Math.min(100, v ?? 0),
                   )}%"></div></div><span class="v">${v === null ? "—" : `${Math.round(v)} %`}</span></div>`
