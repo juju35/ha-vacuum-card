@@ -1222,6 +1222,930 @@ const STRINGS = {
     e_cleaning_tank_full_or_blocked: "Depósito de limpieza lleno u obstruido",
     e_dirty_tank_latch_open: "Pestillo del depósito de agua sucia abierto",
   },
+  sr: {
+    start: "Покрени",
+    pause: "Паузирај",
+    stop: "Заустави",
+    dock: "База",
+    locate: "Пронађи",
+    battery: "Батерија",
+    charging: "Пуњење",
+    progress: "Напредак",
+    routines: "Рутине",
+    run_routine: "Покренути рутину {name}?",
+    empty_bin: "Испразни посуду",
+    running: "Ради",
+    wash_mop: "Опери моп",
+    dry_mop: "Осуши моп",
+    start_action: "Покрени: {name}",
+    stop_action: "Заустави: {name}",
+    choose_rooms: "Просторије за чишћење",
+    clean_rooms: "Очисти ({n})",
+    whole_home: "Цела кућа",
+    select_all: "Све",
+    cancel: "Откажи",
+    rooms_loading: "Учитавање просторија…",
+    rooms_error: "Није могуће преузети просторије са робота.",
+    room_selection: "Дугме за покретање отвара бирач просторија",
+    reset: "Ресетуј",
+    confirm_reset: "Ресетовати бројач за {name}? Урадите ово након замене или чишћења дела.",
+    station: "База",
+    consumables: "Одржавање",
+    statistics: "Статистика",
+    map: "Мапа",
+    last_clean: "Последње чишћење",
+    last_clean_ago: "Последње чишћење {when}",
+    total_count: "Чишћења",
+    total_area: "Укупна површина",
+    total_time: "Укупно време",
+    main_brush: "Главна четка",
+    side_brush: "Бочна четка",
+    filter: "Филтер",
+    sensors: "Сензори",
+    mop: "Моп",
+    roller: "Ваљак",
+    strainer: "Филтер базе",
+    cleaning_brush: "Четка базе",
+    dock_state: "База",
+    clean_water: "Чиста вода",
+    dirty_water: "Прљава вода",
+    cleaning_fluid: "Детерџент",
+    water_shortage: "Резервоар за воду је празан",
+    bin_full: "Посуда је пуна",
+    robot_tank: "Резервоар робота",
+    drying: "Сушење",
+    dust_mode: "Аутоматско пражњење",
+    ok: "У реду",
+    empty: "Празно",
+    full: "Пуно",
+    no_device: "Није пронађен ниједан роботски усисивач. Да ли је инсталирана подржана интеграција (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot)?",
+    unknown_device: "Роботски усисивач није пронађен",
+    no_registry: "Ова картица захтева Home Assistant 2024.8 или новији.",
+    // Editor
+    device: "Роботски усисивач",
+    title: "Наслов (опционо, подразумевано је назив уређаја)",
+    image: "Слика уређаја",
+    image_auto: "Аутоматски (према моделу)",
+    image_none: "Без слике",
+    color: "Боја уређаја",
+    color_auto: "Аутоматски (према моделу)",
+    color_white: "Бела",
+    color_dark: "Црна",
+    show_logo: "Прикажи лого бренда",
+    show_controls: "Прикажи дугмад за контролу",
+    show_modes: "Прикажи подешавања чишћења",
+    show_routines: "Прикажи рутине",
+    show_dock: "Прикажи базу",
+    show_consumables: "Прикажи одржавање",
+    show_stats: "Прикажи статистику",
+    show_map: "Прикажи мапу",
+    collapsed: "Одељци су подразумевано скупљени",
+    map_entity: "Ентитет мапе (опционо, нпр. Xiaomi Cloud Map Extractor камера)",
+    crop: "Исецање мапе (пиксели)",
+    map_size: "Величина слике мапе: {w} × {h} px. Вредности су у пикселима ове слике.",
+    top: "Горе",
+    bottom: "Доле",
+    left: "Лево",
+    right: "Десно",
+    map_never: "Никада",
+    map_cleaning: "Током чишћења",
+    map_always: "Увек",
+    language: "Језик",
+    lang_auto: "Аутоматски",
+    zoom: "Дугме за детаље",
+    zoom_helper: "Дугме у горњем десном углу које пребацује мини картицу на пун приказ и назад",
+    zoom_in: "Прикажи целу картицу",
+    zoom_out: "Назад на компактни приказ",
+    // States and values
+    s_charging: "Пуњење",
+    s_charging_complete: "Напуњен",
+    s_docked: "На бази",
+    s_cleaning: "Чишћење",
+    s_spot_cleaning: "Чишћење тачке",
+    s_zoned_cleaning: "Чишћење зоне",
+    s_segment_cleaning: "Чишћење просторије",
+    s_returning: "Повратак на базу",
+    s_returning_home: "Повратак на базу",
+    s_docking: "Пристајање на базу",
+    s_idle: "Мировање",
+    s_paused: "Паузирано",
+    s_error: "Грешка",
+    s_sleeping: "Спавање",
+    s_mapping: "Мапирање",
+    s_emptying_the_bin: "Пражњење посуде",
+    s_washing_the_mop: "Прање мопа",
+    s_going_to_wash_the_mop: "Одлазак на прање мопа",
+    s_going_to_target: "Одлазак до циља",
+    s_mopping: "Брисање подова (Моп)",
+    s_ready: "Спреман",
+    s_washing: "Прање",
+    s_drying: "Сушење",
+    s_device_offline: "Ван мреже",
+    s_unavailable: "Недоступно",
+    s_unknown: "Непознато",
+    v_vacuum: "Усисавање",
+    v_vac_and_mop: "Усисавање и брисање",
+    v_mop: "Брисање (Моп)",
+    v_quiet: "Тихо",
+    v_balanced: "Балансирано",
+    v_turbo: "Турбо",
+    v_max: "Максимално",
+    v_max_plus: "Максимално+",
+    v_off: "Искључено",
+    v_smart_mode: "SmartPlan",
+    v_custom: "Прилагођено",
+    v_gentle: "Нежно",
+    v_slight: "Благо",
+    v_low: "Ниско",
+    v_mild: "Благо",
+    v_medium: "Средње",
+    v_moderate: "Умерено",
+    v_high: "Високо",
+    v_intense: "Интензивно",
+    v_extreme: "Екстремно",
+    v_standard: "Стандардно",
+    v_deep: "Дубоко",
+    v_deep_plus: "Дубоко+",
+    v_fast: "Брзо",
+    v_smart: "Паметно",
+    v_light: "Благо",
+    e_water_empty: "Резервоар за чисту воду је празан",
+    e_waste_water_tank_full: "Резервоар за прљаву воду је пун",
+    e_no_dustbin: "Недостаје кеса за прашину",
+    e_duct_blockage: "Усисни канал је блокиран",
+    e_cleaning_tank_full_or_blocked: "Резервоар за чишћење је пун или блокиран",
+    e_dirty_tank_latch_open: "Засун резервоара за прљаву воду је отворен",
+  },
+  "sr-Latn": {
+    start: "Pokreni",
+    pause: "Pauziraj",
+    stop: "Zaustavi",
+    dock: "Baza",
+    locate: "Pronađi",
+    battery: "Baterija",
+    charging: "Punjenje",
+    progress: "Napredak",
+    routines: "Rutine",
+    run_routine: "Pokrenuti rutinu {name}?",
+    empty_bin: "Isprazni posudu",
+    running: "Radi",
+    wash_mop: "Operi mop",
+    dry_mop: "Osuši mop",
+    start_action: "Pokreni: {name}",
+    stop_action: "Zaustavi: {name}",
+    choose_rooms: "Prostorije za čišćenje",
+    clean_rooms: "Očisti ({n})",
+    whole_home: "Cela kuća",
+    select_all: "Sve",
+    cancel: "Otkaži",
+    rooms_loading: "Učitavanje prostorija…",
+    rooms_error: "Nije moguće preuzeti prostorije sa robota.",
+    room_selection: "Dugme za pokretanje otvara birač prostorija",
+    reset: "Resetuj",
+    confirm_reset: "Resetovati brojač za {name}? Uradite ovo nakon zamene ili čišćenja dela.",
+    station: "Baza",
+    consumables: "Održavanje",
+    statistics: "Statistika",
+    map: "Mapa",
+    last_clean: "Poslednje čišćenje",
+    last_clean_ago: "Poslednje čišćenje {when}",
+    total_count: "Čišćenja",
+    total_area: "Ukupna površina",
+    total_time: "Ukupno vreme",
+    main_brush: "Glavna četka",
+    side_brush: "Bočna četka",
+    filter: "Filter",
+    sensors: "Senzori",
+    mop: "Mop",
+    roller: "Valjak",
+    strainer: "Filter baze",
+    cleaning_brush: "Četka baze",
+    dock_state: "Baza",
+    clean_water: "Čista voda",
+    dirty_water: "Prljava voda",
+    cleaning_fluid: "Deterdžent",
+    water_shortage: "Rezervoar za vodu je prazan",
+    bin_full: "Posuda je puna",
+    robot_tank: "Rezervoar robota",
+    drying: "Sušenje",
+    dust_mode: "Automatsko pražnjenje",
+    ok: "U redu",
+    empty: "Prazno",
+    full: "Puno",
+    no_device: "Nije pronađen nijedan robotski usisivač. Da li je instalirana podržana integracija (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot)?",
+    unknown_device: "Robotski usisivač nije pronađen",
+    no_registry: "Ova kartica zahteva Home Assistant 2024.8 ili noviji.",
+    // Editor
+    device: "Robotski usisivač",
+    title: "Naslov (opciono, podrazumevano je naziv uređaja)",
+    image: "Slika uređaja",
+    image_auto: "Automatski (prema modelu)",
+    image_none: "Bez slike",
+    color: "Boja uređaja",
+    color_auto: "Automatski (prema modelu)",
+    color_white: "Bela",
+    color_dark: "Crna",
+    show_logo: "Prikaži logo brenda",
+    show_controls: "Prikaži dugmad za kontrolu",
+    show_modes: "Prikaži podešavanja čišćenja",
+    show_routines: "Prikaži rutine",
+    show_dock: "Prikaži bazu",
+    show_consumables: "Prikaži održavanje",
+    show_stats: "Prikaži statistiku",
+    show_map: "Prikaži mapu",
+    collapsed: "Odeljci su podrazumevano skupljeni",
+    map_entity: "Entitet mape (opciono, npr. Xiaomi Cloud Map Extractor kamera)",
+    crop: "Isecanje mape (pikseli)",
+    map_size: "Veličina slike mape: {w} × {h} px. Vrednosti su u pikselima ove slike.",
+    top: "Gore",
+    bottom: "Dole",
+    left: "Levo",
+    right: "Desno",
+    map_never: "Nikada",
+    map_cleaning: "Tokom čišćenja",
+    map_always: "Uvek",
+    language: "Jezik",
+    lang_auto: "Automatski",
+    zoom: "Dugme za detalje",
+    zoom_helper: "Dugme u gornjem desnom uglu koje prebacuje mini karticu na pun prikaz i nazad",
+    zoom_in: "Prikaži celu karticu",
+    zoom_out: "Nazad na kompaktni prikaz",
+    // States and values
+    s_charging: "Punjenje",
+    s_charging_complete: "Napunjen",
+    s_docked: "Na bazi",
+    s_cleaning: "Čišćenje",
+    s_spot_cleaning: "Čišćenje tačke",
+    s_zoned_cleaning: "Čišćenje zone",
+    s_segment_cleaning: "Čišćenje prostorije",
+    s_returning: "Povratak na bazu",
+    s_returning_home: "Povratak na bazu",
+    s_docking: "Pristajanje na bazu",
+    s_idle: "Mirovanje",
+    s_paused: "Pauzirano",
+    s_error: "Greška",
+    s_sleeping: "Spavanje",
+    s_mapping: "Mapiranje",
+    s_emptying_the_bin: "Pražnjenje posude",
+    s_washing_the_mop: "Pranje mopa",
+    s_going_to_wash_the_mop: "Odlazak na pranje mopa",
+    s_going_to_target: "Odlazak do cilja",
+    s_mopping: "Brisanje podova (Mop)",
+    s_ready: "Spreman",
+    s_washing: "Pranje",
+    s_drying: "Sušenje",
+    s_device_offline: "Van mreže",
+    s_unavailable: "Nedostupno",
+    s_unknown: "Nepoznato",
+    v_vacuum: "Usisavanje",
+    v_vac_and_mop: "Usisavanje i brisanje",
+    v_mop: "Brisanje (Mop)",
+    v_quiet: "Tiho",
+    v_balanced: "Balansirano",
+    v_turbo: "Turbo",
+    v_max: "Maksimalno",
+    v_max_plus: "Maksimalno+",
+    v_off: "Isključeno",
+    v_smart_mode: "SmartPlan",
+    v_custom: "Prilagođeno",
+    v_gentle: "Nežno",
+    v_slight: "Blago",
+    v_low: "Nisko",
+    v_mild: "Blago",
+    v_medium: "Srednje",
+    v_moderate: "Umereno",
+    v_high: "Visoko",
+    v_intense: "Intenzivno",
+    v_extreme: "Ekstremno",
+    v_standard: "Standardno",
+    v_deep: "Duboko",
+    v_deep_plus: "Duboko+",
+    v_fast: "Brzo",
+    v_smart: "Pametno",
+    v_light: "Blago",
+    e_water_empty: "Rezervoar za čistu vodu je prazan",
+    e_waste_water_tank_full: "Rezervoar za prljavu vodu je pun",
+    e_no_dustbin: "Nedostaje kesa za prašinu",
+    e_duct_blockage: "Usisni kanal je blokiran",
+    e_cleaning_tank_full_or_blocked: "Rezervoar za čišćenje je pun ili blokiran",
+    e_dirty_tank_latch_open: "Zasun rezervoara za prljavu vodu je otvoren",
+  },
+  it: {
+    start: "Avvia",
+    pause: "Pausa",
+    stop: "Ferma",
+    dock: "Base",
+    locate: "Localizza",
+    battery: "Batteria",
+    charging: "In carica",
+    progress: "Avanzamento",
+    routines: "Routine",
+    run_routine: "Eseguire la routine {name}?",
+    empty_bin: "Svuota contenitore",
+    running: "In corso",
+    wash_mop: "Lava mop",
+    dry_mop: "Asciuga mop",
+    start_action: "Avvia: {name}",
+    stop_action: "Ferma: {name}",
+    choose_rooms: "Stanze da pulire",
+    clean_rooms: "Pulisci ({n})",
+    whole_home: "Tutta la casa",
+    select_all: "Tutte",
+    cancel: "Annulla",
+    rooms_loading: "Caricamento delle stanze…",
+    rooms_error: "Impossibile ottenere le stanze dal robot.",
+    room_selection: "Il pulsante Avvia apre la scelta delle stanze",
+    reset: "Reimposta",
+    confirm_reset: "Reimpostare il contatore di {name}? Fallo dopo aver sostituito o pulito il componente.",
+    station: "Base",
+    consumables: "Manutenzione",
+    statistics: "Statistiche",
+    map: "Mappa",
+    last_clean: "Ultima pulizia",
+    last_clean_ago: "Ultima pulizia {when}",
+    total_count: "Pulizie",
+    total_area: "Superficie totale",
+    total_time: "Tempo totale",
+    main_brush: "Spazzola principale",
+    side_brush: "Spazzola laterale",
+    filter: "Filtro",
+    sensors: "Sensori",
+    mop: "Mop",
+    roller: "Rullo",
+    strainer: "Filtro della base",
+    cleaning_brush: "Spazzola della base",
+    dock_state: "Base",
+    clean_water: "Acqua pulita",
+    dirty_water: "Acqua sporca",
+    cleaning_fluid: "Detergente",
+    water_shortage: "Serbatoio dell'acqua vuoto",
+    bin_full: "Contenitore pieno",
+    robot_tank: "Serbatoio del robot",
+    drying: "Asciugatura",
+    dust_mode: "Svuotamento auto",
+    ok: "OK",
+    empty: "Da riempire",
+    full: "Da svuotare",
+    no_device: "Nessun robot aspirapolvere trovato. È installata un'integrazione supportata (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot)?",
+    unknown_device: "Robot aspirapolvere non trovato",
+    no_registry: "Questa scheda richiede Home Assistant 2024.8 o successivo.",
+    // Editor
+    device: "Robot aspirapolvere",
+    title: "Titolo (facoltativo, per impostazione predefinita il nome del dispositivo)",
+    image: "Immagine del dispositivo",
+    image_auto: "Automatica (in base al modello)",
+    image_none: "Nessuna",
+    color: "Colore del dispositivo",
+    color_auto: "Automatico (in base al modello)",
+    color_white: "Bianco",
+    color_dark: "Nero",
+    show_logo: "Mostra il logo del marchio",
+    show_controls: "Mostra i pulsanti di controllo",
+    show_modes: "Mostra le impostazioni di pulizia",
+    show_routines: "Mostra le routine",
+    show_dock: "Mostra la base",
+    show_consumables: "Mostra la manutenzione",
+    show_stats: "Mostra le statistiche",
+    show_map: "Mostra la mappa",
+    collapsed: "Sezioni compresse per impostazione predefinita",
+    map_entity: "Entità della mappa (facoltativa, ad es. telecamera di Xiaomi Cloud Map Extractor)",
+    crop: "Ritaglio della mappa (pixel)",
+    map_size: "Dimensioni dell'immagine della mappa: {w} × {h} px. I valori sono in pixel di questa immagine.",
+    top: "Alto",
+    bottom: "Basso",
+    left: "Sinistra",
+    right: "Destra",
+    map_never: "Mai",
+    map_cleaning: "Durante la pulizia",
+    map_always: "Sempre",
+    language: "Lingua",
+    lang_auto: "Automatica",
+    zoom: "Pulsante dettagli",
+    zoom_helper: "Pulsante in alto a destra che passa dalla mini scheda alla scheda completa e viceversa",
+    zoom_in: "Mostra la scheda completa",
+    zoom_out: "Torna alla vista compatta",
+    // States and values
+    s_charging: "In carica",
+    s_charging_complete: "Carico",
+    s_docked: "Alla base",
+    s_cleaning: "Pulizia",
+    s_spot_cleaning: "Pulizia localizzata",
+    s_zoned_cleaning: "Pulizia a zone",
+    s_segment_cleaning: "Pulizia delle stanze",
+    s_returning: "Ritorno alla base",
+    s_returning_home: "Ritorno alla base",
+    s_docking: "Aggancio alla base",
+    s_idle: "Inattivo",
+    s_paused: "In pausa",
+    s_error: "Errore",
+    s_sleeping: "In standby",
+    s_mapping: "Mappatura",
+    s_emptying_the_bin: "Svuotamento",
+    s_washing_the_mop: "Lavaggio del mop",
+    s_going_to_wash_the_mop: "Va a lavare il mop",
+    s_going_to_target: "Verso la destinazione",
+    s_mopping: "Lavaggio pavimenti",
+    s_ready: "Pronto",
+    s_washing: "Lavaggio",
+    s_drying: "Asciugatura",
+    s_device_offline: "Offline",
+    s_unavailable: "Non disponibile",
+    s_unknown: "Sconosciuto",
+    v_vacuum: "Aspirazione",
+    v_vac_and_mop: "Aspirazione e lavaggio",
+    v_mop: "Lavaggio",
+    v_quiet: "Silenzioso",
+    v_balanced: "Bilanciato",
+    v_turbo: "Turbo",
+    v_max: "Max",
+    v_max_plus: "Max+",
+    v_off: "Spento",
+    v_smart_mode: "SmartPlan",
+    v_custom: "Personalizzato",
+    v_gentle: "Delicato",
+    v_slight: "Molto basso",
+    v_low: "Basso",
+    v_mild: "Lieve",
+    v_medium: "Medio",
+    v_moderate: "Moderato",
+    v_high: "Alto",
+    v_intense: "Intenso",
+    v_extreme: "Estremo",
+    v_standard: "Standard",
+    v_deep: "Profondo",
+    v_deep_plus: "Profondo+",
+    v_fast: "Rapido",
+    v_smart: "Intelligente",
+    v_light: "Leggero",
+    e_water_empty: "Serbatoio dell'acqua pulita vuoto",
+    e_waste_water_tank_full: "Serbatoio dell'acqua sporca pieno",
+    e_no_dustbin: "Sacchetto della polvere mancante",
+    e_duct_blockage: "Condotto ostruito",
+    e_cleaning_tank_full_or_blocked: "Vaschetta di lavaggio piena o ostruita",
+    e_dirty_tank_latch_open: "Chiusura del serbatoio dell'acqua sporca aperta",
+  },
+  nl: {
+    start: "Starten",
+    pause: "Pauzeren",
+    stop: "Stoppen",
+    dock: "Basis",
+    locate: "Lokaliseren",
+    battery: "Batterij",
+    charging: "Opladen",
+    progress: "Voortgang",
+    routines: "Routines",
+    run_routine: "Routine {name} uitvoeren?",
+    empty_bin: "Stofbak legen",
+    running: "Bezig",
+    wash_mop: "Mop wassen",
+    dry_mop: "Mop drogen",
+    start_action: "Starten: {name}",
+    stop_action: "Stoppen: {name}",
+    choose_rooms: "Te reinigen kamers",
+    clean_rooms: "Reinigen ({n})",
+    whole_home: "Hele huis",
+    select_all: "Alle",
+    cancel: "Annuleren",
+    rooms_loading: "Kamers laden…",
+    rooms_error: "Kan de kamers niet van de robot ophalen.",
+    room_selection: "De startknop opent de kamerkeuze",
+    reset: "Resetten",
+    confirm_reset: "Teller van {name} resetten? Doe dit na het vervangen of reinigen van het onderdeel.",
+    station: "Basisstation",
+    consumables: "Onderhoud",
+    statistics: "Statistieken",
+    map: "Kaart",
+    last_clean: "Laatste reiniging",
+    last_clean_ago: "Gereinigd {when}",
+    total_count: "Reinigingen",
+    total_area: "Totale oppervlakte",
+    total_time: "Totale tijd",
+    main_brush: "Hoofdborstel",
+    side_brush: "Zijborstel",
+    filter: "Filter",
+    sensors: "Sensoren",
+    mop: "Mop",
+    roller: "Rol",
+    strainer: "Zeef van het basisstation",
+    cleaning_brush: "Borstel van het basisstation",
+    dock_state: "Basisstation",
+    clean_water: "Schoon water",
+    dirty_water: "Vuil water",
+    cleaning_fluid: "Reinigingsmiddel",
+    water_shortage: "Watertank leeg",
+    bin_full: "Stofbak vol",
+    robot_tank: "Tank van de robot",
+    drying: "Drogen",
+    dust_mode: "Automatisch legen",
+    ok: "OK",
+    empty: "Leeg",
+    full: "Vol",
+    no_device: "Geen robotstofzuiger gevonden. Is er een ondersteunde integratie (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot) geïnstalleerd?",
+    unknown_device: "Robotstofzuiger niet gevonden",
+    no_registry: "Deze kaart vereist Home Assistant 2024.8 of nieuwer.",
+    // Editor
+    device: "Robotstofzuiger",
+    title: "Titel (optioneel, standaard de apparaatnaam)",
+    image: "Apparaatafbeelding",
+    image_auto: "Automatisch (per model)",
+    image_none: "Geen",
+    color: "Apparaatkleur",
+    color_auto: "Automatisch (per model)",
+    color_white: "Wit",
+    color_dark: "Zwart",
+    show_logo: "Merklogo tonen",
+    show_controls: "Bedieningsknoppen tonen",
+    show_modes: "Reinigingsinstellingen tonen",
+    show_routines: "Routines tonen",
+    show_dock: "Basisstation tonen",
+    show_consumables: "Onderhoud tonen",
+    show_stats: "Statistieken tonen",
+    show_map: "Kaart tonen",
+    collapsed: "Standaard ingeklapte secties",
+    map_entity: "Kaartentiteit (optioneel, bijv. camera van Xiaomi Cloud Map Extractor)",
+    crop: "Kaart bijsnijden (pixels)",
+    map_size: "Grootte van de kaartafbeelding: {w} × {h} px. De waarden zijn in pixels van deze afbeelding.",
+    top: "Boven",
+    bottom: "Onder",
+    left: "Links",
+    right: "Rechts",
+    map_never: "Nooit",
+    map_cleaning: "Tijdens het reinigen",
+    map_always: "Altijd",
+    language: "Taal",
+    lang_auto: "Automatisch",
+    zoom: "Detailknop",
+    zoom_helper: "Knop rechtsboven die de minikaart omschakelt naar de volledige kaart en terug",
+    zoom_in: "Volledige kaart tonen",
+    zoom_out: "Terug naar de compacte weergave",
+    // States and values
+    s_charging: "Opladen",
+    s_charging_complete: "Opgeladen",
+    s_docked: "In basisstation",
+    s_cleaning: "Reinigen",
+    s_spot_cleaning: "Spotreiniging",
+    s_zoned_cleaning: "Zonereiniging",
+    s_segment_cleaning: "Kamerreiniging",
+    s_returning: "Terug naar basisstation",
+    s_returning_home: "Terug naar basisstation",
+    s_docking: "Docken",
+    s_idle: "Inactief",
+    s_paused: "Gepauzeerd",
+    s_error: "Fout",
+    s_sleeping: "Slaapstand",
+    s_mapping: "Kaart maken",
+    s_emptying_the_bin: "Stofbak legen",
+    s_washing_the_mop: "Mop wassen",
+    s_going_to_wash_the_mop: "Gaat mop wassen",
+    s_going_to_target: "Onderweg naar doel",
+    s_mopping: "Dweilen",
+    s_ready: "Gereed",
+    s_washing: "Wassen",
+    s_drying: "Drogen",
+    s_device_offline: "Offline",
+    s_unavailable: "Niet beschikbaar",
+    s_unknown: "Onbekend",
+    v_vacuum: "Stofzuigen",
+    v_vac_and_mop: "Stofzuigen en dweilen",
+    v_mop: "Dweilen",
+    v_quiet: "Stil",
+    v_balanced: "Gebalanceerd",
+    v_turbo: "Turbo",
+    v_max: "Max",
+    v_max_plus: "Max+",
+    v_off: "Uit",
+    v_smart_mode: "SmartPlan",
+    v_custom: "Aangepast",
+    v_gentle: "Zacht",
+    v_slight: "Zeer laag",
+    v_low: "Laag",
+    v_mild: "Mild",
+    v_medium: "Gemiddeld",
+    v_moderate: "Matig",
+    v_high: "Hoog",
+    v_intense: "Intensief",
+    v_extreme: "Extreem",
+    v_standard: "Standaard",
+    v_deep: "Grondig",
+    v_deep_plus: "Grondig+",
+    v_fast: "Snel",
+    v_smart: "Slim",
+    v_light: "Licht",
+    e_water_empty: "Schoonwatertank leeg",
+    e_waste_water_tank_full: "Vuilwatertank vol",
+    e_no_dustbin: "Stofzak ontbreekt",
+    e_duct_blockage: "Luchtkanaal verstopt",
+    e_cleaning_tank_full_or_blocked: "Reinigingsbak vol of verstopt",
+    e_dirty_tank_latch_open: "Vergrendeling van de vuilwatertank open",
+  },
+  pt: {
+    start: "Iniciar",
+    pause: "Pausa",
+    stop: "Parar",
+    dock: "Base",
+    locate: "Localizar",
+    battery: "Bateria",
+    charging: "A carregar",
+    progress: "Progresso",
+    routines: "Rotinas",
+    run_routine: "Executar a rotina {name}?",
+    empty_bin: "Esvaziar depósito",
+    running: "Em curso",
+    wash_mop: "Lavar mopa",
+    dry_mop: "Secar mopa",
+    start_action: "Iniciar: {name}",
+    stop_action: "Parar: {name}",
+    choose_rooms: "Divisões a limpar",
+    clean_rooms: "Limpar ({n})",
+    whole_home: "Casa toda",
+    select_all: "Todas",
+    cancel: "Cancelar",
+    rooms_loading: "A carregar as divisões…",
+    rooms_error: "Não foi possível obter as divisões do robô.",
+    room_selection: "O botão Iniciar abre a escolha das divisões",
+    reset: "Repor",
+    confirm_reset: "Repor o contador de {name}? Faça-o depois de substituir ou limpar a peça.",
+    station: "Estação",
+    consumables: "Manutenção",
+    statistics: "Estatísticas",
+    map: "Mapa",
+    last_clean: "Última limpeza",
+    last_clean_ago: "Última limpeza {when}",
+    total_count: "Limpezas",
+    total_area: "Área total",
+    total_time: "Tempo total",
+    main_brush: "Escova principal",
+    side_brush: "Escova lateral",
+    filter: "Filtro",
+    sensors: "Sensores",
+    mop: "Mopa",
+    roller: "Rolo",
+    strainer: "Filtro da estação",
+    cleaning_brush: "Escova da estação",
+    dock_state: "Estação",
+    clean_water: "Água limpa",
+    dirty_water: "Água suja",
+    cleaning_fluid: "Detergente",
+    water_shortage: "Depósito de água vazio",
+    bin_full: "Depósito cheio",
+    robot_tank: "Depósito do robô",
+    drying: "A secar",
+    dust_mode: "Esvaziamento auto",
+    ok: "OK",
+    empty: "Reabastecer",
+    full: "Esvaziar",
+    no_device: "Nenhum robô aspirador encontrado. Está instalada uma integração suportada (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot)?",
+    unknown_device: "Robô aspirador não encontrado",
+    no_registry: "Este cartão requer o Home Assistant 2024.8 ou posterior.",
+    // Editor
+    device: "Robô aspirador",
+    title: "Título (opcional, por predefinição o nome do dispositivo)",
+    image: "Imagem do dispositivo",
+    image_auto: "Automática (conforme o modelo)",
+    image_none: "Nenhuma",
+    color: "Cor do dispositivo",
+    color_auto: "Automática (conforme o modelo)",
+    color_white: "Branco",
+    color_dark: "Preto",
+    show_logo: "Mostrar o logótipo da marca",
+    show_controls: "Mostrar os botões de controlo",
+    show_modes: "Mostrar as definições de limpeza",
+    show_routines: "Mostrar as rotinas",
+    show_dock: "Mostrar a estação",
+    show_consumables: "Mostrar a manutenção",
+    show_stats: "Mostrar as estatísticas",
+    show_map: "Mostrar o mapa",
+    collapsed: "Secções recolhidas por predefinição",
+    map_entity: "Entidade do mapa (opcional, p. ex. câmara do Xiaomi Cloud Map Extractor)",
+    crop: "Recorte do mapa (píxeis)",
+    map_size: "Tamanho da imagem do mapa: {w} × {h} px. Os valores estão em píxeis desta imagem.",
+    top: "Cima",
+    bottom: "Baixo",
+    left: "Esquerda",
+    right: "Direita",
+    map_never: "Nunca",
+    map_cleaning: "Durante a limpeza",
+    map_always: "Sempre",
+    language: "Idioma",
+    lang_auto: "Automático",
+    zoom: "Botão de detalhe",
+    zoom_helper: "Botão no canto superior direito que alterna o minicartão para o cartão completo e vice-versa",
+    zoom_in: "Mostrar o cartão completo",
+    zoom_out: "Voltar à vista compacta",
+    // States and values
+    s_charging: "A carregar",
+    s_charging_complete: "Carregado",
+    s_docked: "Na base",
+    s_cleaning: "A limpar",
+    s_spot_cleaning: "Limpeza localizada",
+    s_zoned_cleaning: "Limpeza por zonas",
+    s_segment_cleaning: "Limpeza por divisões",
+    s_returning: "A regressar à base",
+    s_returning_home: "A regressar à base",
+    s_docking: "A acoplar à base",
+    s_idle: "Inativo",
+    s_paused: "Em pausa",
+    s_error: "Erro",
+    s_sleeping: "Em repouso",
+    s_mapping: "A criar o mapa",
+    s_emptying_the_bin: "A esvaziar o depósito",
+    s_washing_the_mop: "A lavar a mopa",
+    s_going_to_wash_the_mop: "A ir lavar a mopa",
+    s_going_to_target: "A ir para o destino",
+    s_mopping: "A esfregar",
+    s_ready: "Pronto",
+    s_washing: "A lavar",
+    s_drying: "A secar",
+    s_device_offline: "Offline",
+    s_unavailable: "Indisponível",
+    s_unknown: "Desconhecido",
+    v_vacuum: "Aspirar",
+    v_vac_and_mop: "Aspirar e esfregar",
+    v_mop: "Esfregar",
+    v_quiet: "Silencioso",
+    v_balanced: "Equilibrado",
+    v_turbo: "Turbo",
+    v_max: "Máx.",
+    v_max_plus: "Máx.+",
+    v_off: "Desligado",
+    v_smart_mode: "SmartPlan",
+    v_custom: "Personalizado",
+    v_gentle: "Suave",
+    v_slight: "Muito baixo",
+    v_low: "Baixo",
+    v_mild: "Brando",
+    v_medium: "Médio",
+    v_moderate: "Moderado",
+    v_high: "Alto",
+    v_intense: "Intenso",
+    v_extreme: "Extremo",
+    v_standard: "Padrão",
+    v_deep: "Profundo",
+    v_deep_plus: "Profundo+",
+    v_fast: "Rápido",
+    v_smart: "Inteligente",
+    v_light: "Leve",
+    e_water_empty: "Depósito de água limpa vazio",
+    e_waste_water_tank_full: "Depósito de água suja cheio",
+    e_no_dustbin: "Saco do pó em falta",
+    e_duct_blockage: "Conduta obstruída",
+    e_cleaning_tank_full_or_blocked: "Tabuleiro de limpeza cheio ou obstruído",
+    e_dirty_tank_latch_open: "Trinco do depósito de água suja aberto",
+  },
+  pl: {
+    start: "Uruchom",
+    pause: "Wstrzymaj",
+    stop: "Zatrzymaj",
+    dock: "Stacja",
+    locate: "Zlokalizuj",
+    battery: "Bateria",
+    charging: "Ładowanie",
+    progress: "Postęp",
+    routines: "Procedury",
+    run_routine: "Uruchomić procedurę {name}?",
+    empty_bin: "Opróżnij pojemnik",
+    running: "W toku",
+    wash_mop: "Umyj mop",
+    dry_mop: "Osusz mop",
+    start_action: "Uruchom: {name}",
+    stop_action: "Zatrzymaj: {name}",
+    choose_rooms: "Pomieszczenia do sprzątania",
+    clean_rooms: "Sprzątaj ({n})",
+    whole_home: "Cały dom",
+    select_all: "Wszystkie",
+    cancel: "Anuluj",
+    rooms_loading: "Wczytywanie pomieszczeń…",
+    rooms_error: "Nie można pobrać pomieszczeń z robota.",
+    room_selection: "Przycisk Uruchom otwiera wybór pomieszczeń",
+    reset: "Resetuj",
+    confirm_reset: "Zresetować licznik {name}? Zrób to po wymianie lub wyczyszczeniu części.",
+    station: "Stacja",
+    consumables: "Konserwacja",
+    statistics: "Statystyki",
+    map: "Mapa",
+    last_clean: "Ostatnie sprzątanie",
+    last_clean_ago: "Sprzątano {when}",
+    total_count: "Sprzątania",
+    total_area: "Łączna powierzchnia",
+    total_time: "Łączny czas",
+    main_brush: "Szczotka główna",
+    side_brush: "Szczotka boczna",
+    filter: "Filtr",
+    sensors: "Czujniki",
+    mop: "Mop",
+    roller: "Wałek",
+    strainer: "Sitko stacji",
+    cleaning_brush: "Szczotka stacji",
+    dock_state: "Stacja",
+    clean_water: "Czysta woda",
+    dirty_water: "Brudna woda",
+    cleaning_fluid: "Detergent",
+    water_shortage: "Zbiornik wody pusty",
+    bin_full: "Pojemnik pełny",
+    robot_tank: "Zbiornik robota",
+    drying: "Suszenie",
+    dust_mode: "Auto-opróżnianie",
+    ok: "OK",
+    empty: "Brak",
+    full: "Do opróżnienia",
+    no_device: "Nie znaleziono robota sprzątającego. Czy zainstalowano obsługiwaną integrację (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot)?",
+    unknown_device: "Nie znaleziono robota sprzątającego",
+    no_registry: "Ta karta wymaga Home Assistant 2024.8 lub nowszego.",
+    // Editor
+    device: "Robot sprzątający",
+    title: "Tytuł (opcjonalny, domyślnie nazwa urządzenia)",
+    image: "Obraz urządzenia",
+    image_auto: "Automatyczny (według modelu)",
+    image_none: "Brak",
+    color: "Kolor urządzenia",
+    color_auto: "Automatyczny (według modelu)",
+    color_white: "Biały",
+    color_dark: "Czarny",
+    show_logo: "Pokaż logo marki",
+    show_controls: "Pokaż przyciski sterowania",
+    show_modes: "Pokaż ustawienia sprzątania",
+    show_routines: "Pokaż procedury",
+    show_dock: "Pokaż stację",
+    show_consumables: "Pokaż konserwację",
+    show_stats: "Pokaż statystyki",
+    show_map: "Pokaż mapę",
+    collapsed: "Sekcje domyślnie zwinięte",
+    map_entity: "Encja mapy (opcjonalna, np. kamera Xiaomi Cloud Map Extractor)",
+    crop: "Przycięcie mapy (piksele)",
+    map_size: "Rozmiar obrazu mapy: {w} × {h} px. Wartości są w pikselach tego obrazu.",
+    top: "Góra",
+    bottom: "Dół",
+    left: "Lewo",
+    right: "Prawo",
+    map_never: "Nigdy",
+    map_cleaning: "Podczas sprzątania",
+    map_always: "Zawsze",
+    language: "Język",
+    lang_auto: "Automatyczny",
+    zoom: "Przycisk szczegółów",
+    zoom_helper: "Przycisk w prawym górnym rogu, który przełącza mini kartę na pełną kartę i z powrotem",
+    zoom_in: "Pokaż pełną kartę",
+    zoom_out: "Wróć do widoku kompaktowego",
+    // States and values
+    s_charging: "Ładowanie",
+    s_charging_complete: "Naładowany",
+    s_docked: "W stacji",
+    s_cleaning: "Sprzątanie",
+    s_spot_cleaning: "Sprzątanie punktowe",
+    s_zoned_cleaning: "Sprzątanie strefowe",
+    s_segment_cleaning: "Sprzątanie pokoi",
+    s_returning: "Powrót do stacji",
+    s_returning_home: "Powrót do stacji",
+    s_docking: "Dokowanie",
+    s_idle: "Bezczynny",
+    s_paused: "Wstrzymany",
+    s_error: "Błąd",
+    s_sleeping: "Uśpiony",
+    s_mapping: "Mapowanie",
+    s_emptying_the_bin: "Opróżnianie pojemnika",
+    s_washing_the_mop: "Mycie mopa",
+    s_going_to_wash_the_mop: "W drodze na mycie mopa",
+    s_going_to_target: "W drodze do celu",
+    s_mopping: "Mopowanie",
+    s_ready: "Gotowy",
+    s_washing: "Mycie",
+    s_drying: "Suszenie",
+    s_device_offline: "Offline",
+    s_unavailable: "Niedostępny",
+    s_unknown: "Nieznany",
+    v_vacuum: "Odkurzanie",
+    v_vac_and_mop: "Odkurzanie i mopowanie",
+    v_mop: "Mopowanie",
+    v_quiet: "Cichy",
+    v_balanced: "Zrównoważony",
+    v_turbo: "Turbo",
+    v_max: "Maks.",
+    v_max_plus: "Maks.+",
+    v_off: "Wyłączony",
+    v_smart_mode: "SmartPlan",
+    v_custom: "Niestandardowy",
+    v_gentle: "Delikatny",
+    v_slight: "Bardzo niski",
+    v_low: "Niski",
+    v_mild: "Łagodny",
+    v_medium: "Średni",
+    v_moderate: "Umiarkowany",
+    v_high: "Wysoki",
+    v_intense: "Intensywny",
+    v_extreme: "Ekstremalny",
+    v_standard: "Standardowy",
+    v_deep: "Dokładny",
+    v_deep_plus: "Dokładny+",
+    v_fast: "Szybki",
+    v_smart: "Inteligentny",
+    v_light: "Lekki",
+    e_water_empty: "Zbiornik czystej wody pusty",
+    e_waste_water_tank_full: "Zbiornik brudnej wody pełny",
+    e_no_dustbin: "Brak worka na kurz",
+    e_duct_blockage: "Zablokowany kanał",
+    e_cleaning_tank_full_or_blocked: "Zbiornik myjący pełny lub zablokowany",
+    e_dirty_tank_latch_open: "Zatrzask zbiornika brudnej wody otwarty",
+  },
 };
 
 // Consumables: [translation_key, label, icon, lifetime in hours for the robot ("pct" when the sensor is a percentage),
@@ -1252,6 +2176,16 @@ const esc = (v) =>
 const lang = (hass, config) => {
   const l = (config?.language) || (hass && (hass.locale?.language || hass.language)) || "en";
   return STRINGS[l] ? l : STRINGS[l.split("-")[0]] ? l.split("-")[0] : "en";
+};
+
+// Locale for Intl / toLocale*: the card's language: option, else HA's full locale (keeps its region, e.g.
+// pt-BR, de-CH) when its base matches the resolved card language, else that language. A bare "pt" (HA's
+// code for European Portuguese) becomes "pt-PT", otherwise Intl formats it the Brazilian way.
+const intlLocale = (hass, config) => {
+  const l = lang(hass, config);
+  const src = config?.language || (hass && (hass.locale?.language || hass.language)) || "";
+  const out = src && src.split("-")[0] === l.split("-")[0] ? src : l;
+  return out === "pt" ? "pt-PT" : out;
 };
 
 const t = (hass, config, key, vars = {}) =>
@@ -1306,7 +2240,7 @@ const ago = (hass, config, iso) => {
   const d = Date.parse(iso);
   if (!Number.isFinite(d)) return null;
   const diff = (d - Date.now()) / 1000;
-  const l = lang(hass, config);
+  const l = intlLocale(hass, config);
   const rtf = (RTF[l] ??= new Intl.RelativeTimeFormat(l, { numeric: "auto" }));
   const abs = Math.abs(diff);
   if (abs < 3600) return rtf.format(Math.round(diff / 60), "minute");
@@ -1425,15 +2359,20 @@ const findDevice = (hass, config) => {
 
 const BASE_STYLE = `
   :host { --vc-accent: #ea0029; --vc-ok: var(--success-color, #43a047); --vc-warn: var(--warning-color, #ffa600);
-          --vc-crit: var(--error-color, #db4437); --vc-idle: var(--disabled-text-color, #9e9e9e); --vc-active: var(--info-color, #039be5); }
+          --vc-crit: var(--error-color, #db4437); --vc-idle: var(--disabled-text-color, #9e9e9e); --vc-active: var(--info-color, #039be5);
+          /* Text in a state or brand color is mixed with the text color (darker on a light theme, lighter on a dark
+             one) so that it reads at 4.5:1 at least; dots, bars and icons keep the plain color. */
+          --vc-accent-text: color-mix(in srgb, var(--vc-accent) 50%, var(--primary-text-color)); }
   ha-card { overflow: hidden; }
   .icon { width: 18px; height: 18px; fill: currentColor; flex: none; }
   .muted { color: var(--secondary-text-color); }
   .clickable { cursor: pointer; }
+  [role="button"]:focus-visible { outline: 2px solid var(--primary-color, var(--vc-accent)); outline-offset: 2px; border-radius: 4px; }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
   .ok { --c: var(--vc-ok); } .warn { --c: var(--vc-warn); } .crit { --c: var(--vc-crit); } .idle { --c: var(--vc-idle); } .active { --c: var(--vc-active); }
   .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--c, var(--vc-ok)); flex: none; display: inline-block; }
   .chip { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; white-space: nowrap;
-          background: color-mix(in srgb, var(--c, var(--vc-ok)) 15%, transparent); color: var(--c, var(--vc-ok)); flex: none; }
+          background: color-mix(in srgb, var(--c, var(--vc-ok)) 15%, transparent); color: color-mix(in srgb, var(--c, var(--vc-ok)) 50%, var(--primary-text-color)); flex: none; }
   .bar { height: 4px; border-radius: 3px; background: var(--divider-color, rgba(127,127,127,.25)); overflow: hidden; }
   .bar > div { height: 100%; border-radius: 3px; background: var(--c, var(--vc-ok)); transition: width .6s ease; }
   .header { display: flex; align-items: center; gap: 10px; padding: 12px 12px 0; }
@@ -1442,19 +2381,20 @@ const BASE_STYLE = `
   .titles { flex: 1; min-width: 0; }
   .name { font-size: 16px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .sub { font-size: 12px; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .warning { padding: 16px; color: var(--vc-warn); }
+  .warning { padding: 16px; color: color-mix(in srgb, var(--vc-warn) 50%, var(--primary-text-color)); }
   .picture { flex: none; display: flex; align-items: center; justify-content: center; }
   .picture img { max-width: 100%; max-height: 100%; object-fit: contain; }
   .info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
   .line { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--secondary-text-color); min-width: 0; }
   .line span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .alert-line { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--c, var(--vc-crit)); }
-  .alert-line .icon { width: 16px; height: 16px; }
+  .alert-line { display: flex; align-items: center; gap: 6px; font-size: 13px; color: color-mix(in srgb, var(--c, var(--vc-crit)) 50%, var(--primary-text-color)); }
+  .alert-line .icon { width: 16px; height: 16px; color: var(--c, var(--vc-crit)); }
   .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: none; cursor: pointer; font: inherit; font-size: 13px;
          font-weight: 500; padding: 6px 12px; border-radius: 18px; background: var(--secondary-background-color, rgba(127,127,127,.12));
          color: var(--primary-text-color); min-width: 0; }
   .btn:hover { background: color-mix(in srgb, var(--vc-accent) 12%, var(--secondary-background-color, rgba(127,127,127,.12))); }
-  .btn.primary { background: color-mix(in srgb, var(--vc-accent) 16%, transparent); color: var(--vc-accent); }
+  .btn.primary { background: color-mix(in srgb, var(--vc-accent) 16%, transparent); color: var(--vc-accent-text); }
+  .btn.primary .icon { color: var(--vc-accent); }
   .btn.primary:hover { background: color-mix(in srgb, var(--vc-accent) 24%, transparent); }
   .btn .icon { width: 18px; height: 18px; }
   .btn.round { width: 36px; height: 36px; padding: 0; border-radius: 50%; }
@@ -1467,10 +2407,10 @@ const BASE_STYLE = `
   .room-list { display: flex; flex-wrap: wrap; gap: 6px; }
   .room { font: inherit; font-size: 13px; padding: 6px 12px; border-radius: 16px; cursor: pointer; color: var(--primary-text-color);
           background: var(--secondary-background-color, rgba(127,127,127,.12)); border: 1px solid transparent; }
-  .room.on { background: color-mix(in srgb, var(--vc-accent) 16%, transparent); color: var(--vc-accent); font-weight: 500; }
+  .room.on { background: color-mix(in srgb, var(--vc-accent) 16%, transparent); color: var(--vc-accent-text); font-weight: 500; }
   .room.on:hover { background: color-mix(in srgb, var(--vc-accent) 24%, transparent); }
   .room.all { color: var(--secondary-text-color); }
-  .room.all.on { color: var(--vc-accent); }
+  .room.all.on { color: var(--vc-accent-text); }
   .rooms-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
   .zoom { all: unset; flex: none; cursor: pointer; width: 24px; height: 24px; margin: -4px -4px -4px 0; border-radius: 50%;
           display: grid; place-items: center; color: var(--secondary-text-color); }
@@ -1521,12 +2461,26 @@ const imgTag = (src, attrs) => {
   return `<img data-img="${id}" ${attrs}>`;
 };
 
+// Elements a click acts on, and how one is told from the others across renders (see _focusedSpot).
+const FOCUS_SELECTOR = "[data-action], [data-entity]";
+const focusKey = (el) => {
+  const data = Object.entries({ ...el.dataset });
+  return data.length ? `${el.tagName}|${JSON.stringify(data)}` : "";
+};
+
 class VacuumBase extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
     this._html = "";
     this.shadowRoot.addEventListener("click", (ev) => this._onClick(ev));
+    // Enter / Space on an element with the button role (tile, section title, chip…) acts as a click, as on a <button>
+    // (which clicks on its own: left alone).
+    this.shadowRoot.addEventListener("keydown", (ev) => {
+      if ((ev.key !== "Enter" && ev.key !== " ") || ev.target?.getAttribute?.("role") !== "button") return;
+      ev.preventDefault();
+      ev.target.click();
+    });
     // Escape closes the confirmation popup (as Cancel). Listened on the window while the popup is open: a re-render
     // or a click on its text takes the focus out of the card.
     this._onKey = (ev) => {
@@ -1605,7 +2559,7 @@ class VacuumBase extends HTMLElement {
   }
 
   _locale() {
-    return this._config.language || this._hass.locale?.language || this._hass.language;
+    return intlLocale(this._hass, this._config);
   }
 
   _s(id) {
@@ -1621,9 +2575,12 @@ class VacuumBase extends HTMLElement {
     if (html !== this._html) {
       // The popup keeps its focus across the rewrite (OK, or Cancel when the user moved to it).
       const focused = this._confirm && this.shadowRoot.activeElement?.dataset?.action;
+      // Otherwise, the element of the card that has the focus (keyboard user) gets it back once rewritten.
+      const kept = this._confirm ? null : this._focusedSpot();
       this._html = html;
       this.shadowRoot.innerHTML = html;
       this._placeImages();
+      if (kept) this._restoreFocus(kept);
       if (this._confirm) {
         const sel = focused === "confirm_cancel" ? '[data-action="confirm_cancel"]' : ".modal .primary";
         // preventScroll: an update while the popup is open must not bring a scrolled page back to the card.
@@ -1635,6 +2592,27 @@ class VacuumBase extends HTMLElement {
         else img.addEventListener("load", (ev) => this._onLoad(ev), { once: true });
       }
     }
+  }
+
+  // The focused element of the card, as what identifies it in the next render: its tag and data attributes, and its
+  // rank among the elements that share them (the label and the value of a consumable open the same entity). null: the
+  // focus is elsewhere (more-info dialog, another card) or on an element that cannot be found again.
+  _focusedSpot() {
+    const el = this.shadowRoot.activeElement;
+    if (!el?.dataset) return null;
+    const key = focusKey(el);
+    if (!key) return null;
+    const index = this._focusables(key).indexOf(el);
+    return index < 0 ? null : { key, index };
+  }
+
+  _focusables(key) {
+    return [...this.shadowRoot.querySelectorAll(FOCUS_SELECTOR)].filter((n) => focusKey(n) === key);
+  }
+
+  // preventScroll: a state update must not bring a scrolled page back to the card.
+  _restoreFocus({ key, index }) {
+    this._focusables(key)[index]?.focus({ preventScroll: true });
   }
 
   // Moves the inlined pictures kept from the previous render into the new one, or gives them their src once.
@@ -1838,7 +2816,7 @@ class VacuumBase extends HTMLElement {
   _roomLine(dev) {
     const room = this._s(dev.entities.current_room);
     return valid(room)
-      ? `<div class="line clickable" data-entity="${esc(room.entity_id)}">${svgIcon(ICONS.room)}<span>${esc(room.state)}</span></div>`
+      ? `<div class="line clickable" role="button" tabindex="0" data-entity="${esc(room.entity_id)}">${svgIcon(ICONS.room)}<span>${esc(room.state)}</span></div>`
       : "";
   }
 
@@ -1846,7 +2824,7 @@ class VacuumBase extends HTMLElement {
   _errorLine(dev) {
     const err = this._error(dev);
     return err
-      ? `<div class="alert-line crit clickable" data-entity="${esc(err.entity)}">${svgIcon(ICONS.alert)}<span>${esc(err.text)}</span></div>`
+      ? `<div class="alert-line crit clickable" role="button" tabindex="0" data-entity="${esc(err.entity)}">${svgIcon(ICONS.alert)}<span>${esc(err.text)}</span></div>`
       : "";
   }
 
@@ -1854,7 +2832,7 @@ class VacuumBase extends HTMLElement {
   _pictureBlock(dev, status) {
     const pic = this._picture(dev, status);
     return pic
-      ? `<div class="picture clickable" data-entity="${esc(dev.vacuum || status?.entity || "")}">${imgTag(pic, 'alt=""')}</div>`
+      ? `<div class="picture clickable" role="button" tabindex="0" aria-label="${esc(this._config.title || dev.name || "")}" data-entity="${esc(dev.vacuum || status?.entity || "")}">${imgTag(pic, 'alt=""')}</div>`
       : "";
   }
 
@@ -1899,7 +2877,7 @@ class VacuumBase extends HTMLElement {
         </div>
         ${
           status
-            ? `<span class="chip clickable ${statusClass(status.state)}" data-entity="${esc(status.entity)}"><span class="dot"></span>${esc(status.text)}</span>`
+            ? `<span class="chip clickable ${statusClass(status.state)}" role="button" tabindex="0" data-entity="${esc(status.entity)}"><span class="dot"></span>${esc(status.text)}</span>`
             : ""
         }
         ${this._zoomButton()}
@@ -2086,17 +3064,17 @@ const FULL_STYLE = `
   .tile .k { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .tile .k .icon { width: 14px; height: 14px; color: var(--c, var(--secondary-text-color)); }
   .tile .v { font-size: 14px; font-weight: 500; line-height: 1.3; overflow-wrap: anywhere; }
-  .tile.warn .v, .tile.crit .v { color: var(--c); }
+  .tile.warn .v, .tile.crit .v { color: color-mix(in srgb, var(--c) 50%, var(--primary-text-color)); }
   .cons { display: grid; grid-template-columns: 18px minmax(0, 1fr) 90px 56px; align-items: center; gap: 2px 8px; font-size: 12px; }
   .cons .icon { color: var(--secondary-text-color); }
   .cons .lbl { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .cons .v { text-align: right; font-weight: 500; white-space: nowrap; }
-  .cons .v.warn, .cons .v.crit { color: var(--c); }
+  .cons .v.warn, .cons .v.crit { color: color-mix(in srgb, var(--c) 50%, var(--primary-text-color)); }
   .cons .nobar { height: 6px; }
   .cons.with-reset { grid-template-columns: 18px minmax(0, 1fr) 90px 56px 28px; }
   .reset { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border: none; border-radius: 50%;
            background: transparent; color: var(--secondary-text-color); cursor: pointer; padding: 0; }
-  .reset:hover { background: var(--secondary-background-color, rgba(127,127,127,.12)); color: var(--vc-accent); }
+  .reset:hover { background: var(--secondary-background-color, rgba(127,127,127,.12)); color: var(--vc-accent-text); }
   .reset .icon { width: 18px; height: 18px; }
   .map img { width: 100%; border-radius: 10px; display: block; background: var(--secondary-background-color, rgba(127,127,127,.08)); }
   .map .crop { overflow: hidden; border-radius: 10px; }
@@ -2104,7 +3082,7 @@ const FULL_STYLE = `
   .dock-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
   .dock-actions .btn { flex: 1 1 auto; }
   .dock-actions .btn .icon { color: var(--vc-accent); }
-  .dock-actions .btn.running { background: color-mix(in srgb, var(--vc-active) 16%, transparent); color: var(--vc-active); }
+  .dock-actions .btn.running { background: color-mix(in srgb, var(--vc-active) 16%, transparent); color: color-mix(in srgb, var(--vc-active) 50%, var(--primary-text-color)); }
   .dock-actions .btn.running .icon { color: var(--vc-active); }
   .map .crop img { max-width: none; border-radius: 0; background: none; }
 `;
@@ -2170,18 +3148,18 @@ class VacuumCard extends VacuumBase {
       const time = hours(this._s(e.cleaning_time)) ?? (Number.isFinite(va.cleaning_time) && va.cleaning_time > 0 ? va.cleaning_time / 60 : null);
       const bits = [pct ? `${this._t("progress")} ${Math.round(pct)} %` : null, area !== null ? `${fmtNum(area, 1, this._locale())} ${areaUnit}` : null, time !== null ? fmtHours(time) : null];
       if (bits.some(Boolean))
-        lines.push(`<div class="line clickable" data-entity="${esc(e.clean_percent || e.cleaning_area || dev.vacuum || "")}">${svgIcon(ICONS.clock)}<span>${esc(bits.filter(Boolean).join(" · "))}</span></div>`);
+        lines.push(`<div class="line clickable" role="button" tabindex="0" data-entity="${esc(e.clean_percent || e.cleaning_area || dev.vacuum || "")}">${svgIcon(ICONS.clock)}<span>${esc(bits.filter(Boolean).join(" · "))}</span></div>`);
     }
 
     lines.push(this._errorLine(dev));
     // iRobot Braava / Combo: water tank of the robot, in percent.
     const tank = this._s(e.tank_level);
     if (valid(tank) && num(tank) !== null)
-      lines.push(`<div class="line clickable" data-entity="${esc(tank.entity_id)}">${svgIcon(ICONS.water)}<span>${esc(`${this._t("robot_tank")} · ${Math.round(num(tank))} %`)}</span></div>`);
+      lines.push(`<div class="line clickable" role="button" tabindex="0" data-entity="${esc(tank.entity_id)}">${svgIcon(ICONS.water)}<span>${esc(`${this._t("robot_tank")} · ${Math.round(num(tank))} %`)}</span></div>`);
 
     if (this._config.show_modes !== false) {
       const tags = [];
-      const tag = (id, icon, text) => (text ? `<span class="tag clickable" data-entity="${esc(id)}">${svgIcon(icon)}${esc(text)}</span>` : "");
+      const tag = (id, icon, text) => (text ? `<span class="tag clickable" role="button" tabindex="0" data-entity="${esc(id)}">${svgIcon(icon)}${esc(text)}</span>` : "");
       const mode = this._s(e.cleaning_mode);
       if (valid(mode)) tags.push(tag(mode.entity_id, ICONS.mode, this._fmt(mode)));
       const vac = this._s(dev.vacuum);
@@ -2199,7 +3177,7 @@ class VacuumCard extends VacuumBase {
       <div class="info">
         ${
           batt
-            ? `<div class="batt clickable ${cls}" data-entity="${esc(batt.entity_id)}">
+            ? `<div class="batt clickable ${cls}" role="button" tabindex="0" data-entity="${esc(batt.entity_id)}">
                  ${svgIcon(ICONS.battery)}<span class="pct">${v === null ? "—" : Math.round(v)}<small>%</small></span>
                  ${charging ? svgIcon(ICONS.bolt, "bolt") : ""}
                </div>
@@ -2249,13 +3227,13 @@ class VacuumCard extends VacuumBase {
 
   _sectionTitle(key, icon, label) {
     const closed = this._isCollapsed(key);
-    return `<div class="section-title toggle" data-action="toggle_section" data-section="${key}" aria-expanded="${!closed}">${svgIcon(icon)}${esc(
+    return `<div class="section-title toggle" role="button" tabindex="0" data-action="toggle_section" data-section="${key}" aria-expanded="${!closed}">${svgIcon(icon)}${esc(
       label
     )}${svgIcon(ICONS.chevron_down, "chevron")}</div>`;
   }
 
   _tile(id, icon, label, value, cls = "") {
-    return `<div class="tile clickable ${cls}" data-entity="${esc(id || "")}"><div class="k">${svgIcon(icon)}${esc(label)}</div><div class="v">${esc(value)}</div></div>`;
+    return `<div class="tile clickable ${cls}" role="button" tabindex="0" data-entity="${esc(id || "")}"><div class="k">${svgIcon(icon)}${esc(label)}</div><div class="v">${esc(value)}</div></div>`;
   }
 
   _dock(dev) {
@@ -2344,9 +3322,9 @@ class VacuumCard extends VacuumBase {
         cls = h === null ? "" : h <= 0 ? "crit" : (pct !== null ? pct < 10 : h < 10) ? "warn" : "ok";
       }
       rows.push(`
-        ${svgIcon(icon)}<span class="lbl clickable" data-entity="${esc(s.entity_id)}">${esc(this._t(label))}</span>
+        ${svgIcon(icon)}<span class="lbl clickable" role="button" tabindex="0" data-entity="${esc(s.entity_id)}">${esc(this._t(label))}</span>
         ${pct !== null ? `<div class="bar ${cls}"><div style="width:${Math.max(0, Math.min(100, pct))}%"></div></div>` : `<div class="nobar"></div>`}
-        <span class="v clickable ${cls}" data-entity="${esc(s.entity_id)}">${esc(text)}</span>
+        <span class="v clickable ${cls}" role="button" tabindex="0" data-entity="${esc(s.entity_id)}">${esc(text)}</span>
         ${resets ? this._resetButton(dev, resetKey, label) : ""}`);
     }
     if (!rows.length) return "";
@@ -2409,7 +3387,7 @@ class VacuumCard extends VacuumBase {
     const url = map.attributes.entity_picture;
     const img = `<img src="${esc(url)}" alt="${esc(this._t("map"))}" data-map="${esc(map.entity_id)}"`;
     const crop = this._mapCrop(map.entity_id);
-    const attrs = `class="map clickable" data-action="zoom_map" data-entity="${esc(map.entity_id)}" title="${esc(this._t("map"))}"`;
+    const attrs = `class="map clickable" role="button" tabindex="0" data-action="zoom_map" data-entity="${esc(map.entity_id)}" title="${esc(this._t("map"))}"`;
     if (!crop) return `<div ${attrs}>${img}></div>`;
     return `<div ${attrs}><div class="crop" style="aspect-ratio:${crop.ratio}">${img} style="${crop.img}"></div></div>`;
   }
@@ -2565,7 +3543,7 @@ class VacuumMiniCard extends VacuumCard {
           <div class="info">
             ${
               batt
-                ? `<div class="batt clickable ${cls}" data-entity="${esc(batt.entity_id)}">${svgIcon(ICONS.battery)}<div class="bar ${cls}"><div style="width:${Math.max(
+                ? `<div class="batt clickable ${cls}" role="button" tabindex="0" data-entity="${esc(batt.entity_id)}">${svgIcon(ICONS.battery)}<div class="bar ${cls}"><div style="width:${Math.max(
                     0,
                     Math.min(100, v ?? 0),
                   )}%"></div></div><span class="v">${v === null ? "—" : `${Math.round(v)} %`}</span></div>`
@@ -2650,6 +3628,12 @@ class VacuumEditorBase extends HTMLElement {
               { value: "fr", label: "Français" },
               { value: "de", label: "Deutsch" },
               { value: "es", label: "Español" },
+              { value: "sr", label: "Српски" },
+              { value: "sr-Latn", label: "Srpski (latinica)" },
+              { value: "it", label: "Italiano" },
+              { value: "nl", label: "Nederlands" },
+              { value: "pt", label: "Português (Portugal)" },
+              { value: "pl", label: "Polski" },
             ],
           },
         },
