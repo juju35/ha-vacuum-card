@@ -57,10 +57,20 @@ for (const [name, Card] of [
     const haCard = rule(sheet, "ha-card");
     assert.match(haCard, /container-type:\s*inline-size/);
     // A size container has no width of its own: in an inline-block or a grid "auto" column (layout-card,
-    // button-card…) the card fell to its borders (~2 px in Chromium) without an intrinsic width.
-    const intrinsic = haCard.match(/contain-intrinsic-inline-size:\s*(\d+)px/);
-    assert.ok(intrinsic, "contain-intrinsic-inline-size on the size container");
-    assert.ok(Number(intrinsic[1]) >= 300, intrinsic[1]);
+    // button-card…) the card fell to its borders (~2 px in Chromium). Its natural width comes from a zero-height
+    // grid on :host::before, with no minimum: contain-intrinsic-inline-size (or a min-width in px on the host) is
+    // also a min-content width, and the card overflowed a "1fr 1fr" grid or a flex row on a phone (362 px in 320).
+    assert.doesNotMatch(sheet, /contain-intrinsic/);
+    const host = rule(sheet, ":host");
+    assert.match(host, /display:\s*block/);
+    assert.match(host, /min-width:\s*0\s*(;|$)/);
+    assert.doesNotMatch(host, /min-width:\s*[1-9]\d*px/);
+    const before = rule(sheet, ":host::before");
+    assert.match(before, /display:\s*grid/);
+    assert.match(before, /grid-template-columns:\s*minmax\(0,\s*var\(--vc-natural-width\)\)/);
+    assert.match(before, /height:\s*0/);
+    const natural = [...host.matchAll(/--vc-natural-width:\s*(\d+)px/g)].map((m) => Number(m[1])).pop();
+    assert.ok(natural >= 280 && natural <= 400, String(natural));
     const titles = rule(sheet, ".titles");
     // flex-basis 0: the title takes what the chip leaves, the chip keeps its whole label at usual widths (with
     // flex-basis auto a long name pushed "Charging" into "Charg…" at 280-320 px).
@@ -108,6 +118,9 @@ test("the full card at narrow widths: consumable bars give way to the labels, st
   assert.match(rule(sheet, ".cons", "(max-width: 360px)"), /grid-template-columns:\s*18px minmax\(0, 1fr\) auto/);
   assert.match(rule(sheet, ".cons.with-reset", "(max-width: 360px)"), /grid-template-columns:\s*18px minmax\(0, 1fr\) auto 28px/);
   assert.match(rule(sheet, ".tiles.two", "(max-width: 300px)"), /grid-template-columns:\s*minmax\(0, 1fr\)/);
+  // Below its 9 columns (a "1fr 1fr" layout-card on a phone, ~156-176 px), "100 %" was cut to "10" (+28 px).
+  assert.match(rule(sheet, ".picture", "(max-width: 200px)"), /width:\s*48px/);
+  assert.match(rule(sheet, ".batt .pct", "(max-width: 200px)"), /font-size:\s*24px/);
   assert.match(rule(sheet, ".picture", "(max-width: 300px)"), /width:\s*72px/);
 });
 
