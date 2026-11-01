@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.4.7 - 2026-11-01
+### Fixes
+- An unavailable vacuum (or one whose state is unknown with no status sensor to tell more) no longer shows active buttons that do nothing: Start, Pause, Stop, Dock, Locate and the routines are greyed out until it is back.
+- Narrow cards no longer break. The mini card at its default 6 columns keeps its name readable and its detail button inside the card: its buttons move under the robot and, below 200 px, the picture makes room for the battery and the info lines.
+- The full card now needs at least 9 of 12 columns in a Sections view (it allowed 6, where the maintenance labels disappeared and the values and reset buttons were cut off). On both cards below 260 px, the status chip keeps only its colored dot (its text shows on hover and is read by screen readers). At narrow widths the full card's maintenance bars give way to their labels (the value keeps its color), the statistics take one column and long labels (statistics, mode tags, buttons, section titles) end with an ellipsis instead of being cut.
+
 ## 2.4.6 - 2026-11-01
 ### Changes
 - Added Italian, Dutch, European Portuguese and Polish translations (`it`, `nl`, `pt`, `pl`), also offered in the editor's language list. A Home Assistant set to `pt-BR` uses the European Portuguese texts.
