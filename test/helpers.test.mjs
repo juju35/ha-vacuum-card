@@ -127,13 +127,20 @@ test("the picture animation follows the status, the cleaning mode and the dock d
   assert.match(robotSvg({ activity: "drying" }), /class="heat/);
 });
 
-test("every language has exactly the English keys and placeholders", () => {
+const LANGS = ["fr", "de", "es", "sr", "sr-Latn", "it", "nl", "pt", "pl"];
+
+test("every language has exactly the English keys and placeholders, and no empty value", () => {
   const en = Object.keys(vc.STRINGS.en).sort();
   const vars = (s) => (String(s).match(/\{\w+\}/g) || []).sort().join();
-  for (const l of ["fr", "de", "es", "sr", "sr-Latn"]) {
+  assert.deepEqual(Object.keys(vc.STRINGS).sort(), ["en", ...LANGS].sort());
+  for (const l of ["en", ...LANGS]) {
     assert.ok(vc.STRINGS[l], `missing language ${l}`);
     assert.deepEqual(Object.keys(vc.STRINGS[l]).sort(), en, `keys of ${l}`);
-    for (const k of en) assert.equal(vars(vc.STRINGS[l][k]), vars(vc.STRINGS.en[k]), `placeholders of ${l}.${k}`);
+    for (const k of en) {
+      assert.equal(typeof vc.STRINGS[l][k], "string", `type of ${l}.${k}`);
+      assert.ok(vc.STRINGS[l][k].trim(), `empty ${l}.${k}`);
+      assert.equal(vars(vc.STRINGS[l][k]), vars(vc.STRINGS.en[k]), `placeholders of ${l}.${k}`);
+    }
   }
 });
 
@@ -150,10 +157,30 @@ test("the language: full code if translated, else the part before the dash, else
   assert.equal(vc.lang(hass("de-CH")), "de");
   assert.equal(vc.lang(hass("sr-Latn")), "sr-Latn");
   assert.equal(vc.lang(hass("sr")), "sr");
-  assert.equal(vc.lang(hass("pt-BR")), "en");
+  assert.equal(vc.lang(hass("it-IT")), "it");
+  assert.equal(vc.lang(hass("nl-BE")), "nl");
+  assert.equal(vc.lang(hass("pt")), "pt");
+  assert.equal(vc.lang(hass("pt-BR")), "pt"); // assumed fallback to European Portuguese
+  assert.equal(vc.lang(hass("pl-PL")), "pl");
+  assert.equal(vc.lang(hass("ja")), "en");
   assert.equal(vc.lang({ language: "en", locale: { language: "sr-Latn" } }), "sr-Latn");
   assert.equal(vc.lang(hass("fr"), { language: "sr-Latn" }), "sr-Latn");
   assert.equal(vc.lang(undefined, undefined), "en");
+});
+
+test("the Intl locale: pt becomes pt-PT, regional locales are kept, the language: option wins", () => {
+  const hass = (language, locale) => ({ language, locale: locale && { language: locale } });
+  assert.equal(vc.intlLocale(hass("pt")), "pt-PT");
+  assert.equal(vc.intlLocale(hass("en", "pt")), "pt-PT");
+  assert.equal(vc.intlLocale(hass("pt-BR")), "pt-BR");
+  assert.equal(vc.intlLocale(hass("de-CH")), "de-CH");
+  assert.equal(vc.intlLocale(hass("sr-Latn")), "sr-Latn");
+  assert.equal(vc.intlLocale(hass("ja")), "en");
+  assert.equal(vc.intlLocale(hass("pt-BR"), { language: "fr" }), "fr");
+  assert.equal(vc.intlLocale(hass("fr"), { language: "pt" }), "pt-PT");
+  assert.equal(vc.intlLocale(hass("pt"), { language: "pt-BR" }), "pt-BR");
+  assert.equal(vc.intlLocale(undefined, undefined), "en");
+  assert.equal((1234.5).toLocaleString(vc.intlLocale(hass("pt")), { maximumFractionDigits: 1 }), "1234,5");
 });
 
 test("iRobot: the SKU gives the model name and the brand, the picture follows the model", () => {

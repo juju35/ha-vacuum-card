@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.4.6 - 2026-11-01
+### Changes
+- Added Italian, Dutch, European Portuguese and Polish translations (`it`, `nl`, `pt`, `pl`), also offered in the editor's language list. A Home Assistant set to `pt-BR` uses the European Portuguese texts.
+
 ## 2.4.5 - 2026-11-01
 ### Changes
 - Serbian translations by @cpmarexel2f (#44): Cyrillic (`sr`) and Latin (`sr-Latn`), also offered in the editor's language list. A Home Assistant set to `sr-Latn` picks the Latin variant on its own.

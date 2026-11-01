@@ -404,6 +404,23 @@ test("vacuum-card is the card; roborock-card and robot-vacuum-card stay as alias
   assert.ok(get("vacuum-card-editor") && get("vacuum-mini-card-editor"));
 });
 
+test("the editor offers every translated language, under its own name", () => {
+  for (const tag of ["vacuum-card-editor", "vacuum-mini-card-editor"]) {
+    const editor = new (vc.window.customElements.get(tag))();
+    editor.setConfig({ device: "saros" });
+    editor._hass = makeHass();
+    const field = editor._schema().find((f) => f.name === "language");
+    const options = field.selector.select.options;
+    // Array.from: the options come from the sandbox realm.
+    assert.deepEqual(Array.from(options, (o) => o.value), ["", ...Object.keys(vc.STRINGS)], tag);
+    const labels = Object.fromEntries(Array.from(options, (o) => [o.value, o.label]));
+    assert.equal(labels.it, "Italiano");
+    assert.equal(labels.nl, "Nederlands");
+    assert.equal(labels.pt, "Português (Portugal)");
+    assert.equal(labels.pl, "Polski");
+  }
+});
+
 test("the accent color of the buttons follows the brand", () => {
   const accent = (device, Card = vc.VacuumCard, darkMode = false) => {
     const card = new Card();
