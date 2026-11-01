@@ -2392,10 +2392,10 @@ const BASE_STYLE = `
   .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: none; cursor: pointer; font: inherit; font-size: 13px;
          font-weight: 500; padding: 6px 12px; border-radius: 18px; background: var(--secondary-background-color, rgba(127,127,127,.12));
          color: var(--primary-text-color); min-width: 0; }
-  .btn:hover { background: color-mix(in srgb, var(--vc-accent) 12%, var(--secondary-background-color, rgba(127,127,127,.12))); }
+  .btn:not(.disabled):hover { background: color-mix(in srgb, var(--vc-accent) 12%, var(--secondary-background-color, rgba(127,127,127,.12))); }
   .btn.primary { background: color-mix(in srgb, var(--vc-accent) 16%, transparent); color: var(--vc-accent-text); }
   .btn.primary .icon { color: var(--vc-accent); }
-  .btn.primary:hover { background: color-mix(in srgb, var(--vc-accent) 24%, transparent); }
+  .btn.primary:not(.disabled):hover { background: color-mix(in srgb, var(--vc-accent) 24%, transparent); }
   .btn .icon { width: 18px; height: 18px; }
   .btn.round { width: 36px; height: 36px; padding: 0; border-radius: 50%; }
   .btn.disabled { opacity: .45; cursor: default; }
@@ -2460,6 +2460,9 @@ const imgTag = (src, attrs) => {
   }
   return `<img data-img="${id}" ${attrs}>`;
 };
+
+// Clicks that send a command to the vacuum (or open the room list to send one).
+const VACUUM_ACTIONS = new Set(["start", "open_rooms", "pause", "stop", "return_to_base", "locate", "clean_rooms", "clean_all"]);
 
 // Elements a click acts on, and how one is told from the others across renders (see _focusedSpot).
 const FOCUS_SELECTOR = "[data-action], [data-entity]";
@@ -2688,6 +2691,9 @@ class VacuumBase extends HTMLElement {
     if (!el) return;
     ev.stopPropagation();
     const { action, entity, label } = el.dataset;
+    // No command to a vacuum that cannot take it (its buttons are drawn disabled; this also covers a click that
+    // reaches a button before the card re-renders).
+    if ((VACUUM_ACTIONS.has(action) || (action === "routine" && this._dev?.vacuum)) && this._offline(this._dev)) return;
     if (this._roomAction(action, entity, el.dataset.room)) return;
     if (action === "zoom_map") return this._zoomMap(entity);
     if (action === "zoom") return this._toggleZoom(ev);
@@ -2906,12 +2912,27 @@ class VacuumBase extends HTMLElement {
     return { v, cls: v === null ? "idle" : v <= 15 ? "crit" : v <= 30 ? "warn" : "ok" };
   }
 
+  // True when the vacuum can take no command: unavailable, or its state unknown with no status sensor telling
+  // otherwise (some integrations report an activity they do not know as "unknown" while the robot is online, and
+  // Stop or Dock must then still work).
+  _offline(dev) {
+    const vac = this._s(dev?.vacuum);
+    if (!vac || vac.state === "unavailable") return true;
+    if (vac.state !== "unknown") return false;
+    const e = dev.entities;
+    return !valid(this._s(e.status) || this._s(e.a01_status) || this._s(e.q7_status));
+  }
+
   _controls(dev, round = false) {
     const vac = this._s(dev.vacuum);
     if (!vac || this._config.show_controls === false) return "";
     const cleaning = vac.state === "cleaning";
+    // Home Assistant drops a service call to an unavailable entity without a word: the buttons say it instead.
+    const off = this._offline(dev);
     const btn = (action, icon, label, cls = "") =>
-      `<button class="btn ${round ? "round" : ""} ${cls}" title="${esc(label)}" data-action="${action}" data-entity="${esc(vac.entity_id)}">${svgIcon(icon)}${
+      `<button class="btn ${round ? "round" : ""} ${cls}${off ? " disabled" : ""}" title="${esc(label)}" data-action="${action}" data-entity="${esc(vac.entity_id)}"${
+        off ? " disabled" : ""
+      }>${svgIcon(icon)}${
         round ? "" : `<span>${esc(label)}</span>`
       }</button>`;
     const list = [
@@ -3199,13 +3220,20 @@ class VacuumCard extends VacuumBase {
       return { id: s.entity_id, name };
     });
     items.sort((a, b) => a.name.localeCompare(b.name));
+    // A routine runs on the robot: none while it is unavailable.
+    const off = dev.vacuum && this._offline(dev);
     return `<div>
       ${this._sectionTitle("routines", ICONS.routine, this._t("routines"))}
       ${
         this._isCollapsed("routines")
           ? ""
           : `<div class="routines">${items
-              .map((r) => `<button class="btn" data-action="routine" data-entity="${esc(r.id)}" data-label="${esc(r.name)}">${svgIcon(ICONS.routine)}<span>${esc(r.name)}</span></button>`)
+              .map(
+                (r) =>
+                  `<button class="btn${off ? " disabled" : ""}" data-action="routine" data-entity="${esc(r.id)}" data-label="${esc(r.name)}"${off ? " disabled" : ""}>${svgIcon(
+                    ICONS.routine,
+                  )}<span>${esc(r.name)}</span></button>`,
+              )
               .join("")}</div>`
       }
     </div>`;
