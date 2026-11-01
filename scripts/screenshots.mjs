@@ -63,6 +63,7 @@ async function openCard(browser, { file, type, config, theme, width, overrides }
   await page.setContent(page_html(theme, width));
   await page.addScriptTag({ content: HA_CARD });
   await page.addScriptTag({ content: cardJs });
+  await page.addScriptTag({ content: `window.inlinePictures = ${inlinePictures};` });
   await page.evaluate(
     ({ type, config, states, entities, devices, overrides, maps, theme }) => {
       for (const [id, o] of Object.entries(overrides || {})) states[id] = { ...states[id], ...o };
@@ -79,6 +80,33 @@ async function openCard(browser, { file, type, config, theme, width, overrides }
   return page;
 }
 
+
+// The robot pictures are SVG <img>: their CSS animations run in a document of their own, out of reach of
+// document.getAnimations() and of Playwright's `animations: "disabled"`. For the capture each one is redrawn inline,
+// in a shadow root of its own (its styles and ids stay apart), at the same size and with the same filter, so that
+// its animations can be reset (screenshots) or paused and stepped (GIFs). Returns every animation of the page: those
+// of the document and of the shadow roots of the card and of the pictures (document.getAnimations() leaves out the
+// shadow trees). Run before every frame: a card re-render puts the <img> back, and stepping restarts from the same
+// times anyway.
+function inlinePictures() {
+  const card = document.querySelector("#root").firstElementChild.shadowRoot;
+  window.pictureRoots ||= [];
+  for (const img of card.querySelectorAll("img")) {
+    const src = img.getAttribute("src") || "";
+    if (!src.startsWith("data:image/svg+xml,")) continue;
+    const svg = new DOMParser().parseFromString(decodeURIComponent(src.slice(src.indexOf(",") + 1)), "image/svg+xml").documentElement;
+    const box = img.getBoundingClientRect();
+    const host = document.createElement("div");
+    host.style.cssText = `width:${box.width}px;height:${box.height}px;filter:${getComputedStyle(img).filter};flex:none`;
+    svg.setAttribute("width", "100%");
+    svg.setAttribute("height", "100%");
+    host.attachShadow({ mode: "open" }).appendChild(svg);
+    img.replaceWith(host);
+    window.pictureRoots.push(host.shadowRoot);
+  }
+  window.pictureRoots = window.pictureRoots.filter((r) => r.host.isConnected);
+  return [document, card, ...window.pictureRoots].flatMap((r) => r.getAnimations());
+}
 
 const browser = await chromium.launch(
   process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}
@@ -98,6 +126,9 @@ for (const s of shots) {
     await page.waitForTimeout(100);
   }
   await page.waitForTimeout(800);
+  await page.evaluate(() => {
+    window.inlinePictures();
+  });
   const box = await page.locator("#root").boundingBox();
   await page.screenshot({
     path: `${root}screenshots/${s.file}.png`,
@@ -109,7 +140,8 @@ for (const s of shots) {
 }
 
 // Records one animated state as a looping GIF (screenshots/<gif.file>.gif) — needs ffmpeg on PATH.
-// Every animation is paused and stepped frame by frame, so the GIF is identical whatever the machine's speed.
+// Every animation is paused and stepped frame by frame, so the GIF is identical whatever the machine's speed
+// (the robot pictures are inlined first, see inlinePictures: as <img>, getAnimations() did not see them).
 async function makeGif(browser, gif, { fps = 20, seconds = 3 } = {}) {
   const page = await openCard(browser, gif);
   await page.waitForTimeout(300);
@@ -118,12 +150,19 @@ async function makeGif(browser, gif, { fps = 20, seconds = 3 } = {}) {
   const dir = mkdtempSync(join(tmpdir(), "vc-frames-"));
   const frames = Math.round(fps * seconds);
   for (let i = 0; i < frames; i++) {
-    await page.evaluate((t) => {
-      for (const a of document.getAnimations()) {
-        a.pause();
-        a.currentTime = t;
-      }
-    }, (i * 1000) / fps);
+    const n = await page.evaluate(
+      (t) => {
+        const all = window.inlinePictures();
+        for (const a of all) {
+          a.pause();
+          a.currentTime = t;
+        }
+        return all.length;
+      },
+      (i * 1000) / fps,
+    );
+    // An animated state with no animation to step would record frames at the machine's speed again.
+    if (!n) throw new Error(`${gif.file}: no animation found to step`);
     await page.screenshot({ path: join(dir, `f${String(i).padStart(3, "0")}.png`), clip });
   }
   await page.close();
