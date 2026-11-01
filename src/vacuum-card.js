@@ -3592,10 +3592,11 @@ class VacuumMiniCard extends VacuumCard {
   }
 
   // The click never reaches the header or an action (stopped in _onClick). From the keyboard (Enter / Space: no
-  // click count), the focus moves to the button that replaced this one.
+  // click count), the focus moves to the button that replaced this one, in the same place: preventScroll, the page
+  // must not jump to it when the card grows or shrinks.
   _toggleZoom(ev) {
     this._setZoom(!this._zoomed);
-    if (ev.detail === 0) this.shadowRoot.querySelector(".zoom")?.focus();
+    if (ev.detail === 0) this.shadowRoot.querySelector(".zoom")?.focus({ preventScroll: true });
   }
 
   _render() {
