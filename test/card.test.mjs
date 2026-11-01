@@ -126,9 +126,9 @@ test("the full and mini cards share the room, error and picture blocks", () => {
   mini.setConfig({ device: "saros" });
   mini.hass = hass;
   for (const html of [full.shadowRoot.innerHTML, mini.shadowRoot.innerHTML]) {
-    assert.match(html, /class="line clickable" data-entity="sensor\.aspirateur_piece_actuelle"/);
-    assert.match(html, /class="alert-line crit clickable" data-entity="sensor\.aspirateur_erreur"/);
-    assert.match(html, /class="picture clickable" data-entity="vacuum\.aspirateur"><img data-img="/);
+    assert.match(html, /class="line clickable" role="button" tabindex="0" data-entity="sensor\.aspirateur_piece_actuelle"/);
+    assert.match(html, /class="alert-line crit clickable" role="button" tabindex="0" data-entity="sensor\.aspirateur_erreur"/);
+    assert.match(html, /class="picture clickable" role="button" tabindex="0" aria-label="[^"]*" data-entity="vacuum\.aspirateur"><img data-img="/);
   }
 });
 
@@ -166,7 +166,7 @@ test("inlined pictures are not written into the HTML of every render", () => {
   card.setConfig({ device: "saros", show_map: "never", image: "data:image/png;base64,AAAA" });
   card.hass = makeHass();
   assert.doesNotMatch(card.shadowRoot.innerHTML, /data:image\/png/);
-  assert.match(card.shadowRoot.innerHTML, /class="picture clickable" data-entity="vacuum\.aspirateur"><img data-img="\d+" alt="">/);
+  assert.match(card.shadowRoot.innerHTML, /class="picture clickable" role="button" tabindex="0" aria-label="[^"]*" data-entity="vacuum\.aspirateur"><img data-img="\d+" alt="">/);
   card.setConfig({ device: "saros", show_map: "never", image: "/local/robot.png" });
   card.hass = makeHass();
   assert.match(card.shadowRoot.innerHTML, /<img src="\/local\/robot\.png" alt="">/);
@@ -402,6 +402,23 @@ test("vacuum-card is the card; roborock-card and robot-vacuum-card stay as alias
   for (const t of ["roborock-mini-card", "robot-vacuum-mini-card"]) assert.ok(new (get(t))() instanceof vc.VacuumMiniCard, t);
   assert.equal(vc.window.customCards.map((c) => c.type).join(), "vacuum-card,vacuum-mini-card");
   assert.ok(get("vacuum-card-editor") && get("vacuum-mini-card-editor"));
+});
+
+test("the editor offers every translated language, under its own name", () => {
+  for (const tag of ["vacuum-card-editor", "vacuum-mini-card-editor"]) {
+    const editor = new (vc.window.customElements.get(tag))();
+    editor.setConfig({ device: "saros" });
+    editor._hass = makeHass();
+    const field = editor._schema().find((f) => f.name === "language");
+    const options = field.selector.select.options;
+    // Array.from: the options come from the sandbox realm.
+    assert.deepEqual(Array.from(options, (o) => o.value), ["", ...Object.keys(vc.STRINGS)], tag);
+    const labels = Object.fromEntries(Array.from(options, (o) => [o.value, o.label]));
+    assert.equal(labels.it, "Italiano");
+    assert.equal(labels.nl, "Nederlands");
+    assert.equal(labels.pt, "Português (Portugal)");
+    assert.equal(labels.pl, "Polski");
+  }
 });
 
 test("the accent color of the buttons follows the brand", () => {

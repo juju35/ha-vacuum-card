@@ -63,7 +63,7 @@ Only robot vacuums and wet-dry vacuums are listed: the other devices of these in
 - Detail button on the mini card (top right): it switches the mini card to the full card's content and back; a click anywhere outside the card brings the compact view back
 - Click any value to open its Home Assistant history (more-info dialog)
 - Visual editor in the dashboard UI for both cards (no YAML needed)
-- Light and dark mode, English, French, German and Spanish
+- Light and dark mode, English, French, German, Spanish, Serbian (Cyrillic and Latin), Italian, Dutch, European Portuguese and Polish
 - Single file, no external dependency, the logos and pictures are embedded
 
 ## Prerequisites
@@ -188,10 +188,10 @@ language: fr
 | `show_consumables` | full | `true` | Maintenance (remaining time of brushes, filter, sensors…) |
 | `show_stats` | full | `true` | Cleaning statistics |
 | `show_map` | full | `cleaning` | Map of the current floor: `cleaning` (only while the robot is cleaning), `always` (or `true`) or `never` (or `false`) |
-| `collapsed` | full | `[stats, dock]` | Sections folded by default, among `routines`, `dock`, `consumables` and `stats` (`[]` to unfold everything). Click a section title to fold or unfold it. The dock section unfolds on its own when the dock reports a problem |
+| `collapsed` | full | `[stats, dock]` | Sections folded by default, among `routines`, `dock`, `consumables` and `stats` (`[]` to unfold everything). Click a section title (or Tab to it and press Enter or Space) to fold or unfold it. The dock section unfolds on its own when the dock reports a problem |
 | `map_entity` | full | — | Camera or image entity to show as the map instead of the integration's map, e.g. the camera of [Xiaomi Cloud Map Extractor](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor) |
 | `crop` | full | — | Crop the map, in pixels of the map image: `top`, `bottom`, `left` and/or `right` (see below) |
-| `language` | both | Auto | Force language: `fr`, `en`, `de` or `es` (auto-detects from HA settings) |
+| `language` | both | Auto | Force language: `fr`, `en`, `de`, `es`, `sr`, `sr-Latn`, `it`, `nl`, `pt` or `pl` (auto-detects from HA settings) |
 
 ### Cropping the map
 
@@ -639,6 +639,12 @@ The cards auto-detect the language from your Home Assistant settings. Currently 
 | Français | `fr` |
 | Deutsch | `de` |
 | Español | `es` |
+| Српски | `sr` |
+| Srpski (latinica) | `sr-Latn` |
+| Italiano | `it` |
+| Nederlands | `nl` |
+| Português (European; also used for `pt-BR`) | `pt` |
+| Polski | `pl` |
 
 Contributions for additional languages are welcome!
 
