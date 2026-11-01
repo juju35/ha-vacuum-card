@@ -16,9 +16,11 @@ export function decode(path) {
 }
 
 // True when the two decoded images have the same size and frame count and no channel of any pixel differs by
-// more than `tolerance` (a few levels: rounding of the encoder and of the GIF palette, invisible; a real change of
-// the rendering moves pixels by tens of levels).
-export function samePixels(a, b, tolerance = 8) {
+// more than `tolerance` levels. Two CI renders of the same GIF differ by up to 36 levels (anti-aliasing of a few
+// pixels, then the per-clip palette shifting): invisible, and not a reason to commit. A real change of the
+// rendering (text, shape, position, state color) moves edge pixels by far more. SCREENSHOTS_FORCE=1 rewrites
+// every capture (for a subtle color change below the tolerance).
+export function samePixels(a, b, tolerance = 48) {
   if (!a || !b || a.width !== b.width || a.height !== b.height || a.data.length !== b.data.length) return false;
   for (let i = 0; i < a.data.length; i++) if (Math.abs(a.data[i] - b.data[i]) > tolerance) return false;
   return true;
@@ -26,4 +28,5 @@ export function samePixels(a, b, tolerance = 8) {
 
 // True when `fresh` (a new render) shows the same pixels as `target` (the committed file); false when the target
 // does not exist yet.
-export const unchanged = (fresh, target) => existsSync(target) && samePixels(decode(fresh), decode(target));
+export const unchanged = (fresh, target) =>
+  !process.env.SCREENSHOTS_FORCE && existsSync(target) && samePixels(decode(fresh), decode(target));
