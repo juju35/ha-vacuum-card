@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readdirSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { test } from "node:test";
 import { gifs, shots } from "../scripts/screenshot-list.mjs";
 
@@ -30,4 +30,26 @@ test("every file in screenshots/ is rendered by the screenshot script", () => {
   const files = readdirSync(new URL("../screenshots/", import.meta.url));
   assert.deepEqual(files.filter((f) => !rendered.has(f)), []);
   assert.deepEqual([...rendered].filter((f) => !files.includes(f)), []);
+});
+
+// The screenshot script rewrites a capture only when its decoded pixels change (see scripts/pixels.mjs).
+test("captures are compared by their pixels, with a rounding tolerance, size and frame count included", async () => {
+  const { samePixels } = await import("../scripts/pixels.mjs");
+  const img = (w, h, bytes) => ({ width: w, height: h, frames: bytes.length / (w * h * 4), data: Uint8Array.from(bytes) });
+  const a = img(1, 2, [10, 20, 30, 255, 40, 50, 60, 255]);
+  assert.equal(samePixels(a, img(1, 2, [10, 20, 30, 255, 40, 50, 60, 255])), true, "same pixels, other bytes on disk");
+  assert.equal(samePixels(a, img(1, 2, [12, 19, 30, 255, 40, 50, 61, 255])), true, "encoder rounding");
+  assert.equal(samePixels(a, img(1, 2, [10, 20, 30, 255, 40, 50, 90, 255])), false, "a visible change");
+  assert.equal(samePixels(a, img(2, 1, [10, 20, 30, 255, 40, 50, 60, 255])), false, "another size");
+  assert.equal(samePixels(a, img(1, 2, [10, 20, 30, 255, 40, 50, 60, 255, 10, 20, 30, 255, 40, 50, 60, 255])), false, "another frame count");
+  assert.equal(samePixels(a, undefined), false);
+});
+
+test("the screenshot script writes a capture only through the pixel comparison", () => {
+  const src = readFileSync(new URL("../scripts/screenshots.mjs", import.meta.url), "utf8");
+  assert.match(src, /from "\.\/pixels\.mjs"/);
+  // No capture goes straight to screenshots/: Playwright and ffmpeg write to a temporary file first.
+  assert.doesNotMatch(src, /path:\s*`\$\{root\}screenshots\//);
+  assert.doesNotMatch(src, /const out = `\$\{root\}screenshots\//);
+  assert.match(src, /unchanged\(/);
 });

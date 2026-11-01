@@ -1,15 +1,26 @@
 // Renders the cards with mock Roborock data and saves the README screenshots.
 // Usage: npm run build && npm run screenshots
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { copyFileSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 import { states, entities, devices, maps } from "./mock-states.mjs";
+import { unchanged } from "./pixels.mjs";
 import { shots, gifs } from "./screenshot-list.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
+
+// Every capture is rendered to a temporary file and copied over screenshots/<file> only when its decoded pixels
+// differ (scripts/pixels.mjs): a run that draws the same pictures changes no file, so the workflow commits nothing.
+const work = mkdtempSync(join(tmpdir(), "vc-shots-"));
+const keep = (fresh, name) => {
+  const target = `${root}screenshots/${name}`;
+  if (unchanged(fresh, target)) return console.log(`screenshots/${name} (unchanged)`);
+  copyFileSync(fresh, target);
+  console.log(`screenshots/${name}`);
+};
 const cardJs = readFileSync(`${root}dist/vacuum-card.js`, "utf8");
 
 // Every uncaught page error is collected here; the script exits non-zero when any occurred,
@@ -131,11 +142,11 @@ for (const s of shots) {
   });
   const box = await page.locator("#root").boundingBox();
   await page.screenshot({
-    path: `${root}screenshots/${s.file}.png`,
+    path: join(work, `${s.file}.png`),
     clip: { x: 0, y: 0, width: s.width + 32, height: Math.ceil(box.height) + 32 },
     animations: "disabled",
   });
-  console.log(`screenshots/${s.file}.png`);
+  keep(join(work, `${s.file}.png`), `${s.file}.png`);
   await page.close();
 }
 
@@ -166,19 +177,22 @@ async function makeGif(browser, gif, { fps = 20, seconds = 3 } = {}) {
     await page.screenshot({ path: join(dir, `f${String(i).padStart(3, "0")}.png`), clip });
   }
   await page.close();
-  const out = `${root}screenshots/${gif.file}.gif`;
-  // Halve the retina capture and build a per-clip palette: the colours stay clean and the file stays small.
+  const out = join(work, `${gif.file}.gif`);
+  // Halve the retina capture and build a per-clip palette: the colours stay clean and the file stays small. Both are
+  // deterministic: the palette is computed from the stepped frames only, and Bayer dithering is an ordered pattern
+  // (no random error diffusion), so the same frames give the same GIF.
   execFileSync("ffmpeg", [
     "-y", "-loglevel", "error", "-framerate", String(fps), "-i", join(dir, "f%03d.png"),
     "-vf", `scale=${clip.width}:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=128[p];[b][p]paletteuse=dither=bayer:bayer_scale=4`,
     "-loop", "0", out,
   ]);
   rmSync(dir, { recursive: true });
-  console.log(`screenshots/${gif.file}.gif`);
+  keep(out, `${gif.file}.gif`);
 }
 
 for (const g of gifs) await makeGif(browser, g);
 await browser.close();
+rmSync(work, { recursive: true });
 
 if (pageErrors.length) {
   console.error(`\n${pageErrors.length} page error(s) while rendering:`);
