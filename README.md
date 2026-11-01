@@ -263,7 +263,7 @@ Mini card zoomed in with its detail button (top right, click it again or anywher
 |---|---|
 | ![mini card zoomed in](screenshots/mini-card-zoom.png) | ![mini card zoomed in dark](screenshots/mini-card-zoom-dark.png) |
 
-Narrow cards: the full card at its minimum width (9 of 12 columns of a narrow Sections view) and the mini card at 6 columns. The consumable bars give way to their labels, the status chip keeps its colored dot (its text shows on hover) and the mini card's buttons move under the robot:
+Narrow cards on a phone: the full card at its minimum width (9 of 12 columns of a Sections view, 238 px) and the mini card at 6 columns (170 px). The consumable bars give way to their labels, the status chip keeps its colored dot (its text shows on hover) and the mini card's buttons move under the robot, its picture making room for the battery and the info lines:
 
 | Light | Dark |
 |---|---|

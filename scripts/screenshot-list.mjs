@@ -46,8 +46,8 @@ export const shots = [
   // mini card at 6 columns of a ~450 px one (220 px), with the bars, chip and buttons laid out for that width.
   { file: "card-narrow", type: "vacuum-card", theme: "light", width: 238, config: { collapsed: [] } },
   { file: "card-narrow-dark", type: "vacuum-card", theme: "dark", width: 238, config: { collapsed: [] } },
-  { file: "mini-card-narrow", type: "vacuum-mini-card", theme: "light", width: 220, config: {} },
-  { file: "mini-card-narrow-dark", type: "vacuum-mini-card", theme: "dark", width: 220, config: {} },
+  { file: "mini-card-narrow", type: "vacuum-mini-card", theme: "light", width: 170, config: {} },
+  { file: "mini-card-narrow-dark", type: "vacuum-mini-card", theme: "dark", width: 170, config: {} },
 ];
 
 // One looping GIF per distinct animated state the card shows (each plays different keyframes):
