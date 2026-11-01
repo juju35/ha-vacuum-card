@@ -39,7 +39,10 @@ test("captures are compared by their pixels, with a rounding tolerance, size and
   const a = img(1, 2, [10, 20, 30, 255, 40, 50, 60, 255]);
   assert.equal(samePixels(a, img(1, 2, [10, 20, 30, 255, 40, 50, 60, 255])), true, "same pixels, other bytes on disk");
   assert.equal(samePixels(a, img(1, 2, [12, 19, 30, 255, 40, 50, 61, 255])), true, "encoder rounding");
+  // Two CI renders of dyson-cleaning.gif differed by 4 levels on 22 pixels (GIF palette rounding).
+  assert.equal(samePixels(a, img(1, 2, [14, 20, 30, 255, 40, 46, 60, 255])), true, "GIF palette rounding");
   assert.equal(samePixels(a, img(1, 2, [10, 20, 30, 255, 40, 50, 90, 255])), false, "a visible change");
+  assert.equal(samePixels(a, img(1, 2, [10, 20, 30, 255, 40, 50, 72, 255])), false, "a faint but real change");
   assert.equal(samePixels(a, img(2, 1, [10, 20, 30, 255, 40, 50, 60, 255])), false, "another size");
   assert.equal(samePixels(a, img(1, 2, [10, 20, 30, 255, 40, 50, 60, 255, 10, 20, 30, 255, 40, 50, 60, 255])), false, "another frame count");
   assert.equal(samePixels(a, undefined), false);

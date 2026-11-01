@@ -16,8 +16,9 @@ export function decode(path) {
 }
 
 // True when the two decoded images have the same size and frame count and no channel of any pixel differs by
-// more than `tolerance` (1-2 levels: rounding of the encoder, invisible).
-export function samePixels(a, b, tolerance = 2) {
+// more than `tolerance` (a few levels: rounding of the encoder and of the GIF palette, invisible; a real change of
+// the rendering moves pixels by tens of levels).
+export function samePixels(a, b, tolerance = 8) {
   if (!a || !b || a.width !== b.width || a.height !== b.height || a.data.length !== b.data.length) return false;
   for (let i = 0; i < a.data.length; i++) if (Math.abs(a.data[i] - b.data[i]) > tolerance) return false;
   return true;
