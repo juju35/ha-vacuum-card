@@ -2363,10 +2363,15 @@ const BASE_STYLE = `
           /* Text in a state or brand color is mixed with the text color (darker on a light theme, lighter on a dark
              one) so that it reads at 4.5:1 at least; dots, bars and icons keep the plain color. */
           --vc-accent-text: color-mix(in srgb, var(--vc-accent) 50%, var(--primary-text-color)); }
-  /* Container queries below follow the width the card is given (Sections view columns, mini card). A size container
-     has no width of its own: where the card is sized by its content (inline-block, a grid "auto" column of
-     layout-card…) it takes contain-intrinsic-inline-size instead of collapsing to its borders. */
-  ha-card { overflow: hidden; container-type: inline-size; contain-intrinsic-inline-size: 360px; }
+  /* Container queries below follow the width the card is given (Sections view columns, mini card). */
+  ha-card { overflow: hidden; container-type: inline-size; }
+  /* A size container has no width of its own content: in a parent that sizes to its content (an inline-block, a grid
+     "auto" column of layout-card, button-card…) the card would fall to its borders. This empty, zero-height grid gives
+     the card a natural (max-content) width of --vc-natural-width without any minimum (its min-content width is 0): in
+     a "1fr 1fr" grid or a flex row, wrapped in a <div> or not, the card still shrinks to its track. A min-width on the
+     host or an intrinsic size on ha-card would be a minimum, and the card would overflow there on a phone. */
+  :host { display: block; min-width: 0; --vc-natural-width: 360px; }
+  :host::before { content: ""; display: grid; grid-template-columns: minmax(0, var(--vc-natural-width)); height: 0; }
   .icon { width: 18px; height: 18px; fill: currentColor; flex: none; }
   .muted { color: var(--secondary-text-color); }
   .clickable { cursor: pointer; }
@@ -3143,6 +3148,13 @@ const FULL_STYLE = `
     .hero { gap: 10px; }
     .tiles.two { grid-template-columns: minmax(0, 1fr); }
   }
+  /* Below its 9 columns (a "1fr 1fr" layout-card or grid on a phone, ~156-200 px): the battery keeps its "100 %". */
+  @container (max-width: 200px) {
+    .picture { width: 48px; height: 56px; }
+    .hero { gap: 8px; }
+    .batt { gap: 4px; }
+    .batt .pct { font-size: 24px; }
+  }
 `;
 
 class VacuumCard extends VacuumBase {
@@ -3520,6 +3532,8 @@ class VacuumCard extends VacuumBase {
 // ---------------------------------------------------------------------------
 
 const MINI_STYLE = `
+  /* Natural width in a parent that sizes to its content (see :host::before in BASE_STYLE). */
+  :host { --vc-natural-width: 300px; }
   .logo { width: 32px; height: 32px; }
   .name { font-size: 16px; }
   .content { padding: 8px 12px 12px; display: flex; align-items: center; gap: 12px; }
