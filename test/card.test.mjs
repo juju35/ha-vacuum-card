@@ -416,7 +416,7 @@ test("the editor offers every translated language, under its own name", () => {
     const labels = Object.fromEntries(Array.from(options, (o) => [o.value, o.label]));
     assert.equal(labels.it, "Italiano");
     assert.equal(labels.nl, "Nederlands");
-    assert.equal(labels.pt, "Português");
+    assert.equal(labels.pt, "Português (Portugal)");
     assert.equal(labels.pl, "Polski");
   }
 });
