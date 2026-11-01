@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.4.5 - 2026-11-01
+### Changes
+- Serbian translations by @cpmarexel2f (#44): Cyrillic (`sr`) and Latin (`sr-Latn`), also offered in the editor's language list. A Home Assistant set to `sr-Latn` picks the Latin variant on its own.
 ## 2.4.4
 ### Fixes
 - Keyboard: the section titles (Station, Statistics, Consumables, Routines) can now be reached with Tab and folded or unfolded with Enter or Space, so the dock actions (empty the bin, wash and dry the mops) are no longer out of reach of keyboard users. The same goes for every other clickable part of the cards (status chip, picture, battery, tiles, consumables, map…), and the focus stays on the element when the card updates.
