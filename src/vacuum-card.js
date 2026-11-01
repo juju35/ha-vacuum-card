@@ -2178,6 +2178,16 @@ const lang = (hass, config) => {
   return STRINGS[l] ? l : STRINGS[l.split("-")[0]] ? l.split("-")[0] : "en";
 };
 
+// Locale for Intl / toLocale*: the card's language: option, else HA's full locale (keeps its region, e.g.
+// pt-BR, de-CH) when its base matches the resolved card language, else that language. A bare "pt" (HA's
+// code for European Portuguese) becomes "pt-PT", otherwise Intl formats it the Brazilian way.
+const intlLocale = (hass, config) => {
+  const l = lang(hass, config);
+  const src = config?.language || (hass && (hass.locale?.language || hass.language)) || "";
+  const out = src && src.split("-")[0] === l.split("-")[0] ? src : l;
+  return out === "pt" ? "pt-PT" : out;
+};
+
 const t = (hass, config, key, vars = {}) =>
   String(STRINGS[lang(hass, config)][key] ?? STRINGS.en[key] ?? key).replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? "");
 
@@ -2230,7 +2240,7 @@ const ago = (hass, config, iso) => {
   const d = Date.parse(iso);
   if (!Number.isFinite(d)) return null;
   const diff = (d - Date.now()) / 1000;
-  const l = lang(hass, config);
+  const l = intlLocale(hass, config);
   const rtf = (RTF[l] ??= new Intl.RelativeTimeFormat(l, { numeric: "auto" }));
   const abs = Math.abs(diff);
   if (abs < 3600) return rtf.format(Math.round(diff / 60), "minute");
@@ -2549,7 +2559,7 @@ class VacuumBase extends HTMLElement {
   }
 
   _locale() {
-    return this._config.language || this._hass.locale?.language || this._hass.language;
+    return intlLocale(this._hass, this._config);
   }
 
   _s(id) {

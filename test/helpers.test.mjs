@@ -168,6 +168,21 @@ test("the language: full code if translated, else the part before the dash, else
   assert.equal(vc.lang(undefined, undefined), "en");
 });
 
+test("the Intl locale: pt becomes pt-PT, regional locales are kept, the language: option wins", () => {
+  const hass = (language, locale) => ({ language, locale: locale && { language: locale } });
+  assert.equal(vc.intlLocale(hass("pt")), "pt-PT");
+  assert.equal(vc.intlLocale(hass("en", "pt")), "pt-PT");
+  assert.equal(vc.intlLocale(hass("pt-BR")), "pt-BR");
+  assert.equal(vc.intlLocale(hass("de-CH")), "de-CH");
+  assert.equal(vc.intlLocale(hass("sr-Latn")), "sr-Latn");
+  assert.equal(vc.intlLocale(hass("ja")), "en");
+  assert.equal(vc.intlLocale(hass("pt-BR"), { language: "fr" }), "fr");
+  assert.equal(vc.intlLocale(hass("fr"), { language: "pt" }), "pt-PT");
+  assert.equal(vc.intlLocale(hass("pt"), { language: "pt-BR" }), "pt-BR");
+  assert.equal(vc.intlLocale(undefined, undefined), "en");
+  assert.equal((1234.5).toLocaleString(vc.intlLocale(hass("pt")), { maximumFractionDigits: 1 }), "1234,5");
+});
+
 test("iRobot: the SKU gives the model name and the brand, the picture follows the model", () => {
   const { irobotName, brandOf, autoSvg, roombaSvg } = vc;
   assert.equal(irobotName("R980020"), "Roomba 980");
