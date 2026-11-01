@@ -2363,8 +2363,10 @@ const BASE_STYLE = `
           /* Text in a state or brand color is mixed with the text color (darker on a light theme, lighter on a dark
              one) so that it reads at 4.5:1 at least; dots, bars and icons keep the plain color. */
           --vc-accent-text: color-mix(in srgb, var(--vc-accent) 50%, var(--primary-text-color)); }
-  /* Container queries below follow the width the card is given (Sections view columns, mini card). */
-  ha-card { overflow: hidden; container-type: inline-size; }
+  /* Container queries below follow the width the card is given (Sections view columns, mini card). A size container
+     has no width of its own: where the card is sized by its content (inline-block, a grid "auto" column of
+     layout-card…) it takes contain-intrinsic-inline-size instead of collapsing to its borders. */
+  ha-card { overflow: hidden; container-type: inline-size; contain-intrinsic-inline-size: 360px; }
   .icon { width: 18px; height: 18px; fill: currentColor; flex: none; }
   .muted { color: var(--secondary-text-color); }
   .clickable { cursor: pointer; }
@@ -2381,8 +2383,9 @@ const BASE_STYLE = `
   .header { display: flex; align-items: center; gap: 10px; padding: 12px 12px 0; }
   .logo { width: 40px; height: 40px; object-fit: contain; flex: none; }
   a.logo-link { display: flex; flex: none; }
-  /* The title shrinks first but keeps about four characters and its ellipsis. */
-  .titles { flex: 1 1 auto; min-width: 5ch; font-size: 16px; }
+  /* The title takes the room the chip leaves (flex-basis 0: a long name does not push the chip into its ellipsis)
+     and keeps about four characters and its ellipsis; the chip shrinks only when even that does not fit. */
+  .titles { flex: 1 1 0; min-width: 5ch; font-size: 16px; }
   .name { font-size: 16px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .sub { font-size: 12px; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .warning { padding: 16px; color: color-mix(in srgb, var(--vc-warn) 50%, var(--primary-text-color)); }
@@ -2423,7 +2426,7 @@ const BASE_STYLE = `
   .zoom:hover { background: color-mix(in srgb, var(--vc-idle) 16%, transparent); color: var(--primary-text-color); }
   .zoom:focus-visible { outline: 2px solid var(--primary-color, var(--vc-accent)); outline-offset: 1px; }
   /* Narrow card: the status chip keeps only its colored dot (its text stays in title and aria-label). */
-  @container (max-width: 260px) {
+  @container (max-width: 230px) {
     .chip { padding: 4px; flex: none; }
     .chip-text { display: none; }
   }

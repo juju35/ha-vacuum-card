@@ -54,9 +54,17 @@ for (const [name, Card] of [
 ]) {
   test(`${name} card header: the title keeps a few characters, the chip shrinks, icon buttons never do`, () => {
     const sheet = css(render(Card));
-    assert.match(rule(sheet, "ha-card"), /container-type:\s*inline-size/);
+    const haCard = rule(sheet, "ha-card");
+    assert.match(haCard, /container-type:\s*inline-size/);
+    // A size container has no width of its own: in an inline-block or a grid "auto" column (layout-card,
+    // button-card…) the card fell to its borders (~2 px in Chromium) without an intrinsic width.
+    const intrinsic = haCard.match(/contain-intrinsic-inline-size:\s*(\d+)px/);
+    assert.ok(intrinsic, "contain-intrinsic-inline-size on the size container");
+    assert.ok(Number(intrinsic[1]) >= 300, intrinsic[1]);
     const titles = rule(sheet, ".titles");
-    assert.match(titles, /flex:\s*1 1 auto/);
+    // flex-basis 0: the title takes what the chip leaves, the chip keeps its whole label at usual widths (with
+    // flex-basis auto a long name pushed "Charging" into "Charg…" at 280-320 px).
+    assert.match(titles, /flex:\s*1 1 0(px|%)?\s*(;|$)/);
     assert.match(titles, /min-width:\s*\d+(\.\d+)?ch/);
     assert.match(rule(sheet, ".name"), /text-overflow:\s*ellipsis/);
     const chip = rule(sheet, ".chip");
@@ -67,7 +75,10 @@ for (const [name, Card] of [
     assert.match(rule(sheet, ".zoom"), /flex:\s*none/);
     assert.match(rule(sheet, "a.logo-link"), /flex:\s*none/);
     // Below the threshold the chip shows only its colored dot.
-    assert.match(rule(sheet, ".chip-text", "(max-width: 260px)"), /display:\s*none/);
+    // Only below the narrowest phone width of a usual card (245 px keeps the label).
+    assert.match(rule(sheet, ".chip-text", "(max-width: 230px)"), /display:\s*none/);
+    for (const m of sheet.matchAll(/@container \(max-width: (\d+)px\)\s*\{[^@]*?\.chip-text\s*\{[^}]*display:\s*none/g))
+      assert.ok(Number(m[1]) < 245, `the chip loses its label up to ${m[1]} px`);
   });
 
   test(`${name} card: the status chip keeps its text for screen readers and as a tooltip, in every language`, () => {
