@@ -130,11 +130,30 @@ test("the picture animation follows the status, the cleaning mode and the dock d
 test("every language has exactly the English keys and placeholders", () => {
   const en = Object.keys(vc.STRINGS.en).sort();
   const vars = (s) => (String(s).match(/\{\w+\}/g) || []).sort().join();
-  for (const l of ["fr", "de", "es"]) {
+  for (const l of ["fr", "de", "es", "sr", "sr-Latn"]) {
     assert.ok(vc.STRINGS[l], `missing language ${l}`);
     assert.deepEqual(Object.keys(vc.STRINGS[l]).sort(), en, `keys of ${l}`);
     for (const k of en) assert.equal(vars(vc.STRINGS[l][k]), vars(vc.STRINGS.en[k]), `placeholders of ${l}.${k}`);
   }
+});
+
+test("Serbian: the Cyrillic and Latin blocks keep to their script", () => {
+  // Brand names, Home Assistant, units and placeholders stay in Latin letters in the Cyrillic block.
+  const latin = (s) => String(s).replace(/\{\w+\}|Home Assistant|Roborock|Xiaomi Cloud Map Extractor|Xiaomi|Dreame|Ecovacs|Dyson|iRobot|SmartPlan|px/g, "");
+  for (const [k, v] of Object.entries(vc.STRINGS.sr)) assert.doesNotMatch(latin(v), /[A-Za-z]/, `Latin letter in sr.${k}`);
+  for (const [k, v] of Object.entries(vc.STRINGS["sr-Latn"])) assert.doesNotMatch(v, /[\u0400-\u04FF]/, `Cyrillic letter in sr-Latn.${k}`);
+});
+
+test("the language: full code if translated, else the part before the dash, else English", () => {
+  const hass = (language) => ({ language });
+  assert.equal(vc.lang(hass("fr-FR")), "fr");
+  assert.equal(vc.lang(hass("de-CH")), "de");
+  assert.equal(vc.lang(hass("sr-Latn")), "sr-Latn");
+  assert.equal(vc.lang(hass("sr")), "sr");
+  assert.equal(vc.lang(hass("pt-BR")), "en");
+  assert.equal(vc.lang({ language: "en", locale: { language: "sr-Latn" } }), "sr-Latn");
+  assert.equal(vc.lang(hass("fr"), { language: "sr-Latn" }), "sr-Latn");
+  assert.equal(vc.lang(undefined, undefined), "en");
 });
 
 test("iRobot: the SKU gives the model name and the brand, the picture follows the model", () => {
