@@ -126,9 +126,9 @@ test("the full and mini cards share the room, error and picture blocks", () => {
   mini.setConfig({ device: "saros" });
   mini.hass = hass;
   for (const html of [full.shadowRoot.innerHTML, mini.shadowRoot.innerHTML]) {
-    assert.match(html, /class="line clickable" data-entity="sensor\.aspirateur_piece_actuelle"/);
-    assert.match(html, /class="alert-line crit clickable" data-entity="sensor\.aspirateur_erreur"/);
-    assert.match(html, /class="picture clickable" data-entity="vacuum\.aspirateur"><img data-img="/);
+    assert.match(html, /class="line clickable" role="button" tabindex="0" data-entity="sensor\.aspirateur_piece_actuelle"/);
+    assert.match(html, /class="alert-line crit clickable" role="button" tabindex="0" data-entity="sensor\.aspirateur_erreur"/);
+    assert.match(html, /class="picture clickable" role="button" tabindex="0" aria-label="[^"]*" data-entity="vacuum\.aspirateur"><img data-img="/);
   }
 });
 
@@ -166,7 +166,7 @@ test("inlined pictures are not written into the HTML of every render", () => {
   card.setConfig({ device: "saros", show_map: "never", image: "data:image/png;base64,AAAA" });
   card.hass = makeHass();
   assert.doesNotMatch(card.shadowRoot.innerHTML, /data:image\/png/);
-  assert.match(card.shadowRoot.innerHTML, /class="picture clickable" data-entity="vacuum\.aspirateur"><img data-img="\d+" alt="">/);
+  assert.match(card.shadowRoot.innerHTML, /class="picture clickable" role="button" tabindex="0" aria-label="[^"]*" data-entity="vacuum\.aspirateur"><img data-img="\d+" alt="">/);
   card.setConfig({ device: "saros", show_map: "never", image: "/local/robot.png" });
   card.hass = makeHass();
   assert.match(card.shadowRoot.innerHTML, /<img src="\/local\/robot\.png" alt="">/);
