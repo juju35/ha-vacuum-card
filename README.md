@@ -60,6 +60,8 @@ Only robot vacuums and wet-dry vacuums are listed: the other devices of these in
 - Map of the current floor while the robot is cleaning (or always, or never), with optional cropping, enlarged full screen on click; any camera or image entity can be used (`map_entity`)
 - Roborock: room selector on the Start button, routines of the Roborock app as one-tap buttons, dock (water tanks, detergent, auto-empty mode, mop drying, Empty bin / Wash mop / Dry mop buttons)
 - Collapsible sections (statistics and dock folded by default)
+- Sections view: the full card takes 12 columns by default and at least 9, the mini card 6; narrow widths get their own layout (see [Screenshots](#screenshots))
+- Command buttons disabled while the vacuum is unavailable
 - Detail button on the mini card (top right): it switches the mini card to the full card's content and back; a click anywhere outside the card brings the compact view back
 - Click any value to open its Home Assistant history (more-info dialog)
 - Visual editor in the dashboard UI for both cards (no YAML needed)
@@ -260,6 +262,12 @@ Mini card zoomed in with its detail button (top right, click it again or anywher
 | Light | Dark |
 |---|---|
 | ![mini card zoomed in](screenshots/mini-card-zoom.png) | ![mini card zoomed in dark](screenshots/mini-card-zoom-dark.png) |
+
+Narrow cards: the full card at its minimum width (9 of 12 columns of a narrow Sections view) and the mini card at 6 columns. The consumable bars give way to their labels, the status chip keeps its colored dot (its text shows on hover) and the mini card's buttons move under the robot:
+
+| Light | Dark |
+|---|---|
+| ![narrow card](screenshots/card-narrow.png) ![narrow mini card](screenshots/mini-card-narrow.png) | ![narrow card dark](screenshots/card-narrow-dark.png) ![narrow mini card dark](screenshots/mini-card-narrow-dark.png) |
 
 Room selector (opened by the Start button):
 

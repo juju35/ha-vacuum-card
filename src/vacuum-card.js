@@ -2363,7 +2363,8 @@ const BASE_STYLE = `
           /* Text in a state or brand color is mixed with the text color (darker on a light theme, lighter on a dark
              one) so that it reads at 4.5:1 at least; dots, bars and icons keep the plain color. */
           --vc-accent-text: color-mix(in srgb, var(--vc-accent) 50%, var(--primary-text-color)); }
-  ha-card { overflow: hidden; }
+  /* Container queries below follow the width the card is given (Sections view columns, mini card). */
+  ha-card { overflow: hidden; container-type: inline-size; }
   .icon { width: 18px; height: 18px; fill: currentColor; flex: none; }
   .muted { color: var(--secondary-text-color); }
   .clickable { cursor: pointer; }
@@ -2372,13 +2373,16 @@ const BASE_STYLE = `
   .ok { --c: var(--vc-ok); } .warn { --c: var(--vc-warn); } .crit { --c: var(--vc-crit); } .idle { --c: var(--vc-idle); } .active { --c: var(--vc-active); }
   .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--c, var(--vc-ok)); flex: none; display: inline-block; }
   .chip { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; white-space: nowrap;
-          background: color-mix(in srgb, var(--c, var(--vc-ok)) 15%, transparent); color: color-mix(in srgb, var(--c, var(--vc-ok)) 50%, var(--primary-text-color)); flex: none; }
+          background: color-mix(in srgb, var(--c, var(--vc-ok)) 15%, transparent); color: color-mix(in srgb, var(--c, var(--vc-ok)) 50%, var(--primary-text-color));
+          flex: 0 1 auto; min-width: 0; max-width: 50%; overflow: hidden; box-sizing: border-box; }
+  .chip-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .bar { height: 4px; border-radius: 3px; background: var(--divider-color, rgba(127,127,127,.25)); overflow: hidden; }
   .bar > div { height: 100%; border-radius: 3px; background: var(--c, var(--vc-ok)); transition: width .6s ease; }
   .header { display: flex; align-items: center; gap: 10px; padding: 12px 12px 0; }
   .logo { width: 40px; height: 40px; object-fit: contain; flex: none; }
   a.logo-link { display: flex; flex: none; }
-  .titles { flex: 1; min-width: 0; }
+  /* The title shrinks first but keeps about four characters and its ellipsis. */
+  .titles { flex: 1 1 auto; min-width: 5ch; font-size: 16px; }
   .name { font-size: 16px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .sub { font-size: 12px; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .warning { padding: 16px; color: color-mix(in srgb, var(--vc-warn) 50%, var(--primary-text-color)); }
@@ -2392,6 +2396,7 @@ const BASE_STYLE = `
   .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: none; cursor: pointer; font: inherit; font-size: 13px;
          font-weight: 500; padding: 6px 12px; border-radius: 18px; background: var(--secondary-background-color, rgba(127,127,127,.12));
          color: var(--primary-text-color); min-width: 0; }
+  .btn span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .btn:not(.disabled):hover { background: color-mix(in srgb, var(--vc-accent) 12%, var(--secondary-background-color, rgba(127,127,127,.12))); }
   .btn.primary { background: color-mix(in srgb, var(--vc-accent) 16%, transparent); color: var(--vc-accent-text); }
   .btn.primary .icon { color: var(--vc-accent); }
@@ -2417,6 +2422,15 @@ const BASE_STYLE = `
   .zoom .icon { width: 16px; height: 16px; }
   .zoom:hover { background: color-mix(in srgb, var(--vc-idle) 16%, transparent); color: var(--primary-text-color); }
   .zoom:focus-visible { outline: 2px solid var(--primary-color, var(--vc-accent)); outline-offset: 1px; }
+  /* Narrow card: the status chip keeps only its colored dot (its text stays in title and aria-label). */
+  @container (max-width: 260px) {
+    .chip { padding: 4px; flex: none; }
+    .chip-text { display: none; }
+  }
+  @container (max-width: 200px) {
+    .header { gap: 6px; }
+    .header .logo { width: 24px; height: 24px; }
+  }
 `;
 
 // In-card confirmation popup, as in ha-system-monitor-card and ha-iptv: a backdrop over the card with a
@@ -2883,7 +2897,9 @@ class VacuumBase extends HTMLElement {
         </div>
         ${
           status
-            ? `<span class="chip clickable ${statusClass(status.state)}" role="button" tabindex="0" data-entity="${esc(status.entity)}"><span class="dot"></span>${esc(status.text)}</span>`
+            ? `<span class="chip clickable ${statusClass(status.state)}" role="button" tabindex="0" data-entity="${esc(status.entity)}" title="${esc(status.text)}" aria-label="${esc(
+                status.text,
+              )}"><span class="dot"></span><span class="chip-text">${esc(status.text)}</span></span>`
             : ""
         }
         ${this._zoomButton()}
@@ -3064,13 +3080,16 @@ const FULL_STYLE = `
   .line .icon { width: 16px; height: 16px; }
   .tags { display: flex; flex-wrap: wrap; gap: 4px; }
   .tag { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; padding: 2px 6px; border-radius: 8px;
-         background: var(--secondary-background-color, rgba(127,127,127,.12)); color: var(--primary-text-color); white-space: nowrap; }
+         background: var(--secondary-background-color, rgba(127,127,127,.12)); color: var(--primary-text-color); white-space: nowrap;
+         max-width: 100%; min-width: 0; box-sizing: border-box; }
+  .tag span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
   .tag .icon { width: 14px; height: 14px; color: var(--secondary-text-color); }
   .controls { display: flex; flex-wrap: wrap; gap: 6px; }
   .controls .btn { flex: 1 1 auto; }
   .section-title { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; text-transform: uppercase;
                    letter-spacing: .04em; color: var(--secondary-text-color); margin-bottom: 6px; }
   .section-title .icon { width: 16px; height: 16px; }
+  .section-title span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .section-title.toggle { cursor: pointer; user-select: none; }
   .section-title.toggle[aria-expanded="false"] { margin-bottom: 0; }
   .section-title .chevron { margin-left: auto; width: 16px; height: 16px; transition: transform .2s ease; }
@@ -3083,6 +3102,7 @@ const FULL_STYLE = `
   .tile { display: flex; flex-direction: column; gap: 2px; padding: 6px 10px; border-radius: 10px; min-width: 0;
           background: var(--secondary-background-color, rgba(127,127,127,.08)); }
   .tile .k { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tile .k span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
   .tile .k .icon { width: 14px; height: 14px; color: var(--c, var(--secondary-text-color)); }
   .tile .v { font-size: 14px; font-weight: 500; line-height: 1.3; overflow-wrap: anywhere; }
   .tile.warn .v, .tile.crit .v { color: color-mix(in srgb, var(--c) 50%, var(--primary-text-color)); }
@@ -3106,6 +3126,18 @@ const FULL_STYLE = `
   .dock-actions .btn.running { background: color-mix(in srgb, var(--vc-active) 16%, transparent); color: color-mix(in srgb, var(--vc-active) 50%, var(--primary-text-color)); }
   .dock-actions .btn.running .icon { color: var(--vc-active); }
   .map .crop img { max-width: none; border-radius: 0; background: none; }
+  /* Narrow card (9 of 12 columns in a narrow Sections view, ~240 px): the consumable bars give way to the labels
+     (the value keeps its state color), then the picture shrinks and the statistics take one column. */
+  @container (max-width: 360px) {
+    .cons { grid-template-columns: 18px minmax(0, 1fr) auto; }
+    .cons.with-reset { grid-template-columns: 18px minmax(0, 1fr) auto 28px; }
+    .cons .bar, .cons .nobar { display: none; }
+  }
+  @container (max-width: 300px) {
+    .picture { width: 72px; height: 80px; }
+    .hero { gap: 10px; }
+    .tiles.two { grid-template-columns: minmax(0, 1fr); }
+  }
 `;
 
 class VacuumCard extends VacuumBase {
@@ -3123,8 +3155,10 @@ class VacuumCard extends VacuumBase {
     return 8;
   }
 
+  // Below 9 of 12 columns (~240 px in the narrowest Sections view) the hero, the controls and the consumables no
+  // longer fit: 9 is the narrowest width the layout holds at.
   getGridOptions() {
-    return { columns: 12, min_columns: 6 };
+    return { columns: 12, min_columns: 9 };
   }
 
   _render() {
@@ -3180,7 +3214,7 @@ class VacuumCard extends VacuumBase {
 
     if (this._config.show_modes !== false) {
       const tags = [];
-      const tag = (id, icon, text) => (text ? `<span class="tag clickable" role="button" tabindex="0" data-entity="${esc(id)}">${svgIcon(icon)}${esc(text)}</span>` : "");
+      const tag = (id, icon, text) => (text ? `<span class="tag clickable" role="button" tabindex="0" data-entity="${esc(id)}">${svgIcon(icon)}<span>${esc(text)}</span></span>` : "");
       const mode = this._s(e.cleaning_mode);
       if (valid(mode)) tags.push(tag(mode.entity_id, ICONS.mode, this._fmt(mode)));
       const vac = this._s(dev.vacuum);
@@ -3255,13 +3289,13 @@ class VacuumCard extends VacuumBase {
 
   _sectionTitle(key, icon, label) {
     const closed = this._isCollapsed(key);
-    return `<div class="section-title toggle" role="button" tabindex="0" data-action="toggle_section" data-section="${key}" aria-expanded="${!closed}">${svgIcon(icon)}${esc(
+    return `<div class="section-title toggle" role="button" tabindex="0" data-action="toggle_section" data-section="${key}" aria-expanded="${!closed}">${svgIcon(icon)}<span>${esc(
       label
-    )}${svgIcon(ICONS.chevron_down, "chevron")}</div>`;
+    )}</span>${svgIcon(ICONS.chevron_down, "chevron")}</div>`;
   }
 
   _tile(id, icon, label, value, cls = "") {
-    return `<div class="tile clickable ${cls}" role="button" tabindex="0" data-entity="${esc(id || "")}"><div class="k">${svgIcon(icon)}${esc(label)}</div><div class="v">${esc(value)}</div></div>`;
+    return `<div class="tile clickable ${cls}" role="button" tabindex="0" data-entity="${esc(id || "")}"><div class="k">${svgIcon(icon)}<span>${esc(label)}</span></div><div class="v">${esc(value)}</div></div>`;
   }
 
   _dock(dev) {
@@ -3493,6 +3527,15 @@ const MINI_STYLE = `
   .line .icon { width: 14px; height: 14px; }
   .controls { display: flex; gap: 6px; flex: none; }
   .rooms-wrap { padding: 0 12px 12px; }
+  /* Narrow mini card (6 of 12 columns, 156-250 px): the round buttons move under the robot, then the picture
+     gives way to the battery and the info lines. */
+  @container (max-width: 300px) {
+    .content { flex-wrap: wrap; row-gap: 8px; }
+    .controls { flex-basis: 100%; justify-content: flex-end; }
+  }
+  @container (max-width: 200px) {
+    .picture { display: none; }
+  }
 `;
 
 // The mini card is a full card drawn compact: its detail button (top right, `zoom: false` removes it) switches it
