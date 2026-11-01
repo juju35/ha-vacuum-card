@@ -105,3 +105,31 @@ test("a device without a vacuum entity keeps its routines", () => {
   click(card, { action: "routine", entity: "button.aspirateur_morning", label: "Morning" });
   assert.ok(card._confirm, "the routine's confirmation opens");
 });
+
+// iRobot: the vacuum's status attribute (roombapy's phase) is its status sensor. Home Assistant reports a phase
+// missing from its table as "unknown" while the robot is online and talking: the chip then says the phase
+// ("Charging"…) and the commands must agree with it instead of being disabled.
+test("iRobot: an unknown vacuum state with a status attribute keeps the commands, as the chip says the robot is there", () => {
+  const ROOMBA = "vacuum.couloir";
+  const st = { ...states, [ROOMBA]: { ...states[ROOMBA], state: "unknown", attributes: { ...states[ROOMBA].attributes, status: "Charging" } } };
+  const hass = makeHass(st);
+  const card = newCard(hass, vc.VacuumCard, { device: "j7" });
+  const html = card.shadowRoot.innerHTML;
+  assert.match(html, /Charging/);
+  const tags = commandTags(html);
+  assert.ok(tags.length >= 2);
+  for (const tag of tags) assert.doesNotMatch(tag, /\bdisabled\b/, tag);
+  click(card, { action: "return_to_base", entity: ROOMBA });
+  assert.equal(hass.calls.length, 1);
+});
+
+test("iRobot: an unknown vacuum state without a status attribute still disables the commands", () => {
+  const ROOMBA = "vacuum.couloir";
+  const { status: _s, ...attributes } = states[ROOMBA].attributes;
+  const st = { ...states, [ROOMBA]: { ...states[ROOMBA], state: "unknown", attributes } };
+  const hass = makeHass(st);
+  const card = newCard(hass, vc.VacuumMiniCard, { device: "j7" });
+  for (const tag of commandTags(card.shadowRoot.innerHTML)) assert.match(tag, /\bdisabled\b/, tag);
+  click(card, { action: "return_to_base", entity: ROOMBA });
+  assert.deepEqual(hass.calls, []);
+});

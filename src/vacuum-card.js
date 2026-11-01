@@ -2930,12 +2930,14 @@ class VacuumBase extends HTMLElement {
 
   // True when the vacuum can take no command: unavailable, or its state unknown with no status sensor telling
   // otherwise (some integrations report an activity they do not know as "unknown" while the robot is online, and
-  // Stop or Dock must then still work).
+  // Stop or Dock must then still work). iRobot has no status sensor: the vacuum's status attribute (the robot's
+  // phase, which _status shows) tells it is there.
   _offline(dev) {
     const vac = this._s(dev?.vacuum);
     if (!vac || vac.state === "unavailable") return true;
     if (vac.state !== "unknown") return false;
     const e = dev.entities;
+    if (dev.platform === "roomba" && typeof vac.attributes?.status === "string" && valid({ state: vac.attributes.status.trim() })) return false;
     return !valid(this._s(e.status) || this._s(e.a01_status) || this._s(e.q7_status));
   }
 
