@@ -146,6 +146,13 @@ test("the mini card at narrow widths: its buttons move under the robot, the pict
   assert.match(rule(sheet, ".controls"), /flex:\s*none/);
 });
 
+test("the mini card keeps the full card's logo size in its compact view", () => {
+  const logo = (Card) => rule(css(render(Card)), ".logo");
+  assert.doesNotMatch(logo(vc.VacuumMiniCard), /32px/);
+  assert.equal(logo(vc.VacuumMiniCard), logo(vc.VacuumCard));
+  assert.match(logo(vc.VacuumMiniCard), /width:\s*40px;\s*height:\s*40px/);
+});
+
 test("the README screenshots show both cards at a narrow width, so a narrow-layout break shows in review", () => {
   for (const type of ["vacuum-card", "vacuum-mini-card"]) {
     const narrow = shots.filter((s) => s.type === type && s.width <= 246);
