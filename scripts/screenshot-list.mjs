@@ -42,6 +42,12 @@ export const shots = [
   { file: "mini-card-braava-light", type: "vacuum-mini-card", theme: "light", width: 380, config: { device: "Washroom robot" } },
   { file: "mini-card-zoom", type: "vacuum-mini-card", theme: "light", width: 460, config: {}, clicks: [".zoom"] },
   { file: "mini-card-zoom-dark", type: "vacuum-mini-card", theme: "dark", width: 460, config: {}, clicks: [".zoom"] },
+  // Narrow cards: the full card at its minimum width (9 of 12 columns of a 320 px Sections view, 238 px) and the
+  // mini card at 6 columns of a phone's Sections view (170 px), with the bars, chip and buttons laid out for that width.
+  { file: "card-narrow", type: "vacuum-card", theme: "light", width: 238, config: { collapsed: [] } },
+  { file: "card-narrow-dark", type: "vacuum-card", theme: "dark", width: 238, config: { collapsed: [] } },
+  { file: "mini-card-narrow", type: "vacuum-mini-card", theme: "light", width: 170, config: {} },
+  { file: "mini-card-narrow-dark", type: "vacuum-mini-card", theme: "dark", width: 170, config: {} },
 ];
 
 // One looping GIF per distinct animated state the card shows (each plays different keyframes):

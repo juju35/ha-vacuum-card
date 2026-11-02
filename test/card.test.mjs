@@ -227,6 +227,18 @@ test("the mini card's detail button shows the full card, and back", () => {
   assert.equal(mini.getCardSize(), 3);
 });
 
+test("the detail button pressed from the keyboard keeps the focus without scrolling the page to the card", () => {
+  const mini = newMini(makeHass());
+  const focusCalls = [];
+  const query = mini.shadowRoot.querySelector.bind(mini.shadowRoot);
+  mini.shadowRoot.querySelector = (sel) => (sel === ".zoom" ? { focus: (opts) => focusCalls.push(opts) } : query(sel));
+  // Enter or Space: a click with no click count.
+  mini._onClick({ composedPath: () => [{ dataset: { action: "zoom" } }], stopPropagation() {}, detail: 0 });
+  assert.equal(mini._zoomed, true);
+  assert.equal(focusCalls.length, 1);
+  assert.equal(focusCalls[0]?.preventScroll, true);
+});
+
 test("a click outside the mini card brings the compact view back, not one inside it or in a dialog", () => {
   const mini = newMini(makeHass());
   click(mini, { action: "zoom" });
