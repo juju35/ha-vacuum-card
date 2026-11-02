@@ -1,8 +1,9 @@
-# Vacuum Card
+# ha-vacuum-card
 
 [![HACS](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
 [![HACS Validation](https://github.com/juju35/ha-vacuum-card/actions/workflows/hacs.yml/badge.svg)](https://github.com/juju35/ha-vacuum-card/actions/workflows/hacs.yml)
 [![Validate](https://github.com/juju35/ha-vacuum-card/actions/workflows/validate.yml/badge.svg)](https://github.com/juju35/ha-vacuum-card/actions/workflows/validate.yml)
+[![Lint](https://github.com/juju35/ha-vacuum-card/actions/workflows/lint.yml/badge.svg)](https://github.com/juju35/ha-vacuum-card/actions/workflows/lint.yml)
 [![Release](https://img.shields.io/github/v/release/juju35/ha-vacuum-card)](https://github.com/juju35/ha-vacuum-card/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -32,20 +33,6 @@ The cards work on top of the integrations you already use — [Roborock](https:/
 | ![ecovacs card](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-ecovacs.png) | ![dyson card](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-dyson.png) | ![irobot card](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-irobot.png) |
 | ![ecovacs mini card](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-ecovacs.png) | ![dyson mini card](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-dyson.png) | ![irobot mini card](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-irobot.png) |
 
-## Supported integrations
-
-| Integration | Brands | What the cards show |
-|---|---|---|
-| <img src="images/logo.svg" alt="" width="16"> [Roborock](https://www.home-assistant.io/integrations/roborock/) (core) | Roborock, Mi Robot Vacuum (1S…) | Everything: status, room, progress, modes, controls, **room selector**, **routines**, **dock**, maintenance with reset, statistics, map |
-| <img src="images/mihome.png" alt="" width="16"> [Xiaomi Miio](https://www.home-assistant.io/integrations/xiaomi_miio/) (core) | Roborock and Xiaomi robots paired with Mi Home | Status, errors, fan speed, controls, maintenance with reset, statistics; map with `map_entity` |
-| <img src="images/xiaomi.png" alt="" width="16"> [Xiaomi Home](https://github.com/XiaoMi/ha_xiaomi_home) (custom) | Xiaomi / Mijia robots | Vacuum (status, fan speed, controls) and battery |
-| <img src="images/dreame.png" alt="" width="16"> [Dreame Vacuum](https://github.com/Tasshack/dreame-vacuum) (custom) | Dreame, Xiaomi / Mijia robots built by Dreame | Status, room, progress, errors, controls, maintenance (mop included) with reset, statistics, map |
-| <img src="images/ecovacs.png" alt="" width="16"> [Ecovacs](https://www.home-assistant.io/integrations/ecovacs/) (core) | Ecovacs DEEBOT | Status, errors, cleaning mode and water amount, controls, maintenance in % (mop included) with reset, statistics, map |
-| <img src="images/dyson.png" alt="" width="16"> [Dyson](https://github.com/libdyson-wg/ha-dyson) (custom, `dyson_local`) | Dyson 360 Eye, 360 Heurist, 360 Vis Nav | Vacuum (status, power mode, controls) and battery |
-| <img src="images/irobot.png" alt="" width="16"> [iRobot Roomba and Braava](https://www.home-assistant.io/integrations/roomba/) (core, `roomba`) | iRobot Roomba (600, 900, e, i, s, j, Combo) and Braava jet m6 | Status (Clean Base emptying the bin included), battery, current clean, errors and bin full, fan speed or mopping behavior, water tanks, controls, statistics |
-
-Only robot vacuums and wet-dry vacuums are listed: the other devices of these integrations (fans, purifiers, air conditioners, lamps, mowers, the Roborock Zeo washing machine…) are skipped. Details in [Integrations](#integrations).
-
 ## Features
 
 - Two cards: a full **Vacuum Card** (`custom:vacuum-card`) and a compact **Vacuum Mini Card** (`custom:vacuum-mini-card`)
@@ -67,6 +54,20 @@ Only robot vacuums and wet-dry vacuums are listed: the other devices of these in
 - Visual editor in the dashboard UI for both cards (no YAML needed)
 - Light and dark mode, English, French, German, Spanish, Serbian (Cyrillic and Latin), Italian, Dutch, European Portuguese and Polish
 - Single file, no external dependency, the logos and pictures are embedded
+
+## Supported integrations
+
+| Integration | Brands | What the cards show |
+|---|---|---|
+| <img src="images/logo.svg" alt="" width="16"> [Roborock](https://www.home-assistant.io/integrations/roborock/) (core) | Roborock, Mi Robot Vacuum (1S…) | Everything: status, room, progress, modes, controls, **room selector**, **routines**, **dock**, maintenance with reset, statistics, map |
+| <img src="images/mihome.png" alt="" width="16"> [Xiaomi Miio](https://www.home-assistant.io/integrations/xiaomi_miio/) (core) | Roborock and Xiaomi robots paired with Mi Home | Status, errors, fan speed, controls, maintenance with reset, statistics; map with `map_entity` |
+| <img src="images/xiaomi.png" alt="" width="16"> [Xiaomi Home](https://github.com/XiaoMi/ha_xiaomi_home) (custom) | Xiaomi / Mijia robots | Vacuum (status, fan speed, controls) and battery |
+| <img src="images/dreame.png" alt="" width="16"> [Dreame Vacuum](https://github.com/Tasshack/dreame-vacuum) (custom) | Dreame, Xiaomi / Mijia robots built by Dreame | Status, room, progress, errors, controls, maintenance (mop included) with reset, statistics, map |
+| <img src="images/ecovacs.png" alt="" width="16"> [Ecovacs](https://www.home-assistant.io/integrations/ecovacs/) (core) | Ecovacs DEEBOT | Status, errors, cleaning mode and water amount, controls, maintenance in % (mop included) with reset, statistics, map |
+| <img src="images/dyson.png" alt="" width="16"> [Dyson](https://github.com/libdyson-wg/ha-dyson) (custom, `dyson_local`) | Dyson 360 Eye, 360 Heurist, 360 Vis Nav | Vacuum (status, power mode, controls) and battery |
+| <img src="images/irobot.png" alt="" width="16"> [iRobot Roomba and Braava](https://www.home-assistant.io/integrations/roomba/) (core, `roomba`) | iRobot Roomba (600, 900, e, i, s, j, Combo) and Braava jet m6 | Status (Clean Base emptying the bin included), battery, current clean, errors and bin full, fan speed or mopping behavior, water tanks, controls, statistics |
+
+Only robot vacuums and wet-dry vacuums are listed: the other devices of these integrations (fans, purifiers, air conditioners, lamps, mowers, the Roborock Zeo washing machine…) are skipped. Details in [Integrations](#integrations).
 
 ## Prerequisites
 
