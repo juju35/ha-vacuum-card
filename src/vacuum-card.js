@@ -3534,7 +3534,6 @@ class VacuumCard extends VacuumBase {
 const MINI_STYLE = `
   /* Natural width in a parent that sizes to its content (see :host::before in BASE_STYLE). */
   :host { --vc-natural-width: 300px; }
-  .logo { width: 32px; height: 32px; }
   .name { font-size: 16px; }
   .content { padding: 8px 12px 12px; display: flex; align-items: center; gap: 12px; }
   .picture { width: 64px; height: 72px; }

@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+### Fixes
+- Mini card: the brand logo keeps its full size (40 px) in the compact view, like the full card.
+
 ## 2.4.7 - 2026-11-01
 ### Fixes
 - An unavailable vacuum (or one whose state is unknown with no status sensor to tell more) no longer shows active buttons that do nothing: Start, Pause, Stop, Dock, Locate and the routines are greyed out until it is back.
