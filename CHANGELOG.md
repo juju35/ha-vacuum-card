@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.5.0 - 2026-11-03
+### Features
+- Header: the brand logo becomes an icon of the kind of device (robot vacuum, mopping robot, wet-dry vacuum), tinted with the brand color, with the brand logo as a badge, on the full card and the mini card. A robot that mops (mop, water tank, mop washing in the dock, Braava, Combo) gets the mopping robot icon. The device picture is unchanged.
+
 ## 2.4.8 - 2026-11-02
 ### Fixes
 - Mini card: the brand logo keeps its full size (40 px) in the compact view, like the full card.

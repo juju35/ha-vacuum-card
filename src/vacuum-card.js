@@ -471,6 +471,14 @@ const activityOf = (status, mode, drying) => {
   if (/vac|sweep/.test(m) && /mop/.test(m)) return "vacmop";
   return /mop/.test(m) ? "mop" : "vacuum";
 };
+// Kind of device for the header icon: wet-dry vacuum, mopping robot (a mop, a water tank or mop washing in the
+// dock, or a Braava / Combo / m6), else robot vacuum.
+const MOP_KEYS = ["mop_life", "mop_life_time_left", "mop_intensity", "water_flow", "tank_level"];
+const deviceTypeOf = (dev) => {
+  if (dev.kind === "wetdry") return "wet_dry";
+  if (MOP_KEYS.some((k) => dev.entities?.[k]) || Object.keys(dev.dock || {}).some((k) => /mop/.test(k))) return "robot_mop";
+  return /braava|combo|\bm6\b/i.test(modelName(dev)) ? "robot_mop" : "robot_vacuum";
+};
 const svgUri = (svg) => svg && `data:image/svg+xml,${encodeURIComponent(svg)}`;
 // Brands: the brand of the model (brandOf), else the one of the integration (PLATFORMS) gives the logo of the
 // header and the accent color of the buttons, from the logo: [light theme, dark theme]. The light-theme shades are
@@ -602,6 +610,12 @@ const ICONS = {
   // mdi:arrow-expand and mdi:arrow-collapse (mini card detail button)
   expand: "M10,21V19H6.41L10.91,14.5L9.5,13.09L5,17.59V14H3V21H10M14.5,10.91L19,6.41V10H21V3H14V5H17.59L13.09,9.5L14.5,10.91Z",
   collapse: "M19.5,3.09L15,7.59V4H13V11H20V9H16.41L20.91,4.5L19.5,3.09M4,13V15H7.59L3.09,19.5L4.5,20.91L9,16.41V20H11V13H4Z",
+  // Kind of device, in the header: robot vacuum, mopping robot, wet-dry vacuum (nonzero fill: the rings wind both ways).
+  robot_vacuum: "M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20zM12 4a8 8 0 1 1 0 16a8 8 0 1 1 0-16zM12 6a6 6 0 0 1 6 6H6a6 6 0 0 1 6-6z",
+  robot_mop:
+    "M12 1.5a8.5 8.5 0 1 0 0 17a8.5 8.5 0 1 0 0-17zM12 3.5a6.5 6.5 0 1 1 0 13a6.5 6.5 0 1 1 0-13zM12 5.5a4.5 4.5 0 0 1 4.5 4.5h-9a4.5 4.5 0 0 1 4.5-4.5zM2 20.6c1.6-1.3 3.4-1.3 5 0s3.4 1.3 5 0 3.4-1.3 5 0 3.4 1.3 5 0v1.8c-1.6 1.3-3.4 1.3-5 0s-3.4-1.3-5 0-3.4 1.3-5 0-3.4-1.3-5 0z",
+  wet_dry:
+    "M14 1.5h4a1 1 0 0 1 0 2h-4a1 1 0 0 1 0-2zM15 3.2l1.9.6-2 6.2-1.9-.6zM11.6 9h3.8a1.6 1.6 0 0 1 1.6 1.6v4.3a1.6 1.6 0 0 1-1.6 1.6h-3.8a1.6 1.6 0 0 1-1.6-1.6v-4.3a1.6 1.6 0 0 1 1.6-1.6zM12.5 16h2v2h-2zM6.5 17.5h10a1.5 1.5 0 0 1 0 3h-10a1.5 1.5 0 0 1 0-3zM21 13.5c0 0-1.4 1.6-1.4 2.5a1.4 1.4 0 0 0 2.8 0c0-.9-1.4-2.5-1.4-2.5z",
   reset: "M12,4C14.1,4 16.1,4.8 17.6,6.3C20.7,9.4 20.7,14.5 17.6,17.6C15.8,19.5 13.3,20.2 10.9,19.9L11.4,17.9C13.1,18.1 14.9,17.5 16.2,16.2C18.5,13.9 18.5,10.1 16.2,7.7C15.1,6.6 13.5,6 12,6V10.6L7,5.6L12,0.6V4M6.3,17.6C3.7,15 3.3,11 5.1,7.9L6.6,9.4C5.5,11.6 5.9,14.4 7.8,16.2C8.3,16.7 8.9,17.1 9.6,17.4L9,19.4C8,19 7.1,18.4 6.3,17.6Z",
 };
 
@@ -2388,6 +2402,12 @@ const BASE_STYLE = `
   .header { display: flex; align-items: center; gap: 10px; padding: 12px 12px 0; }
   .logo { width: 40px; height: 40px; object-fit: contain; flex: none; }
   a.logo-link { display: flex; flex: none; }
+  .type-icon { position: relative; width: 40px; height: 40px; border-radius: 50%; align-items: center; justify-content: center;
+               background: color-mix(in srgb, var(--vc-accent) 16%, transparent); }
+  .type-icon .icon.type { width: 24px; height: 24px; fill: var(--vc-accent); }
+  .type-icon .logo { position: absolute; right: -4px; bottom: -4px; width: 18px; height: 18px; border-radius: 5px;
+                     background: var(--card-background-color, #fff);
+                     box-shadow: 0 0 0 1px var(--divider-color, rgba(0,0,0,.12)), 0 0 0 3px var(--card-background-color, #fff); }
   /* The title takes the room the chip leaves (flex-basis 0: a long name does not push the chip into its ellipsis)
      and keeps about four characters and its ellipsis; the chip shrinks only when even that does not fit. */
   .titles { flex: 1 1 0; min-width: 5ch; font-size: 16px; }
@@ -2437,7 +2457,9 @@ const BASE_STYLE = `
   }
   @container (max-width: 200px) {
     .header { gap: 6px; }
-    .header .logo { width: 24px; height: 24px; }
+    .header .type-icon { width: 28px; height: 28px; }
+    .header .type-icon .icon.type { width: 18px; height: 18px; }
+    .header .type-icon .logo { width: 13px; height: 13px; right: -3px; bottom: -3px; border-radius: 4px; }
   }
 `;
 
@@ -2885,11 +2907,11 @@ class VacuumBase extends HTMLElement {
     return svgUri(preset ? IMAGES[img](activity, white) : autoSvg(model ? presetDevice(img) : dev, activity, white));
   }
 
-  // Logo of the brand of the model (Roborock, Xiaomi or Dreame), else of the integration the device comes from
-  // (Roborock, Xiaomi Mi Home, Xiaomi Home or Dreame Vacuum), linking to its site.
+  // Icon of the kind of device, tinted with the brand color, with the logo of the brand of the model (else of the
+  // integration the device comes from) as a badge, linking to its site.
   _logo(dev) {
     const b = brandFor(dev);
-    return `<a class="logo-link" href="${b.site}" target="_blank" rel="noopener noreferrer" title="${esc(b.name)}">${imgTag(b.logo, `class="logo" alt="${esc(b.name)}"`)}</a>`;
+    return `<a class="logo-link type-icon" href="${b.site}" target="_blank" rel="noopener noreferrer" title="${esc(b.name)}">${imgTag(b.logo, `class="logo" alt="${esc(b.name)}"`)}${svgIcon(ICONS[deviceTypeOf(dev)], "type")}</a>`;
   }
 
   _header(dev, status, sub) {
