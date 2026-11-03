@@ -243,3 +243,12 @@ test("every translation key is read somewhere in the code (no orphan key)", asyn
     statePrefixes.some((p) => k.startsWith(p)) || code.includes(`"${k}"`) || prefixes.some((p) => k.startsWith(p) && code.includes(`"${k.slice(p.length)}"`));
   for (const k of Object.keys(vc.STRINGS.en)) assert.ok(read(k), `orphan translation key ${k}`);
 });
+
+test("deviceTypeOf: wet-dry vacuum, mopping robot, robot vacuum", () => {
+  const { deviceTypeOf } = vc;
+  assert.equal(deviceTypeOf({ kind: "wetdry", model: "roborock.wetdryvac.a56", entities: {} }), "wet_dry");
+  assert.equal(deviceTypeOf({ kind: "robot", model: "roborock.vacuum.a15", entities: { mop_intensity: "select.x" } }), "robot_mop");
+  assert.equal(deviceTypeOf({ kind: "robot", model: "roborock.vacuum.a15", entities: {}, dock: { mop_drying_status: "binary_sensor.x" } }), "robot_mop");
+  assert.equal(deviceTypeOf({ kind: "robot", name: "Braava jet m6", entities: {}, dock: {} }), "robot_mop");
+  assert.equal(deviceTypeOf({ kind: "robot", name: "Roomba i7+", entities: {}, dock: {} }), "robot_vacuum");
+});
