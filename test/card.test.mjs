@@ -437,11 +437,9 @@ test("the editor offers every translated language, under its own name", () => {
     assert.equal(labels.ru, "Русский");
     assert.equal(labels.uk, "Українська");
     assert.equal(labels.hu, "Magyar");
-    assert.equal(labels.ga, "Gaeilge");
     assert.equal(labels.sk, "Slovenčina");
     assert.equal(labels.cs, "Čeština");
     assert.equal(labels.sl, "Slovenščina");
-    assert.equal(labels.mt, "Malti");
     assert.equal(labels.lv, "Latviešu");
     assert.equal(labels.el, "Ελληνικά");
   }
