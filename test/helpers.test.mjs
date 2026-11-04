@@ -127,7 +127,7 @@ test("the picture animation follows the status, the cleaning mode and the dock d
   assert.match(robotSvg({ activity: "drying" }), /class="heat/);
 });
 
-const LANGS = ["fr", "de", "es", "sr", "sr-Latn", "it", "nl", "pt", "pl"];
+const LANGS = ["fr", "de", "es", "sr", "sr-Latn", "it", "nl", "pt", "pl", "ro", "da", "sv", "bg", "ru", "uk", "hu", "ga", "sk", "cs", "sl", "mt", "lv", "el"];
 
 test("every language has exactly the English keys and placeholders, and no empty value", () => {
   const en = Object.keys(vc.STRINGS.en).sort();
@@ -162,6 +162,20 @@ test("the language: full code if translated, else the part before the dash, else
   assert.equal(vc.lang(hass("pt")), "pt");
   assert.equal(vc.lang(hass("pt-BR")), "pt"); // assumed fallback to European Portuguese
   assert.equal(vc.lang(hass("pl-PL")), "pl");
+  assert.equal(vc.lang(hass("ro-RO")), "ro");
+  assert.equal(vc.lang(hass("da")), "da");
+  assert.equal(vc.lang(hass("sv-FI")), "sv");
+  assert.equal(vc.lang(hass("bg")), "bg");
+  assert.equal(vc.lang(hass("ru-RU")), "ru");
+  assert.equal(vc.lang(hass("uk")), "uk");
+  assert.equal(vc.lang(hass("hu")), "hu");
+  assert.equal(vc.lang(hass("ga-IE")), "ga");
+  assert.equal(vc.lang(hass("sk")), "sk");
+  assert.equal(vc.lang(hass("cs-CZ")), "cs");
+  assert.equal(vc.lang(hass("sl")), "sl");
+  assert.equal(vc.lang(hass("mt")), "mt");
+  assert.equal(vc.lang(hass("lv-LV")), "lv");
+  assert.equal(vc.lang(hass("el-GR")), "el");
   assert.equal(vc.lang(hass("ja")), "en");
   assert.equal(vc.lang({ language: "en", locale: { language: "sr-Latn" } }), "sr-Latn");
   assert.equal(vc.lang(hass("fr"), { language: "sr-Latn" }), "sr-Latn");
