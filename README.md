@@ -5,17 +5,17 @@
 [![Validate](https://github.com/juju35/ha-vacuum-card/actions/workflows/validate.yml/badge.svg)](https://github.com/juju35/ha-vacuum-card/actions/workflows/validate.yml)
 [![Lint](https://github.com/juju35/ha-vacuum-card/actions/workflows/lint.yml/badge.svg)](https://github.com/juju35/ha-vacuum-card/actions/workflows/lint.yml)
 [![Release](https://img.shields.io/github/v/release/juju35/ha-vacuum-card)](https://github.com/juju35/ha-vacuum-card/releases/latest)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/juju35/ha-vacuum-card/blob/main/LICENSE)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/julienstep9)
 
 <p align="center">
-  <img src="images/logo.svg" alt="Roborock" width="64">&nbsp;&nbsp;
-  <img src="images/xiaomi.png" alt="Xiaomi" width="64">&nbsp;&nbsp;
-  <img src="images/mihome.png" alt="Xiaomi Mi Home" width="64">&nbsp;&nbsp;
-  <img src="images/dreame.png" alt="Dreame" width="64">&nbsp;&nbsp;
-  <img src="images/ecovacs.png" alt="Ecovacs" width="64">&nbsp;&nbsp;
-  <img src="images/dyson.png" alt="Dyson" width="64">&nbsp;&nbsp;
-  <img src="images/irobot.png" alt="iRobot" width="64">
+  <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/logo.svg" alt="Roborock" width="64">&nbsp;&nbsp;
+  <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/xiaomi.png" alt="Xiaomi" width="64">&nbsp;&nbsp;
+  <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/mihome.png" alt="Xiaomi Mi Home" width="64">&nbsp;&nbsp;
+  <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/dreame.png" alt="Dreame" width="64">&nbsp;&nbsp;
+  <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/ecovacs.png" alt="Ecovacs" width="64">&nbsp;&nbsp;
+  <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/dyson.png" alt="Dyson" width="64">&nbsp;&nbsp;
+  <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/irobot.png" alt="iRobot" width="64">
 </p>
 
 Lovelace cards for Home Assistant to monitor and control robot vacuums and wet-dry vacuums from **[Roborock](https://www.roborock.com)**, **Xiaomi / Mijia**, **[Dreame](https://www.dreametech.com)**, **[Ecovacs](https://www.ecovacs.com)**, **[Dyson](https://www.dyson.com)** and **[iRobot](https://www.irobot.com)** (Roomba, Braava): status, battery, room, maintenance, statistics and map at a glance, plus rooms, routines and dock for Roborock.
@@ -24,12 +24,12 @@ The cards work on top of the integrations you already use — [Roborock](https:/
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=juju35&repository=ha-vacuum-card&category=plugin)
 
-| <img src="images/logo.svg" alt="" width="20"> Roborock | <img src="images/xiaomi.png" alt="" width="20"> Xiaomi | <img src="images/dreame.png" alt="" width="20"> Dreame |
+| <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/logo.svg" alt="" width="20"> Roborock | <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/xiaomi.png" alt="" width="20"> Xiaomi | <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/dreame.png" alt="" width="20"> Dreame |
 |---|---|---|
 | ![roborock card](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card.png) | ![xiaomi card](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-xiaomi.png) | ![dreame card](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-dreame.png) |
 | ![roborock mini card](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card.png) | ![xiaomi mini card](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-xiaomi.png) | ![dreame mini card](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-dreame.png) |
 
-| <img src="images/ecovacs.png" alt="" width="20"> Ecovacs | <img src="images/dyson.png" alt="" width="20"> Dyson | <img src="images/irobot.png" alt="" width="20"> iRobot |
+| <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/ecovacs.png" alt="" width="20"> Ecovacs | <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/dyson.png" alt="" width="20"> Dyson | <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/irobot.png" alt="" width="20"> iRobot |
 |---|---|---|
 | ![ecovacs card](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-ecovacs.png) | ![dyson card](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-dyson.png) | ![irobot card](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-irobot.png) |
 | ![ecovacs mini card](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-ecovacs.png) | ![dyson mini card](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-dyson.png) | ![irobot mini card](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-irobot.png) |
@@ -60,13 +60,13 @@ The cards work on top of the integrations you already use — [Roborock](https:/
 
 | Integration | Brands | What the cards show |
 |---|---|---|
-| <img src="images/logo.svg" alt="" width="16"> [Roborock](https://www.home-assistant.io/integrations/roborock/) (core) | Roborock, Mi Robot Vacuum (1S…) | Everything: status, room, progress, modes, controls, **room selector**, **routines**, **dock**, maintenance with reset, statistics, map |
-| <img src="images/mihome.png" alt="" width="16"> [Xiaomi Miio](https://www.home-assistant.io/integrations/xiaomi_miio/) (core) | Roborock and Xiaomi robots paired with Mi Home | Status, errors, fan speed, controls, maintenance with reset, statistics; map with `map_entity` |
-| <img src="images/xiaomi.png" alt="" width="16"> [Xiaomi Home](https://github.com/XiaoMi/ha_xiaomi_home) (custom) | Xiaomi / Mijia robots | Vacuum (status, fan speed, controls) and battery |
-| <img src="images/dreame.png" alt="" width="16"> [Dreame Vacuum](https://github.com/Tasshack/dreame-vacuum) (custom) | Dreame, Xiaomi / Mijia robots built by Dreame | Status, room, progress, errors, controls, maintenance (mop included) with reset, statistics, map |
-| <img src="images/ecovacs.png" alt="" width="16"> [Ecovacs](https://www.home-assistant.io/integrations/ecovacs/) (core) | Ecovacs DEEBOT | Status, errors, cleaning mode and water amount, controls, maintenance in % (mop included) with reset, statistics, map |
-| <img src="images/dyson.png" alt="" width="16"> [Dyson](https://github.com/libdyson-wg/ha-dyson) (custom, `dyson_local`) | Dyson 360 Eye, 360 Heurist, 360 Vis Nav | Vacuum (status, power mode, controls) and battery |
-| <img src="images/irobot.png" alt="" width="16"> [iRobot Roomba and Braava](https://www.home-assistant.io/integrations/roomba/) (core, `roomba`) | iRobot Roomba (600, 900, e, i, s, j, Combo) and Braava jet m6 | Status (Clean Base emptying the bin included), battery, current clean, errors and bin full, fan speed or mopping behavior, water tanks, controls, statistics |
+| <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/logo.svg" alt="" width="16"> [Roborock](https://www.home-assistant.io/integrations/roborock/) (core) | Roborock, Mi Robot Vacuum (1S…) | Everything: status, room, progress, modes, controls, **room selector**, **routines**, **dock**, maintenance with reset, statistics, map |
+| <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/mihome.png" alt="" width="16"> [Xiaomi Miio](https://www.home-assistant.io/integrations/xiaomi_miio/) (core) | Roborock and Xiaomi robots paired with Mi Home | Status, errors, fan speed, controls, maintenance with reset, statistics; map with `map_entity` |
+| <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/xiaomi.png" alt="" width="16"> [Xiaomi Home](https://github.com/XiaoMi/ha_xiaomi_home) (custom) | Xiaomi / Mijia robots | Vacuum (status, fan speed, controls) and battery |
+| <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/dreame.png" alt="" width="16"> [Dreame Vacuum](https://github.com/Tasshack/dreame-vacuum) (custom) | Dreame, Xiaomi / Mijia robots built by Dreame | Status, room, progress, errors, controls, maintenance (mop included) with reset, statistics, map |
+| <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/ecovacs.png" alt="" width="16"> [Ecovacs](https://www.home-assistant.io/integrations/ecovacs/) (core) | Ecovacs DEEBOT | Status, errors, cleaning mode and water amount, controls, maintenance in % (mop included) with reset, statistics, map |
+| <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/dyson.png" alt="" width="16"> [Dyson](https://github.com/libdyson-wg/ha-dyson) (custom, `dyson_local`) | Dyson 360 Eye, 360 Heurist, 360 Vis Nav | Vacuum (status, power mode, controls) and battery |
+| <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/irobot.png" alt="" width="16"> [iRobot Roomba and Braava](https://www.home-assistant.io/integrations/roomba/) (core, `roomba`) | iRobot Roomba (600, 900, e, i, s, j, Combo) and Braava jet m6 | Status (Clean Base emptying the bin included), battery, current clean, errors and bin full, fan speed or mopping behavior, water tanks, controls, statistics |
 
 Only robot vacuums and wet-dry vacuums are listed: the other devices of these integrations (fans, purifiers, air conditioners, lamps, mowers, the Roborock Zeo washing machine…) are skipped. Details in [Integrations](#integrations).
 
@@ -224,176 +224,176 @@ While the robot is out vacuuming and mopping, it sways across the floor, its sid
 
 | Light | Dark |
 |---|---|
-| ![cleaning animation](screenshots/cleaning.gif) | ![cleaning animation dark](screenshots/cleaning-dark.gif) |
+| ![cleaning animation](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/cleaning.gif) | ![cleaning animation dark](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/cleaning-dark.gif) |
 
 Heading back, it slides in from the side and settles in front of its dock:
 
 | Light | Dark |
 |---|---|
-| ![returning animation](screenshots/returning.gif) | ![returning animation dark](screenshots/returning-dark.gif) |
+| ![returning animation](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/returning.gif) | ![returning animation dark](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/returning-dark.gif) |
 
 Docked and washing its mop, blue bubbles rise at the dock:
 
 | Light | Dark |
 |---|---|
-| ![mop washing animation](screenshots/mop-washing.gif) | ![mop washing animation dark](screenshots/mop-washing-dark.gif) |
+| ![mop washing animation](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mop-washing.gif) | ![mop washing animation dark](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mop-washing-dark.gif) |
 
 Docked and drying its mop, orange heat waves rise instead:
 
 | Light | Dark |
 |---|---|
-| ![mop drying animation](screenshots/mop-drying.gif) | ![mop drying animation dark](screenshots/mop-drying-dark.gif) |
+| ![mop drying animation](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mop-drying.gif) | ![mop drying animation dark](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mop-drying-dark.gif) |
 
 A wet-dry vacuum (F25 Ultra) rocks on its handle and its floor roller turns while it cleans:
 
 | Light | Dark |
 |---|---|
-| ![F25 cleaning animation](screenshots/f25-cleaning.gif) | ![F25 cleaning animation dark](screenshots/f25-cleaning-dark.gif) |
+| ![F25 cleaning animation](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/f25-cleaning.gif) | ![F25 cleaning animation dark](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/f25-cleaning-dark.gif) |
 
-### <img src="images/logo.svg" alt="" width="24"> Roborock
+### <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/logo.svg" alt="" width="24"> Roborock
 
 Saros 20 with its dock, set up with the Roborock integration:
 
 | Light | Dark |
 |---|---|
-| ![card](screenshots/card.png) | ![card dark](screenshots/card-dark.png) |
-| ![mini card](screenshots/mini-card.png) | ![mini card dark](screenshots/mini-card-dark.png) |
+| ![card](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card.png) | ![card dark](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-dark.png) |
+| ![mini card](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card.png) | ![mini card dark](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-dark.png) |
 
 Mini card zoomed in with its detail button (top right, click it again or anywhere outside the card to go back):
 
 | Light | Dark |
 |---|---|
-| ![mini card zoomed in](screenshots/mini-card-zoom.png) | ![mini card zoomed in dark](screenshots/mini-card-zoom-dark.png) |
+| ![mini card zoomed in](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-zoom.png) | ![mini card zoomed in dark](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-zoom-dark.png) |
 
 Narrow cards on a phone: the full card at its minimum width (9 of 12 columns of a Sections view, 238 px) and the mini card at 6 columns (170 px). The consumable bars give way to their labels, the status chip keeps its label (below 230 px, only its colored dot: its text shows on hover) and the mini card's buttons move under the robot, its picture making room for the battery and the info lines:
 
 | Light | Dark |
 |---|---|
-| ![narrow card](screenshots/card-narrow.png) ![narrow mini card](screenshots/mini-card-narrow.png) | ![narrow card dark](screenshots/card-narrow-dark.png) ![narrow mini card dark](screenshots/mini-card-narrow-dark.png) |
+| ![narrow card](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-narrow.png) ![narrow mini card](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-narrow.png) | ![narrow card dark](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-narrow-dark.png) ![narrow mini card dark](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-narrow-dark.png) |
 
 Room selector (opened by the Start button):
 
 | Light | Dark |
 |---|---|
-| ![room selector](screenshots/card-rooms.png) | ![room selector dark](screenshots/card-rooms-dark.png) |
+| ![room selector](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-rooms.png) | ![room selector dark](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-rooms-dark.png) |
 
 Wet-dry vacuum (F25 Ultra):
 
 | | Card | Mini card |
 |---|---|---|
-| Light | ![card f25](screenshots/card-f25.png) | ![mini card f25](screenshots/mini-card-f25.png) |
-| Dark | ![card f25 dark](screenshots/card-f25-dark.png) | ![mini card f25 dark](screenshots/mini-card-f25-dark.png) |
+| Light | ![card f25](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-f25.png) | ![mini card f25](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-f25.png) |
+| Dark | ![card f25 dark](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-f25-dark.png) | ![mini card f25 dark](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-f25-dark.png) |
 
 Drawn Roborock models (a few of the ~60 recognized):
 
-<p align="center"><img src="images/models-roborock.svg" alt="Roborock device pictures" width="760"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/models-roborock.svg" alt="Roborock device pictures" width="760"></p>
 
-### <img src="images/xiaomi.png" alt="" width="24"> Xiaomi / Mijia
+### <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/xiaomi.png" alt="" width="24"> Xiaomi / Mijia
 
 Mi Robot Vacuum 1S renamed « Robot vacuum », set up with Xiaomi Miio, map from Xiaomi Cloud Map Extractor (`map_entity`):
 
 | | Card | Mini card |
 |---|---|---|
-| Light | ![card xiaomi](screenshots/card-xiaomi.png) | ![mini card xiaomi](screenshots/mini-card-xiaomi.png) |
-| Dark | ![card xiaomi dark](screenshots/card-xiaomi-dark.png) | ![mini card xiaomi dark](screenshots/mini-card-xiaomi-dark.png) |
+| Light | ![card xiaomi](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-xiaomi.png) | ![mini card xiaomi](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-xiaomi.png) |
+| Dark | ![card xiaomi dark](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-xiaomi-dark.png) | ![mini card xiaomi dark](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-xiaomi-dark.png) |
 
 Drawn Xiaomi / Mijia models (white; the ones with a station are drawn in it):
 
-<p align="center"><img src="images/models-xiaomi.svg" alt="Xiaomi device pictures" width="760"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/models-xiaomi.svg" alt="Xiaomi device pictures" width="760"></p>
 
-### <img src="images/dreame.png" alt="" width="24"> Dreame
+### <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/dreame.png" alt="" width="24"> Dreame
 
 L10s Ultra renamed « Upstairs robot », set up with Dreame Vacuum, with the map camera of the integration:
 
 | | Card | Mini card |
 |---|---|---|
-| Dark | ![card dreame](screenshots/card-dreame.png) | ![mini card dreame](screenshots/mini-card-dreame.png) |
-| Light | ![card dreame light](screenshots/card-dreame-light.png) | ![mini card dreame light](screenshots/mini-card-dreame-light.png) |
+| Dark | ![card dreame](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-dreame.png) | ![mini card dreame](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-dreame.png) |
+| Light | ![card dreame light](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-dreame-light.png) | ![mini card dreame light](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-dreame-light.png) |
 
 Drawn Dreame models:
 
-<p align="center"><img src="images/models-dreame.svg" alt="Dreame device pictures" width="560"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/models-dreame.svg" alt="Dreame device pictures" width="560"></p>
 
-### <img src="images/ecovacs.png" alt="" width="24"> Ecovacs
+### <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/ecovacs.png" alt="" width="24"> Ecovacs
 
-<p><img src="images/ecovacs-logo.png" alt="Ecovacs" height="32"></p>
+<p><img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/ecovacs-logo.png" alt="Ecovacs" height="32"></p>
 
 DEEBOT X1 Omni renamed « Studio robot », set up with the Ecovacs integration, with its map image; maintenance in percent with the reset buttons of the integration:
 
 | | Card | Mini card |
 |---|---|---|
-| Light | ![card ecovacs](screenshots/card-ecovacs.png) | ![mini card ecovacs](screenshots/mini-card-ecovacs.png) |
-| Dark | ![card ecovacs dark](screenshots/card-ecovacs-dark.png) | ![mini card ecovacs dark](screenshots/mini-card-ecovacs-dark.png) |
+| Light | ![card ecovacs](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-ecovacs.png) | ![mini card ecovacs](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-ecovacs.png) |
+| Dark | ![card ecovacs dark](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-ecovacs-dark.png) | ![mini card ecovacs dark](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-ecovacs-dark.png) |
 
 Drawn Ecovacs models:
 
-<p align="center"><img src="images/models-ecovacs.svg" alt="Ecovacs device pictures" width="700"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/models-ecovacs.svg" alt="Ecovacs device pictures" width="700"></p>
 
 Animations of the DEEBOT: out vacuuming and mopping, heading back to its station, then the station washing and drying the mops — read from the integration's **Station state** sensor (`washing_mop`, `drying_mop`):
 
 | | Cleaning | Returning |
 |---|---|---|
-| Light | ![ecovacs cleaning animation](screenshots/ecovacs-cleaning.gif) | ![ecovacs returning animation](screenshots/ecovacs-returning.gif) |
-| Dark | ![ecovacs cleaning animation dark](screenshots/ecovacs-cleaning-dark.gif) | ![ecovacs returning animation dark](screenshots/ecovacs-returning-dark.gif) |
+| Light | ![ecovacs cleaning animation](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/ecovacs-cleaning.gif) | ![ecovacs returning animation](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/ecovacs-returning.gif) |
+| Dark | ![ecovacs cleaning animation dark](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/ecovacs-cleaning-dark.gif) | ![ecovacs returning animation dark](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/ecovacs-returning-dark.gif) |
 
 | | Washing the mops | Drying the mops |
 |---|---|---|
-| Dark | ![ecovacs mop washing animation](screenshots/ecovacs-mop-washing.gif) | ![ecovacs mop drying animation](screenshots/ecovacs-mop-drying.gif) |
-| Light | ![ecovacs mop washing animation light](screenshots/ecovacs-mop-washing-light.gif) | ![ecovacs mop drying animation light](screenshots/ecovacs-mop-drying-light.gif) |
+| Dark | ![ecovacs mop washing animation](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/ecovacs-mop-washing.gif) | ![ecovacs mop drying animation](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/ecovacs-mop-drying.gif) |
+| Light | ![ecovacs mop washing animation light](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/ecovacs-mop-washing-light.gif) | ![ecovacs mop drying animation light](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/ecovacs-mop-drying-light.gif) |
 
-### <img src="images/dyson.png" alt="" width="24"> Dyson
+### <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/dyson.png" alt="" width="24"> Dyson
 
 360 Vis Nav renamed « Toy room robot », set up with the Dyson integration (`dyson_local`): the vacuum and its battery:
 
 | | Card | Mini card |
 |---|---|---|
-| Dark | ![card dyson](screenshots/card-dyson.png) | ![mini card dyson](screenshots/mini-card-dyson.png) |
-| Light | ![card dyson light](screenshots/card-dyson-light.png) | ![mini card dyson light](screenshots/mini-card-dyson-light.png) |
+| Dark | ![card dyson](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-dyson.png) | ![mini card dyson](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-dyson.png) |
+| Light | ![card dyson light](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-dyson-light.png) | ![mini card dyson light](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-dyson-light.png) |
 
 Drawn Dyson models:
 
-<p align="center"><img src="images/models-dyson.svg" alt="Dyson device pictures" width="420"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/models-dyson.svg" alt="Dyson device pictures" width="420"></p>
 
 The Dyson 360 robots have their own drawing — a tall drum on two tank tracks with the 360° camera on top (wider and lower for the Vis Nav, with its purple band). Vacuuming, the tracks roll and dust is sucked in; heading back, the robot slides in from the side:
 
 | | Cleaning | Returning |
 |---|---|---|
-| Dark | ![dyson cleaning animation](screenshots/dyson-cleaning.gif) | ![dyson returning animation](screenshots/dyson-returning.gif) |
-| Light | ![dyson cleaning animation light](screenshots/dyson-cleaning-light.gif) | ![dyson returning animation light](screenshots/dyson-returning-light.gif) |
+| Dark | ![dyson cleaning animation](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/dyson-cleaning.gif) | ![dyson returning animation](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/dyson-returning.gif) |
+| Light | ![dyson cleaning animation light](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/dyson-cleaning-light.gif) | ![dyson returning animation light](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/dyson-returning-light.gif) |
 
-### <img src="images/irobot.png" alt="" width="24"> iRobot
+### <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/irobot.png" alt="" width="24"> iRobot
 
-<p><img src="images/irobot-logo.png" alt="iRobot" height="32"></p>
+<p><img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/irobot-logo.png" alt="iRobot" height="32"></p>
 
 Roomba j7+ renamed « Workshop robot », set up with the iRobot integration (`roomba`): status, battery, mission statistics and the last mission:
 
 | | Card | Mini card |
 |---|---|---|
-| Light | ![card irobot](screenshots/card-irobot.png) | ![mini card irobot](screenshots/mini-card-irobot.png) |
-| Dark | ![card irobot dark](screenshots/card-irobot-dark.png) | ![mini card irobot dark](screenshots/mini-card-irobot-dark.png) |
+| Light | ![card irobot](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-irobot.png) | ![mini card irobot](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-irobot.png) |
+| Dark | ![card irobot dark](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-irobot-dark.png) | ![mini card irobot dark](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-irobot-dark.png) |
 
 Braava jet m6 renamed « Washroom robot »: mopping behavior and the robot's water tank:
 
 | | Card | Mini card |
 |---|---|---|
-| Dark | ![card braava](screenshots/card-braava.png) | ![mini card braava](screenshots/mini-card-braava.png) |
-| Light | ![card braava light](screenshots/card-braava-light.png) | ![mini card braava light](screenshots/mini-card-braava-light.png) |
+| Dark | ![card braava](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-braava.png) | ![mini card braava](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-braava.png) |
+| Light | ![card braava light](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-braava-light.png) | ![mini card braava light](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-braava-light.png) |
 
 Drawn iRobot models — Roomba round with its CLEAN button and light ring (the s9 D-shaped, the j series with its front camera), the "+" models in front of their slim Clean Base (wider for the Combo j9+, with its water tank), the Braava jet m6 a white rounded square:
 
-<p align="center"><img src="images/models-irobot.svg" alt="iRobot device pictures" width="980"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/models-irobot.svg" alt="iRobot device pictures" width="980"></p>
 
 Animations of the Roomba j7+: vacuuming (it sways, its single side brush spins and dust trails behind), heading back to its Clean Base, then the base emptying the bin — dust rises up its duct, read from the vacuum's `status` attribute (`Emptying Bin`):
 
 | | Cleaning | Returning |
 |---|---|---|
-| Light | ![irobot cleaning animation](screenshots/irobot-cleaning.gif) | ![irobot returning animation](screenshots/irobot-returning.gif) |
-| Dark | ![irobot cleaning animation dark](screenshots/irobot-cleaning-dark.gif) | ![irobot returning animation dark](screenshots/irobot-returning-dark.gif) |
+| Light | ![irobot cleaning animation](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/irobot-cleaning.gif) | ![irobot returning animation](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/irobot-returning.gif) |
+| Dark | ![irobot cleaning animation dark](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/irobot-cleaning-dark.gif) | ![irobot returning animation dark](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/irobot-returning-dark.gif) |
 
 | | Emptying the bin | Braava jet m6 mopping |
 |---|---|---|
-| Dark | ![irobot emptying animation](screenshots/irobot-emptying.gif) | ![braava mopping animation](screenshots/braava-mopping.gif) |
-| Light | ![irobot emptying animation light](screenshots/irobot-emptying-light.gif) | ![braava mopping animation light](screenshots/braava-mopping-light.gif) |
+| Dark | ![irobot emptying animation](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/irobot-emptying.gif) | ![braava mopping animation](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/braava-mopping.gif) |
+| Light | ![irobot emptying animation light](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/irobot-emptying-light.gif) | ![braava mopping animation light](https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/braava-mopping-light.gif) |
 
 The Braava mops (wet trail and spray drops), the Combo models vacuum and mop at once, the other Roombas vacuum.
 
@@ -411,13 +411,13 @@ The brand gives the logo and the color of the buttons, taken from the logo, with
 
 | Brand | Light theme | Dark theme |
 |---|---|---|
-| <img src="images/logo.svg" alt="" width="16"> Roborock | `#ea0029` | `#ea0029` |
-| <img src="images/xiaomi.png" alt="" width="16"> Xiaomi | `#c24c00` | `#ff6900` |
-| <img src="images/mihome.png" alt="" width="16"> Mi Home | `#2a7f57` | `#43b17e` |
-| <img src="images/dreame.png" alt="" width="16"> Dreame | `#8a6a3c` | `#c9a46e` |
-| <img src="images/ecovacs.png" alt="" width="16"> Ecovacs | `#0b6bc4` | `#3d9be9` |
-| <img src="images/dyson.png" alt="" width="16"> Dyson | `#4a4a4a` | `#b8b8b8` |
-| <img src="images/irobot.png" alt="" width="16"> iRobot | `#4a8209` | `#64a70b` |
+| <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/logo.svg" alt="" width="16"> Roborock | `#ea0029` | `#ea0029` |
+| <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/xiaomi.png" alt="" width="16"> Xiaomi | `#c24c00` | `#ff6900` |
+| <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/mihome.png" alt="" width="16"> Mi Home | `#2a7f57` | `#43b17e` |
+| <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/dreame.png" alt="" width="16"> Dreame | `#8a6a3c` | `#c9a46e` |
+| <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/ecovacs.png" alt="" width="16"> Ecovacs | `#0b6bc4` | `#3d9be9` |
+| <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/dyson.png" alt="" width="16"> Dyson | `#4a4a4a` | `#b8b8b8` |
+| <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/irobot.png" alt="" width="16"> iRobot | `#4a8209` | `#64a70b` |
 
 The Ecovacs and Dyson logos are drawn on a white rounded tile, so that they stay visible on a dark card; the iRobot logo is its green rounded tile.
 
@@ -636,7 +636,7 @@ npm run screenshots  # renders the cards (and one GIF per animated state, needs 
 ### Releasing
 
 1. Bump `version` in `package.json`
-2. Add a `## <version>` section at the top of [CHANGELOG.md](CHANGELOG.md)
+2. Add a `## <version>` section at the top of [CHANGELOG.md](https://github.com/juju35/ha-vacuum-card/blob/main/CHANGELOG.md)
 3. Push to `main`: the **Release** workflow builds the card, creates the tag and the GitHub release with the changelog section as notes, and attaches `vacuum-card.js` (and the `roborock-card.js` copy)
 
 ## Translations
@@ -676,7 +676,7 @@ Roborock, the Roborock logo and the product pictures are trademarks and property
 
 ## License
 
-[MIT](LICENSE)
+[MIT](https://github.com/juju35/ha-vacuum-card/blob/main/LICENSE)
 
 ## Support
 
