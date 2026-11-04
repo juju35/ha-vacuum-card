@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.5.1 - 2026-11-04
+### Changes
+- Added Romanian, Danish, Swedish, Bulgarian, Russian, Ukrainian, Hungarian, Slovak, Czech, Slovenian, Latvian and Greek translations (`ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `sk`, `cs`, `sl`, `lv`, `el`), also offered in the editor's language list.
+
 ## 2.5.0 - 2026-11-03
 ### Features
 - Header: the brand logo becomes an icon of the kind of device (robot vacuum, mopping robot, wet-dry vacuum), tinted with the brand color, with the brand logo as a badge, on the full card and the mini card. A robot that mops (mop, water tank, mop washing in the dock, Braava, Combo) gets the mopping robot icon. The device picture is unchanged.

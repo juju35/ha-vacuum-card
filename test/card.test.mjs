@@ -430,6 +430,18 @@ test("the editor offers every translated language, under its own name", () => {
     assert.equal(labels.nl, "Nederlands");
     assert.equal(labels.pt, "Português (Portugal)");
     assert.equal(labels.pl, "Polski");
+    assert.equal(labels.ro, "Română");
+    assert.equal(labels.da, "Dansk");
+    assert.equal(labels.sv, "Svenska");
+    assert.equal(labels.bg, "Български");
+    assert.equal(labels.ru, "Русский");
+    assert.equal(labels.uk, "Українська");
+    assert.equal(labels.hu, "Magyar");
+    assert.equal(labels.sk, "Slovenčina");
+    assert.equal(labels.cs, "Čeština");
+    assert.equal(labels.sl, "Slovenščina");
+    assert.equal(labels.lv, "Latviešu");
+    assert.equal(labels.el, "Ελληνικά");
   }
 });
 

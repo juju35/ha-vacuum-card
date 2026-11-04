@@ -92,7 +92,7 @@ for (const [name, Card] of [
   });
 
   test(`${name} card: the status chip keeps its text for screen readers and as a tooltip, in every language`, () => {
-    for (const language of ["en", "pl", "sr-Latn"]) {
+    for (const language of ["en", "pl", "sr-Latn", "bg", "el", "ru"]) {
       const html = render(Card, {}, language);
       const chip = html.match(/<span class="chip [^>]*>([\s\S]*?)<\/span><\/span>/);
       assert.ok(chip, "chip");
