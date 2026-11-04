@@ -529,6 +529,129 @@ test("a change of the map_entity camera (outside the device) re-renders the card
   assert.equal(renders, 1);
 });
 
+// A card whose shadow root parses the map <img> of each rewrite, and pictures loaded aside (new Image()) whose decoding
+// the test settles by hand.
+const CAM = "camera.dustbusters_map";
+const mapCard = (config = {}) => {
+  const fakeImg = (attrs = {}) => ({
+    dataset: { map: CAM },
+    style: { cssText: attrs.style || "" },
+    alt: attrs.alt,
+    listeners: {},
+    attrs: attrs.src ? { src: attrs.src } : {},
+    getAttribute(k) {
+      return this.attrs[k] ?? null;
+    },
+    hasAttribute(k) {
+      return k in this.attrs;
+    },
+    setAttribute(k, v) {
+      this.attrs[k] = v;
+    },
+    addEventListener(type, fn) {
+      this.listeners[type] = fn;
+    },
+    replaceWith(other) {
+      m.nodes = [other];
+    },
+  });
+  const m = { nodes: [], rewrites: 0, decoding: [] };
+  vc.window.Image = class {
+    set src(url) {
+      this.url = url;
+    }
+    getAttribute() {
+      return this.url;
+    }
+    decode() {
+      return new Promise((resolve, reject) => m.decoding.push({ resolve, reject }));
+    }
+  };
+  const card = new vc.VacuumCard();
+  m.card = card;
+  const root = card.shadowRoot;
+  Object.defineProperty(root, "innerHTML", {
+    set(html) {
+      m.rewrites++;
+      const tag = html.match(/<img [^>]*data-map="[^>]*>/)?.[0];
+      const attr = (name) => tag?.match(new RegExp(`\\b${name}="([^"]*)"`))?.[1];
+      m.nodes = tag ? [fakeImg({ src: attr("src"), alt: attr("alt"), style: attr("style") })] : [];
+    },
+  });
+  root.querySelectorAll = (sel) => (sel === "img[data-map]" ? m.nodes : []);
+  card.setConfig({ device: "saros", show_map: "always", map_entity: CAM, ...config });
+  m.hass = makeHass();
+  card.hass = m.hass;
+  m.frame = (url, extra = {}) => {
+    const st = m.hass.states[CAM];
+    m.hass = { ...m.hass, ...extra, states: { ...m.hass.states, [CAM]: { ...st, attributes: { ...st.attributes, entity_picture: url } } } };
+    card.hass = m.hass;
+  };
+  return m;
+};
+const settled = () => new Promise((resolve) => setTimeout(resolve));
+
+test("a new map frame does not rewrite the card, and the <img> keeps its picture until the next one is decoded", async () => {
+  const m = mapCard();
+  const img = m.nodes[0];
+  const first = states[CAM].attributes.entity_picture;
+  assert.equal(img.getAttribute("src"), first, "the first picture goes straight to the <img>");
+  m.frame("/map?v=2");
+  assert.equal(m.rewrites, 1);
+  assert.equal(img.getAttribute("src"), first);
+  m.frame("/map?v=2");
+  assert.equal(m.decoding.length, 1, "a frame already loading is not loaded twice");
+  m.decoding[0].resolve();
+  await settled();
+  assert.equal(m.nodes[0], img);
+  assert.equal(img.getAttribute("src"), "/map?v=2");
+});
+
+test("a render while a map frame is loading moves the same <img>, which still has its picture", async () => {
+  const m = mapCard();
+  const img = m.nodes[0];
+  const first = img.getAttribute("src");
+  m.frame("/map?v=2", { language: "fr" });
+  assert.equal(m.rewrites, 2);
+  assert.equal(m.nodes[0], img, "same node");
+  assert.equal(img.alt, vc.STRINGS.fr.map, "its attributes follow the render");
+  assert.equal(img.getAttribute("src"), first, "not touched while loading");
+  m.decoding[0].resolve();
+  await settled();
+  assert.equal(img.getAttribute("src"), "/map?v=2");
+});
+
+test("a map frame overtaken by a newer one is dropped, and a failed one leaves the picture shown", async () => {
+  const m = mapCard();
+  const img = m.nodes[0];
+  const first = img.getAttribute("src");
+  m.frame("/map?v=2");
+  m.frame("/map?v=3");
+  m.decoding[0].resolve();
+  await settled();
+  assert.equal(img.getAttribute("src"), first, "v=2 was overtaken");
+  m.decoding[1].reject(new Error("broken"));
+  await settled();
+  assert.equal(img.getAttribute("src"), first, "v=3 failed");
+  m.frame("/map?v=4");
+  m.decoding[2].resolve();
+  await settled();
+  assert.equal(img.getAttribute("src"), "/map?v=4");
+});
+
+test("the crop applies to the kept map <img> once its size is known", async () => {
+  const m = mapCard({ crop: { top: 10 } });
+  const img = m.nodes[0];
+  m.card.isConnected = true;
+  assert.equal(img.style.cssText, "", "uncropped until the size is known");
+  img.naturalWidth = 200;
+  img.naturalHeight = 100;
+  img.listeners.load({ target: img });
+  await settled();
+  assert.equal(m.nodes[0], img);
+  assert.match(img.style.cssText, /margin-top:-5\.0000%/);
+});
+
 test("a dock section unfolded by hand stays unfolded when a dock problem appears", () => {
   const card = newCard(makeHass());
   let problem = false;
