@@ -4475,18 +4475,15 @@ class VacuumBase extends HTMLElement {
       this._html = html;
       this.shadowRoot.innerHTML = html;
       this._placeImages();
+      this._placeMaps();
       if (kept) this._restoreFocus(kept);
       if (this._confirm) {
         const sel = focused === "confirm_cancel" ? '[data-action="confirm_cancel"]' : ".modal .primary";
         // preventScroll: an update while the popup is open must not bring a scrolled page back to the card.
         this.shadowRoot.querySelector(sel)?.focus({ preventScroll: true });
       }
-      // Map size for the crop: read it from the image itself, already loaded (cache) or once loaded.
-      for (const img of this.shadowRoot.querySelectorAll("img[data-map]")) {
-        if (img.complete && img.naturalWidth) this._onLoad({ target: img });
-        else img.addEventListener("load", (ev) => this._onLoad(ev), { once: true });
-      }
     }
+    this._syncMaps();
   }
 
   // The focused element of the card, as what identifies it in the next render: its tag and data attributes, and its
@@ -4525,6 +4522,51 @@ class VacuumBase extends HTMLElement {
         img.src = DATA_IMGS[img.dataset.img];
         this._imgNodes.set(key, img);
       }
+    }
+  }
+
+  // The map <img> outlives the renders, like the inlined pictures: a new node has no height until its picture has
+  // loaded, which would collapse the card.
+  _placeMaps() {
+    const kept = this._mapNodes || new Map();
+    this._mapNodes = new Map();
+    for (const img of this.shadowRoot.querySelectorAll("img[data-map]")) {
+      const id = img.dataset.map;
+      const old = kept.get(id);
+      if (old) {
+        old.style.cssText = img.style.cssText;
+        old.alt = img.alt;
+        img.replaceWith(old);
+        this._mapNodes.set(id, old);
+      } else {
+        // Map size for the crop: read it from the image itself, each time a picture has loaded.
+        img.addEventListener("load", (ev) => this._onLoad(ev));
+        this._mapNodes.set(id, img);
+      }
+    }
+  }
+
+  // The map URL can change on every frame and is left out of the HTML: the next picture is loaded aside and only given
+  // to the <img> once decoded, as an <img> still loading would show nothing if a render moved it (see _placeMaps).
+  _syncMaps() {
+    this._mapNext ??= new Map();
+    for (const [id, img] of this._mapNodes || []) {
+      const url = this._s(id)?.attributes?.entity_picture;
+      if (!url || img.getAttribute("src") === url) continue;
+      if (!img.hasAttribute("src")) {
+        img.setAttribute("src", url);
+        continue;
+      }
+      if (this._mapNext.get(id)?.getAttribute("src") === url) continue;
+      const next = new Image();
+      next.src = url;
+      this._mapNext.set(id, next);
+      next.decode().then(
+        () => {
+          if (this._mapNext.get(id) === next) this._mapNodes.get(id)?.setAttribute("src", url);
+        },
+        () => {},
+      );
     }
   }
 
@@ -5333,8 +5375,7 @@ class VacuumCard extends VacuumBase {
     if (!maps.length) return "";
     const selected = this._s(dev.entities.selected_map)?.state;
     const map = (selected && maps.find((s) => (s.attributes.friendly_name || "").endsWith(selected))) || maps[0];
-    const url = map.attributes.entity_picture;
-    const img = `<img src="${esc(url)}" alt="${esc(this._t("map"))}" data-map="${esc(map.entity_id)}"`;
+    const img = `<img alt="${esc(this._t("map"))}" data-map="${esc(map.entity_id)}"`;
     const crop = this._mapCrop(map.entity_id);
     const attrs = `class="map clickable" role="button" tabindex="0" data-action="zoom_map" data-entity="${esc(map.entity_id)}" title="${esc(this._t("map"))}"`;
     if (!crop) return `<div ${attrs}>${img}></div>`;
