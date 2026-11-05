@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.5.3 - 2026-11-05
+
+### Fixes
+- Map: the map no longer flickers and the card no longer jumps in height while the robot cleans. A new map frame (every few seconds with Dreame) no longer redraws the whole card: the same image is kept and each new frame is shown only once it has loaded, the previous one staying visible meanwhile or if a frame fails to load (thanks @nvcs, #60).
+
 ## 2.5.2 - 2026-11-04
 
 ### Documentation
