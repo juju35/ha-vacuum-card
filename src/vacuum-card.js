@@ -4199,6 +4199,8 @@ const resolve = (hass) => {
 
 // Map pictures of a device: the integration's map images (Roborock) or cameras (Dreame Vacuum), or the camera /
 // image entity set with map_entity (Xiaomi Cloud Map Extractor, Valetudo…), which belongs to no device.
+// Same dependency list (same length, same objects): what a memoized value was built from has not changed.
+const sameDeps = (a, b) => !!a && a.length === b.length && a.every((d, i) => d === b[i]);
 const mapIds = (dev, config) => (config?.map_entity ? [config.map_entity] : [...(dev.extra.image || []), ...(dev.extra.camera || [])]);
 
 const listDevices = (hass) => {
@@ -4426,11 +4428,24 @@ class VacuumBase extends HTMLElement {
     document.addEventListener("click", this._onOutside, true);
     // Reattached with the popup still open (view switch, editor): Escape keeps closing it.
     if (this._confirm) window.addEventListener("keydown", this._onKey);
+    // No new map frame is loaded while the card is off-screen or the tab hidden (see _mapsPaused); the latest one
+    // is loaded as soon as the card can be seen again.
+    this._onVisibility ??= () => this._syncMaps();
+    document.addEventListener("visibilitychange", this._onVisibility);
+    if (typeof IntersectionObserver === "function") {
+      this._observer ??= new IntersectionObserver((entries) => {
+        this._offscreen = !entries.at(-1).isIntersecting;
+        this._syncMaps();
+      });
+      this._observer.observe(this);
+    }
   }
 
   disconnectedCallback() {
     document.removeEventListener("click", this._onOutside, true);
     window.removeEventListener("keydown", this._onKey);
+    document.removeEventListener("visibilitychange", this._onVisibility);
+    this._observer?.disconnect();
     clearTimeout(this._pendingTimer);
     this._closeZoom?.();
   }
@@ -4549,6 +4564,7 @@ class VacuumBase extends HTMLElement {
   // The map URL can change on every frame and is left out of the HTML: the next picture is loaded aside and only given
   // to the <img> once decoded, as an <img> still loading would show nothing if a render moved it (see _placeMaps).
   _syncMaps() {
+    if (this._mapsPaused()) return;
     this._mapNext ??= new Map();
     for (const [id, img] of this._mapNodes || []) {
       const url = this._s(id)?.attributes?.entity_picture;
@@ -4568,6 +4584,10 @@ class VacuumBase extends HTMLElement {
         () => {},
       );
     }
+  }
+
+  _mapsPaused() {
+    return !!(this._offscreen || document.hidden);
   }
 
   // Dock switches only change state on the next poll of the integration (up to ~30 s): the requested
@@ -5497,7 +5517,8 @@ class VacuumMiniCard extends VacuumCard {
   }
 
   getGridOptions() {
-    return this._zoomed ? super.getGridOptions() : { columns: 6, min_columns: 6 };
+    // rows: "auto": the compact and the full view each take the height they need in a Sections view.
+    return { ...(this._zoomed ? super.getGridOptions() : { columns: 6, min_columns: 6 }), rows: "auto" };
   }
 
   _zoomButton() {
@@ -5692,18 +5713,24 @@ class VacuumEditorBase extends HTMLElement {
     // A new data or schema object re-renders the whole form: only hand over new ones when the config,
     // the language, the registries or the map size changed, not on every state change.
     const h = this._hass;
-    const same = (a, b) => a && a.length === b.length && a.every((d, i) => d === b[i]);
     const dataDeps = [this._config, h.entities, h.devices];
-    if (!same(this._dataDeps, dataDeps)) {
+    if (!sameDeps(this._dataDeps, dataDeps)) {
       this._dataDeps = dataDeps;
       this._form.data = data;
     }
-    const schemaDeps = [lang(h, this._config), h.entities, h.devices, this._mapSize];
-    if (!same(this._schemaDeps, schemaDeps)) {
-      this._schemaDeps = schemaDeps;
-      this._form.schema = this._schema();
-    }
+    this._syncSchema();
     this._loadMapSize(data.device);
+  }
+
+  // The schema is only rebuilt when what it is made of changed: the language, the registries (device list) and the
+  // map size (crop help).
+  _syncSchema() {
+    if (!this._form) return;
+    const h = this._hass;
+    const deps = [lang(h, this._config), h.entities, h.devices, this._mapSize];
+    if (sameDeps(this._schemaDeps, deps)) return;
+    this._schemaDeps = deps;
+    this._form.schema = this._schema();
   }
 
   // Size of the map image of the selected device, shown in the crop section to help pick the values.
@@ -5716,7 +5743,7 @@ class VacuumEditorBase extends HTMLElement {
       if (this._mapSizeImg) this._mapSizeImg.onload = null;
       if (this._mapSizeFor == null && this._mapSize == null) return;
       this._mapSizeFor = this._mapSize = null;
-      if (this._form) this._form.schema = this._schema();
+      this._syncSchema();
       return;
     }
     if (this._mapSizeFor === id) return;
@@ -5727,7 +5754,7 @@ class VacuumEditorBase extends HTMLElement {
     this._mapSizeImg = img;
     img.onload = () => {
       this._mapSize = { w: img.naturalWidth, h: img.naturalHeight };
-      if (this._form) this._form.schema = this._schema();
+      this._syncSchema();
     };
     img.src = this._hass.states[id].attributes.entity_picture;
   }

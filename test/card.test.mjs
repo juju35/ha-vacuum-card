@@ -220,11 +220,12 @@ test("the mini card's detail button shows the full card, and back", () => {
   // Everything the full card shows, same markup, plus the button.
   assert.equal(zoomed.replace(/<button class="zoom"[\s\S]*?<\/button>/, ""), full.shadowRoot.innerHTML);
   assert.equal(mini.getCardSize(), full.getCardSize());
-  assert.deepEqual(mini.getGridOptions(), full.getGridOptions());
+  assert.deepEqual({ ...mini.getGridOptions() }, { ...full.getGridOptions(), rows: "auto" });
   click(mini, { action: "zoom" });
   assert.match(mini.shadowRoot.innerHTML, /title="Show the full card"/);
   assert.doesNotMatch(mini.shadowRoot.innerHTML, /class="section-title/);
   assert.equal(mini.getCardSize(), 3);
+  assert.deepEqual({ ...mini.getGridOptions() }, { columns: 6, min_columns: 6, rows: "auto" });
 });
 
 test("the detail button pressed from the keyboard keeps the focus without scrolling the page to the card", () => {
@@ -414,6 +415,48 @@ test("vacuum-card is the card; roborock-card and robot-vacuum-card stay as alias
   for (const t of ["roborock-mini-card", "robot-vacuum-mini-card"]) assert.ok(new (get(t))() instanceof vc.VacuumMiniCard, t);
   assert.equal(vc.window.customCards.map((c) => c.type).join(), "vacuum-card,vacuum-mini-card");
   assert.ok(get("vacuum-card-editor") && get("vacuum-mini-card-editor"));
+});
+
+test("the editor rebuilds its schema only when the language, the registries or the map size change", () => {
+  const probes = [];
+  vc.window.Image = class {
+    constructor() {
+      probes.push(this);
+    }
+  };
+  const editor = new (vc.window.customElements.get("vacuum-card-editor"))();
+  editor.setConfig({ device: "saros", map_entity: "camera.dustbusters_map" });
+  let hass = makeHass();
+  editor.hass = hass;
+  let builds = 0;
+  let schema = editor._form.schema;
+  Object.defineProperty(editor._form, "schema", {
+    get: () => schema,
+    set(v) {
+      builds++;
+      schema = v;
+    },
+  });
+  // A state change elsewhere in the instance: new hass, same registries.
+  const tick = () => {
+    hass = { ...hass, states: { ...hass.states } };
+    editor.hass = hass;
+  };
+  tick();
+  editor.setConfig({ device: "saros", map_entity: "camera.dustbusters_map", show_dock: false });
+  assert.equal(builds, 0);
+  // The map picture's size is known: one rebuild (crop help), none on the next updates.
+  probes.at(-1).naturalWidth = 800;
+  probes.at(-1).naturalHeight = 600;
+  probes.at(-1).onload();
+  assert.equal(builds, 1);
+  tick();
+  assert.equal(builds, 1);
+  editor.setConfig({ device: "saros", map_entity: "camera.dustbusters_map", language: "fr" });
+  assert.equal(builds, 2);
+  hass = { ...hass, entities: { ...hass.entities } };
+  editor.hass = hass;
+  assert.equal(builds, 3);
 });
 
 test("the editor offers every translated language, under its own name", () => {
@@ -637,6 +680,73 @@ test("a map frame overtaken by a newer one is dropped, and a failed one leaves t
   m.decoding[2].resolve();
   await settled();
   assert.equal(img.getAttribute("src"), "/map?v=4");
+});
+
+test("no map frame is loaded while the card is off-screen; the latest one is once it is back in view", async () => {
+  let observer;
+  vc.window.IntersectionObserver = class {
+    constructor(cb) {
+      observer = this;
+      this.cb = cb;
+    }
+    observe(el) {
+      this.target = el;
+    }
+    disconnect() {
+      this.target = null;
+    }
+  };
+  try {
+    const m = mapCard();
+    const img = m.nodes[0];
+    const first = img.getAttribute("src");
+    m.card.connectedCallback();
+    assert.equal(observer.target, m.card);
+    observer.cb([{ isIntersecting: false }]);
+    m.frame("/map?v=2");
+    m.frame("/map?v=3");
+    assert.equal(m.decoding.length, 0, "nothing loaded off-screen");
+    assert.equal(img.getAttribute("src"), first);
+    observer.cb([{ isIntersecting: true }]);
+    assert.equal(m.decoding.length, 1, "only the latest frame is loaded");
+    m.decoding[0].resolve();
+    await settled();
+    assert.equal(img.getAttribute("src"), "/map?v=3");
+    m.card.disconnectedCallback();
+    assert.equal(observer.target, null, "the observer is released");
+  } finally {
+    delete vc.window.IntersectionObserver;
+  }
+});
+
+test("no map frame is loaded while the tab is hidden; the latest one is when it shows again", async () => {
+  const listeners = {};
+  const { addEventListener, removeEventListener } = vc.document;
+  vc.document.addEventListener = (type, fn) => {
+    listeners[type] = fn;
+  };
+  vc.document.removeEventListener = (type, fn) => {
+    if (listeners[type] === fn) delete listeners[type];
+  };
+  try {
+    const m = mapCard();
+    const img = m.nodes[0];
+    m.card.connectedCallback();
+    vc.document.hidden = true;
+    m.frame("/map?v=2");
+    assert.equal(m.decoding.length, 0, "nothing loaded in a hidden tab");
+    vc.document.hidden = false;
+    listeners.visibilitychange();
+    assert.equal(m.decoding.length, 1);
+    m.decoding[0].resolve();
+    await settled();
+    assert.equal(img.getAttribute("src"), "/map?v=2");
+    m.card.disconnectedCallback();
+    assert.equal(listeners.visibilitychange, undefined, "the listener is removed");
+  } finally {
+    Object.assign(vc.document, { addEventListener, removeEventListener });
+    delete vc.document.hidden;
+  }
 });
 
 test("the crop applies to the kept map <img> once its size is known", async () => {
