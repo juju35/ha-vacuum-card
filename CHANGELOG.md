@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.6.0 - 2026-11-07
+
+### Features
+- Map: no new map frame is loaded while the card is off-screen or the browser tab is hidden; the latest one is shown as soon as the card can be seen again.
+- Mini card: it tells the Sections view to size its height to its content (`rows: auto`), in the compact and the full view.
+- Editor: the form's fields are only rebuilt when the language, the device list or the map size change, not on every update of Home Assistant.
+
 ## 2.5.3 - 2026-11-05
 
 ### Fixes
