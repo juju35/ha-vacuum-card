@@ -24,7 +24,22 @@ const fakeRoot = () => ({
 const fakeNode = (tag) => ({
   tagName: String(tag).toUpperCase(),
   style: {},
+  dataset: {},
+  attributes: {},
   children: [],
+  setAttribute(name, value) {
+    this.attributes[name] = String(value);
+  },
+  getAttribute(name) {
+    return name in this.attributes ? this.attributes[name] : null;
+  },
+  hasAttribute(name) {
+    return name in this.attributes;
+  },
+  focus() {
+    (this.focused ||= 0);
+    this.focused++;
+  },
   listeners: {},
   parentNode: null,
   appendChild(child) {

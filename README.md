@@ -18,7 +18,7 @@
   <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/irobot.png" alt="iRobot" width="64">
 </p>
 
-Lovelace cards for Home Assistant to monitor and control robot vacuums and wet-dry vacuums from **[Roborock](https://www.roborock.com)**, **Xiaomi / Mijia**, **[Dreame](https://www.dreametech.com)**, **[Ecovacs](https://www.ecovacs.com)**, **[Dyson](https://www.dyson.com)** and **[iRobot](https://www.irobot.com)** (Roomba, Braava): status, battery, room, maintenance, statistics and map at a glance, plus rooms, routines and dock for Roborock.
+Lovelace cards for Home Assistant to monitor and control robot vacuums and wet-dry vacuums from **[Roborock](https://www.roborock.com)**, **Xiaomi / Mijia**, **[Dreame](https://www.dreametech.com)**, **[Ecovacs](https://www.ecovacs.com)**, **[Dyson](https://www.dyson.com)** and **[iRobot](https://www.irobot.com)** (Roomba, Braava): status, battery, room, maintenance, statistics and map at a glance, plus room selection (Roborock, Dreame, Xiaomi Miio), routines and dock for Roborock.
 
 The cards work on top of the integrations you already use — [Roborock](https://www.home-assistant.io/integrations/roborock/), [Xiaomi Miio](https://www.home-assistant.io/integrations/xiaomi_miio/), [Xiaomi Home](https://github.com/XiaoMi/ha_xiaomi_home), [Dreame Vacuum](https://github.com/Tasshack/dreame-vacuum), [Ecovacs](https://www.home-assistant.io/integrations/ecovacs/), [Dyson](https://github.com/libdyson-wg/ha-dyson) and [iRobot Roomba and Braava](https://www.home-assistant.io/integrations/roomba/). Entities are **discovered automatically** from the Home Assistant registries: you don't pick them one by one, and it works whatever your Home Assistant language or entity ids. The logo, the button color and the drawn picture follow the brand and the model of each robot.
 
@@ -46,7 +46,8 @@ The cards work on top of the integrations you already use — [Roborock](https:/
 - Maintenance: main brush, side brush, filter, sensors, mop, dock strainer… with remaining time or percentage, and a reset button (with confirmation) when the integration provides one
 - Statistics: last clean, number of cleanings, total area and time
 - Map of the current floor while the robot is cleaning (or always, or never), with optional cropping, enlarged full screen on click; any camera or image entity can be used (`map_entity`)
-- Roborock: room selector on the Start button, routines of the Roborock app as one-tap buttons, dock (water tanks, detergent, auto-empty mode, mop drying, Empty bin / Wash mop / Dry mop buttons)
+- Room selector on the Start button: Roborock, Dreame Vacuum, and Xiaomi Miio with the `rooms` option (see [Room selection](#room-selection))
+- Roborock: routines of the Roborock app as one-tap buttons, dock (water tanks, detergent, auto-empty mode, mop drying, Empty bin / Wash mop / Dry mop buttons)
 - Collapsible sections (statistics and dock folded by default)
 - Sections view: the full card takes 12 columns by default and at least 9, the mini card 6; narrow widths get their own layout (see [Screenshots](#screenshots))
 - Command buttons disabled while the vacuum is unavailable
@@ -61,9 +62,9 @@ The cards work on top of the integrations you already use — [Roborock](https:/
 | Integration | Brands | What the cards show |
 |---|---|---|
 | <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/logo.svg" alt="" width="16"> [Roborock](https://www.home-assistant.io/integrations/roborock/) (core) | Roborock, Mi Robot Vacuum (1S…) | Everything: status, room, progress, modes, controls, **room selector**, **routines**, **dock**, maintenance with reset, statistics, map |
-| <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/mihome.png" alt="" width="16"> [Xiaomi Miio](https://www.home-assistant.io/integrations/xiaomi_miio/) (core) | Roborock and Xiaomi robots paired with Mi Home | Status, errors, fan speed, controls, maintenance with reset, statistics; map with `map_entity` |
+| <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/mihome.png" alt="" width="16"> [Xiaomi Miio](https://www.home-assistant.io/integrations/xiaomi_miio/) (core) | Roborock and Xiaomi robots paired with Mi Home | Status, errors, fan speed, controls, maintenance with reset, statistics; room selector with the `rooms` option; map with `map_entity` |
 | <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/xiaomi.png" alt="" width="16"> [Xiaomi Home](https://github.com/XiaoMi/ha_xiaomi_home) (custom) | Xiaomi / Mijia robots | Vacuum (status, fan speed, controls) and battery |
-| <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/dreame.png" alt="" width="16"> [Dreame Vacuum](https://github.com/Tasshack/dreame-vacuum) (custom) | Dreame, Xiaomi / Mijia robots built by Dreame | Status, room, progress, errors, controls, maintenance (mop included) with reset, statistics, map |
+| <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/dreame.png" alt="" width="16"> [Dreame Vacuum](https://github.com/Tasshack/dreame-vacuum) (custom) | Dreame, Xiaomi / Mijia robots built by Dreame | Status, room, progress, errors, controls, **room selector**, maintenance (mop included) with reset, statistics, map |
 | <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/ecovacs.png" alt="" width="16"> [Ecovacs](https://www.home-assistant.io/integrations/ecovacs/) (core) | Ecovacs DEEBOT | Status, errors, cleaning mode and water amount, controls, maintenance in % (mop included) with reset, statistics, map |
 | <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/dyson.png" alt="" width="16"> [Dyson](https://github.com/libdyson-wg/ha-dyson) (custom, `dyson_local`) | Dyson 360 Eye, 360 Heurist, 360 Vis Nav | Vacuum (status, power mode, controls) and battery |
 | <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/irobot.png" alt="" width="16"> [iRobot Roomba and Braava](https://www.home-assistant.io/integrations/roomba/) (core, `roomba`) | iRobot Roomba (600, 900, e, i, s, j, Combo) and Braava jet m6 | Status (Clean Base emptying the bin included), battery, current clean, errors and bin full, fan speed or mopping behavior, water tanks, controls, statistics |
@@ -184,7 +185,8 @@ language: fr
 | `color` | both | `auto` | Color of the drawn picture: `auto` (per model), `white` or `dark` — for models sold in both colors (F25 Ultra, S7, Q5…) |
 | `show_logo` | both | `true` | Show the header icon of the kind of device with the brand logo (opens the brand's site in a new tab), see [Brands](#brands) |
 | `show_controls` | both | `true` | Start / pause, stop, dock and locate buttons (robot vacuums), dock actions (empty bin, wash and dry mop) and maintenance reset buttons |
-| `room_selection` | both | `true` | Roborock integration: the Start button opens the room selector; `false` starts a full cleaning right away |
+| `room_selection` | both | `true` | Roborock, Dreame Vacuum and Xiaomi Miio (with `rooms`): the Start button opens the room selector; `false` starts a full cleaning right away |
+| `rooms` | both | — | Rooms of the room selector, as a list of `id` (segment id) and `name`, in the order shown: needed with Xiaomi Miio, which cannot list them; with Roborock and Dreame Vacuum, replaces the rooms read from the robot. See [Room selection](#room-selection) |
 | `zoom` | mini | `true` | Detail button at the top right of the mini card: it shows the full card's content (with the same options, so `show_dock`, `show_map`, `collapsed`… can be set on the mini card too) and switches back to the compact view; a click outside the card also brings the compact view back. `false` removes the button |
 | `show_modes` | full | `true` | Cleaning mode, suction power, mop intensity and route |
 | `show_routines` | full | `true` | Routines buttons (Roborock integration) |
@@ -429,6 +431,32 @@ Saros robots, the E / C1 series and the Mi Vacuum-Mop Essential / 1C have no LiD
 
 The picture is animated by the current activity, from the status, the cleaning mode and the dock drying: vacuuming (side brushes and dust), mopping (wet trail and drops), both, returning to the dock, washing the mops (bubbles) and drying them (heat waves), emptying the bin into an iRobot Clean Base (dust rising up the base); it stays still otherwise and with the reduced-motion setting. Use the `image` option to pick another model or your own picture, and `color` (`white` / `dark`) when your model exists in both colors.
 
+### Room selection
+
+The Start button opens a list of rooms to clean (or **Whole home**) when the integration can clean rooms (segments):
+
+| Integration | Rooms listed from | Cleaned with |
+|---|---|---|
+| Roborock | `roborock.get_maps` (current map) | `vacuum.send_command` `app_segment_clean` |
+| Dreame Vacuum | the vacuum's `rooms` attribute (current map, `selected_map`) | `dreame_vacuum.vacuum_clean_segment` |
+| Xiaomi Miio | the `rooms` option only (the integration cannot list them) | `xiaomi_miio.vacuum_clean_segment` |
+
+The segment ids of a Xiaomi Miio robot can be read with [Xiaomi Cloud Map Extractor](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor) (`rooms` attribute of its camera) or found by trying `xiaomi_miio.vacuum_clean_segment` from the developer tools:
+
+```yaml
+type: custom:vacuum-card
+device: Living room robot
+rooms:
+  - id: 16
+    name: Kitchen
+  - id: 17
+    name: Living room
+  - id: 18
+    name: Bedroom
+```
+
+The option can be set on the mini card too. It is YAML only (the visual editor keeps it).
+
 ### Integrations
 
 - **Roborock**: the dock entities, which the integration puts on a separate "… Dock" device, are attached to their robot. The room selector reads the rooms of the current map (the one chosen in the integration's **Selected map** select) with the `roborock.get_maps` service, then cleans the selected rooms with the same `app_segment_clean` command the integration uses; when the robot is paused, the Start button resumes the cleaning instead. Routines created in the Roborock app appear as buttons in the integration; the card lists them and asks for confirmation before running one.
@@ -438,7 +466,7 @@ The picture is animated by the current activity, from the status, the cleaning m
 - **Ecovacs**: current and total cleaning (`stats_area`, `stats_time`, `total_stats_*`), cleaning mode (`work_mode`) and water amount (`water_amount`), maintenance in percent (`lifespan_brush`, `lifespan_side_brush`, `lifespan_filter`, `lifespan_round_mop`) with the `reset_lifespan_*` buttons, error code (`0`: no error) with its description, the station state (`station_state`: mops washed / dried, animated on the picture), and the map image. The error sensor is disabled by default in the integration: enable it to see the errors.
 - **Dyson** (`dyson_local`): the vacuum entity only — status, power mode, controls — and the battery from its `battery_level` attribute. The picture is a dedicated Dyson 360 drawing.
 - **iRobot** (`roomba`): the vacuum (status, fan speed — Automatic / Eco / Performance on the Roombas with Carpet Boost — or mopping behavior of the Braava, controls), the battery sensor, the current clean (time and area, attributes of the vacuum while it cleans; the area in m², or ft² with the US customary unit system), the error (`error` attribute) and the **Bin full** sensor as alerts, the statistics (`total_missions`, `total_cleaned_area`, `total_cleaning_time`, `last_mission`), the robot's water tank (`tank_level`, Braava and Combo) and the Clean Base's (`dock_tank_level`, Combo j9+). The vacuum's `status` attribute tells the Clean Base emptying the bin (`Emptying Bin`, shown and animated) and the robot charging. No map and no maintenance counters (the integration has none).
-- Xiaomi Miio, Xiaomi Home, Dreame Vacuum, Ecovacs, Dyson and iRobot have no `roborock.get_maps` service: the Start button starts a full cleaning (no room selector), and there is no routine or dock section.
+- Xiaomi Home, Ecovacs, Dyson and iRobot have no room cleaning the cards know: the Start button starts a full cleaning (no room selector). Only Roborock has the routine and dock sections.
 
 Each maintenance line has a reset button when the integration exposes the matching reset button, and asks for confirmation before resetting the counter. The remaining time turns orange under 10 % of the part lifetime (or under 10 h when the lifetime is unknown), and red when it reaches 0; a percentage (Ecovacs, Roborock wet-dry vacuums) turns orange under 10 % and red at 0 %. Bars use the robot lifetimes: main brush 300 h, side brush 200 h, filter 150 h, sensors 30 h.
 

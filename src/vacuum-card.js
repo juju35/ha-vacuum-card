@@ -4080,18 +4080,21 @@ const areaUnitOf = (s) => {
   return typeof u === "string" && u.trim() ? u : "m²";
 };
 
+// Duration in hours, written with the units of the language ("2 h 30 min", "2 Std. 30 Min.", "2 hr 30 min").
 // Rounded to the minute first, so that 1.995 h reads "2 h" (not "1 h 60") and 0.999 h "1 h" (not "60 min").
-const fmtHours = (h) => {
+const UNIT_FMT = {};
+const fmtUnit = (v, unit, locale) => (UNIT_FMT[`${locale}|${unit}`] ??= new Intl.NumberFormat(locale, { style: "unit", unit, unitDisplay: "short" })).format(v);
+const fmtHours = (h, locale) => {
   if (h === null || h === undefined) return "—";
-  if (h <= 0) return "0 h";
+  if (h <= 0) return fmtUnit(0, "hour", locale);
   const total = Math.round(h * 60);
-  if (total < 60) return `${Math.max(1, total)} min`;
+  if (total < 60) return fmtUnit(Math.max(1, total), "minute", locale);
   if (total < 600) {
     const m = total % 60;
-    const H = Math.floor(total / 60);
-    return m ? `${H} h ${String(m).padStart(2, "0")}` : `${H} h`;
+    const H = fmtUnit(Math.floor(total / 60), "hour", locale);
+    return m ? `${H} ${fmtUnit(m, "minute", locale)}` : H;
   }
-  return `${Math.round(h)} h`;
+  return fmtUnit(Math.round(h), "hour", locale);
 };
 
 const fmtNum = (v, digits = 0, locale) => (v === null ? "—" : Number(v).toLocaleString(locale, { maximumFractionDigits: digits }));
@@ -4355,6 +4358,38 @@ const imgTag = (src, attrs) => {
   return `<img data-img="${id}" ${attrs}>`;
 };
 
+// Rooms as { id, name }, with a string id (the one of data-room) and a name ("#id" when it has none).
+const roomItems = (rooms) =>
+  (Array.isArray(rooms) ? rooms : [])
+    .filter((r) => r && r.id !== undefined && r.id !== null && r.id !== "")
+    .map((r) => ({ id: String(r.id), name: r.name ? String(r.name) : `#${r.id}` }));
+const sortRooms = (rooms) => roomItems(rooms).sort((a, b) => a.name.localeCompare(b.name));
+
+// Room (segment) cleaning per integration: `clean` gives the service call [domain, service, data] for the selected
+// room ids; the rooms are listed by a service (`service`, Roborock), read from the vacuum (`attribute`) or, for an
+// integration that cannot list them (Xiaomi Miio), given by the `rooms` option.
+const ROOM_ADAPTERS = {
+  roborock: {
+    service: "get_maps",
+    clean: (entity_id, segments) => ["vacuum", "send_command", { entity_id, command: "app_segment_clean", params: [{ segments }] }],
+  },
+  xiaomi_miio: { clean: (entity_id, segments) => ["xiaomi_miio", "vacuum_clean_segment", { entity_id, segments }] },
+  // Dreame Vacuum: `rooms` is { map name: [{ id, name, … }] }, the current map being `selected_map`.
+  dreame_vacuum: {
+    attribute: (vac) => {
+      const rooms = vac?.attributes?.rooms;
+      if (Array.isArray(rooms)) return rooms;
+      if (!rooms || typeof rooms !== "object") return [];
+      const map = rooms[vac.attributes.selected_map] ?? Object.values(rooms)[0];
+      return Array.isArray(map) ? map : [];
+    },
+    clean: (entity_id, segments) => ["dreame_vacuum", "vacuum_clean_segment", { entity_id, segments }],
+  },
+};
+
+// Key of the enlarged map's next frame in _mapNext (map ids are entity ids, which never look like this).
+const ZOOM_KEY = "#zoom";
+
 // Clicks that send a command to the vacuum (or open the room list to send one).
 const VACUUM_ACTIONS = new Set(["start", "open_rooms", "pause", "stop", "return_to_base", "locate", "clean_rooms", "clean_all"]);
 
@@ -4563,23 +4598,28 @@ class VacuumBase extends HTMLElement {
 
   // The map URL can change on every frame and is left out of the HTML: the next picture is loaded aside and only given
   // to the <img> once decoded, as an <img> still loading would show nothing if a render moved it (see _placeMaps).
+  // The enlarged map (see _zoomMap) follows the frames the same way, under its own key.
   _syncMaps() {
     if (this._mapsPaused()) return;
     this._mapNext ??= new Map();
-    for (const [id, img] of this._mapNodes || []) {
+    const targets = [...(this._mapNodes || [])].map(([id]) => [id, id]);
+    if (this._zoomImg) targets.push([ZOOM_KEY, this._zoomImg.dataset.map]);
+    const nodeOf = (key, id) => (key === ZOOM_KEY ? this._zoomImg : this._mapNodes.get(id));
+    for (const [key, id] of targets) {
+      const img = nodeOf(key, id);
       const url = this._s(id)?.attributes?.entity_picture;
       if (!url || img.getAttribute("src") === url) continue;
       if (!img.hasAttribute("src")) {
         img.setAttribute("src", url);
         continue;
       }
-      if (this._mapNext.get(id)?.getAttribute("src") === url) continue;
+      if (this._mapNext.get(key)?.getAttribute("src") === url) continue;
       const next = new Image();
       next.src = url;
-      this._mapNext.set(id, next);
+      this._mapNext.set(key, next);
       next.decode().then(
         () => {
-          if (this._mapNext.get(id) === next) this._mapNodes.get(id)?.setAttribute("src", url);
+          if (this._mapNext.get(key) === next) nodeOf(key, id)?.setAttribute("src", url);
         },
         () => {},
       );
@@ -4896,7 +4936,7 @@ class VacuumBase extends HTMLElement {
     const list = [
       cleaning
         ? btn("pause", ICONS.pause, this._t("pause"), "primary")
-        : btn(this._config.room_selection !== false && dev.platform === "roborock" && vac.state !== "paused" ? "open_rooms" : "start", ICONS.play, this._t("start"), "primary"),
+        : btn(vac.state !== "paused" && this._canSelectRooms(dev, vac) ? "open_rooms" : "start", ICONS.play, this._t("start"), "primary"),
       round ? "" : btn("stop", ICONS.stop, this._t("stop")),
       btn("return_to_base", ICONS.home, this._t("dock")),
       round ? "" : btn("locate", ICONS.locate, this._t("locate")),
@@ -4905,18 +4945,39 @@ class VacuumBase extends HTMLElement {
   }
 
   // ----- Room selector -----------------------------------------------------
-  // Rooms come from the integration's roborock.get_maps service (current map, as chosen in the
-  // "selected map" select); the selected rooms are cleaned with app_segment_clean, like the
-  // integration's own segment cleaning.
+  // Rooms come from the `rooms` option when set, otherwise from the integration (see ROOM_ADAPTERS): Roborock's
+  // roborock.get_maps service (current map, as chosen in the "selected map" select), Dreame's `rooms` attribute of
+  // the vacuum (current map). Xiaomi Miio cannot list them: the option is needed there.
+
+  // Rooms of the `rooms` option, in its order.
+  _configRooms() {
+    return roomItems(this._config.rooms);
+  }
+
+  _canSelectRooms(dev, vac) {
+    const adapter = ROOM_ADAPTERS[dev.platform];
+    if (this._config.room_selection === false || !adapter) return false;
+    return !!(this._configRooms().length || adapter.service || adapter.attribute?.(vac).length);
+  }
 
   _roomAction(action, entity, room) {
     const r = this._rooms;
     switch (action) {
-      case "open_rooms":
+      case "open_rooms": {
+        const vac = this._s(entity);
+        const adapter = ROOM_ADAPTERS[this._dev?.platform];
+        const list = this._configRooms();
+        if (!list.length && adapter?.attribute) list.push(...sortRooms(adapter.attribute(vac)));
+        if (list.length || !adapter?.service) {
+          this._rooms = { entity, selected: [], loading: false, list, error: !list.length };
+          this._update();
+          return true;
+        }
         this._rooms = { entity, selected: [], loading: true };
         this._update();
         this._loadRooms(entity);
         return true;
+      }
       case "close_rooms":
         this._rooms = null;
         this._update();
@@ -4932,12 +4993,8 @@ class VacuumBase extends HTMLElement {
         this._update();
         return true;
       case "clean_rooms":
-        if (!r?.selected.length) return true;
-        this._call("vacuum", "send_command", {
-          entity_id: entity,
-          command: "app_segment_clean",
-          params: [{ segments: r.selected.map(Number) }],
-        });
+        if (!r?.selected.length || !ROOM_ADAPTERS[this._dev?.platform]) return true;
+        this._call(...ROOM_ADAPTERS[this._dev.platform].clean(entity, r.selected.map(Number)));
         this._rooms = null;
         this._update();
         return true;
@@ -4963,9 +5020,7 @@ class VacuumBase extends HTMLElement {
       const maps = res?.response?.[entity]?.maps || [];
       const selected = this._s(this._dev?.entities.selected_map)?.state;
       const map = maps.find((m) => m.name === selected) || maps[0];
-      const list = Object.entries(map?.rooms || {})
-        .map(([id, name]) => ({ id, name: name || `#${id}` }))
-        .sort((a, b) => a.name.localeCompare(b.name));
+      const list = sortRooms(Object.entries(map?.rooms || {}).map(([id, name]) => ({ id, name })));
       if (this._rooms?.entity !== entity) return;
       this._rooms = { ...this._rooms, loading: false, list, error: !list.length };
     } catch (_e) {
@@ -5150,7 +5205,7 @@ class VacuumCard extends VacuumBase {
       const areaUnit =
         sensorArea !== null ? areaUnitOf(areaSensor) : this._hass.config?.unit_system?.length === "mi" ? "ft²" : "m²";
       const time = hours(this._s(e.cleaning_time)) ?? (Number.isFinite(va.cleaning_time) && va.cleaning_time > 0 ? va.cleaning_time / 60 : null);
-      const bits = [pct ? `${this._t("progress")} ${Math.round(pct)} %` : null, area !== null ? `${fmtNum(area, 1, this._locale())} ${areaUnit}` : null, time !== null ? fmtHours(time) : null];
+      const bits = [pct ? `${this._t("progress")} ${Math.round(pct)} %` : null, area !== null ? `${fmtNum(area, 1, this._locale())} ${areaUnit}` : null, time !== null ? fmtHours(time, this._locale()) : null];
       if (bits.some(Boolean))
         lines.push(`<div class="line clickable" role="button" tabindex="0" data-entity="${esc(e.clean_percent || e.cleaning_area || dev.vacuum || "")}">${svgIcon(ICONS.clock)}<span>${esc(bits.filter(Boolean).join(" · "))}</span></div>`);
     }
@@ -5277,7 +5332,7 @@ class VacuumCard extends VacuumBase {
     const dryH = hours(dry);
     const drying = [d.mop_drying, d.mop_drying_status].some((id) => this._isOn(id));
     if (dryH > 0 || drying)
-      tiles.push(this._tile(dry?.entity_id || d.mop_drying, ICONS.fan, this._t("drying"), dryH > 0 ? fmtHours(dryH) : this._t("running"), "active"));
+      tiles.push(this._tile(dry?.entity_id || d.mop_drying, ICONS.fan, this._t("drying"), dryH > 0 ? fmtHours(dryH, this._locale()) : this._t("running"), "active"));
     const actions = this._dockActions(dev);
     if (!tiles.length && !actions) return "";
     return `<div>
@@ -5329,7 +5384,7 @@ class VacuumCard extends VacuumBase {
         const h = hours(s);
         const lifetime = dev.kind === "robot" ? life : null;
         if (lifetime && h !== null) pct = (100 * h) / lifetime;
-        text = fmtHours(h);
+        text = fmtHours(h, this._locale());
         cls = h === null ? "" : h <= 0 ? "crit" : (pct !== null ? pct < 10 : h < 10) ? "warn" : "ok";
       }
       rows.push(`
@@ -5366,7 +5421,7 @@ class VacuumCard extends VacuumBase {
     const area = this._s(e.cleaning_area);
     const time = this._s(e.cleaning_time);
     if ((valid(area) && num(area)) || (valid(time) && num(time))) {
-      const bits = [valid(area) ? `${fmtNum(num(area), 1, this._locale())} ${areaUnitOf(area)}` : null, valid(time) ? fmtHours(hours(time)) : null].filter(Boolean);
+      const bits = [valid(area) ? `${fmtNum(num(area), 1, this._locale())} ${areaUnitOf(area)}` : null, valid(time) ? fmtHours(hours(time), this._locale()) : null].filter(Boolean);
       tiles.push(this._tile((area || time).entity_id, ICONS.clock, this._t("last_clean"), bits.join(" · ")));
     }
     const count = this._s(e.total_cleaning_count);
@@ -5374,7 +5429,7 @@ class VacuumCard extends VacuumBase {
     const tArea = this._s(e.total_cleaning_area);
     if (valid(tArea) && num(tArea)) tiles.push(this._tile(tArea.entity_id, ICONS.area, this._t("total_area"), `${fmtNum(num(tArea), 0, this._locale())} ${areaUnitOf(tArea)}`));
     const tTime = this._s(e.total_cleaning_time);
-    if (valid(tTime) && num(tTime)) tiles.push(this._tile(tTime.entity_id, ICONS.clock, this._t("total_time"), fmtHours(hours(tTime))));
+    if (valid(tTime) && num(tTime)) tiles.push(this._tile(tTime.entity_id, ICONS.clock, this._t("total_time"), fmtHours(hours(tTime), this._locale())));
     if (!tiles.length) return "";
     return `<div>
       ${this._sectionTitle("stats", ICONS.stats, this._t("statistics"))}
@@ -5421,7 +5476,8 @@ class VacuumCard extends VacuumBase {
   }
 
   // Enlarged map, appended to the document body so that it is not clipped or offset by the card
-  // (themes with blur or transforms). Closes on click or Escape.
+  // (themes with blur or transforms). Closes on click or Escape. A modal dialog for screen readers: it takes the
+  // focus and gives it back on close. Its picture gets the new map frames like the card's (see _syncMaps).
   _zoomMap(id) {
     const s = this._s(id);
     const url = s?.attributes?.entity_picture;
@@ -5430,16 +5486,23 @@ class VacuumCard extends VacuumBase {
     const crop = this._mapCrop(id);
     const ratio = crop ? crop.w / crop.h : size ? size.w / size.h : 16 / 9;
     const overlay = document.createElement("div");
+    overlay.setAttribute("role", "dialog");
+    overlay.setAttribute("aria-modal", "true");
+    overlay.setAttribute("aria-label", this._t("map"));
+    overlay.tabIndex = -1;
     overlay.style.cssText =
       "position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.82);cursor:zoom-out;padding:16px;box-sizing:border-box";
     const box = document.createElement("div");
     box.style.cssText = `width:min(96vw, calc(92vh * ${ratio}));aspect-ratio:${ratio};overflow:hidden;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.5)`;
     const img = document.createElement("img");
-    img.src = url;
+    img.setAttribute("src", url);
+    img.dataset.map = id;
     img.alt = this._t("map");
     img.style.cssText = crop ? crop.img : "width:100%;height:100%;object-fit:contain;display:block";
     box.appendChild(img);
     overlay.appendChild(box);
+    // The element that had the focus (the map button, in the card's shadow root), focused again on close.
+    const opener = this._closeZoom ? this._zoomOpener : this.shadowRoot.activeElement || document.activeElement;
     this._closeZoom?.();
     const close = () => {
       overlay.remove();
@@ -5447,14 +5510,24 @@ class VacuumCard extends VacuumBase {
       if (this._closeZoom === close) {
         this._closeZoom = null;
         this._zoomOverlay = null;
+        this._zoomImg = null;
+        this._mapNext?.delete(ZOOM_KEY);
+        if (this.isConnected) opener?.focus?.({ preventScroll: true });
       }
     };
     this._closeZoom = close;
     this._zoomOverlay = overlay;
-    const onKey = (ev) => ev.key === "Escape" && close();
+    this._zoomImg = img;
+    this._zoomOpener = opener;
+    // Tab stays on the dialog (nothing in it to move to); Escape closes it.
+    const onKey = (ev) => {
+      if (ev.key === "Escape") close();
+      else if (ev.key === "Tab") ev.preventDefault?.();
+    };
     overlay.addEventListener("click", close);
     window.addEventListener("keydown", onKey);
     document.body.appendChild(overlay);
+    overlay.focus?.({ preventScroll: true });
   }
 }
 
