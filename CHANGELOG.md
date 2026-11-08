@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.7.1 - 2026-11-08
+
+### Fixes
+- Mini card: the 40 px robot type icon keeps its size in the narrowest compact view (it shrank to 28 px below 200 px); the name gives way instead.
+- "Last clean … ago" no longer freezes: the card re-checks it every minute while it is on the page.
+
 ## 2.7.0 - 2026-11-07
 
 ### Features

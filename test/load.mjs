@@ -89,6 +89,16 @@ export const load = () => {
     },
     setTimeout,
     clearTimeout,
+    // Intervals are not run: kept in `intervals` (id → callback) for the tests to fire by hand.
+    intervals: new Map(),
+    setInterval(fn) {
+      const id = Symbol("interval");
+      sandbox.intervals.set(id, fn);
+      return id;
+    },
+    clearInterval(id) {
+      sandbox.intervals.delete(id);
+    },
   };
   // window-level listeners, fired by hand with fire(type, ev).
   const winListeners = {};
