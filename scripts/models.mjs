@@ -47,6 +47,7 @@ const GALLERIES = {
     ["277", "360 Vis Nav"],
   ],
   irobot: [
+    ["r976020", "Roomba 976"],
     ["r980020", "Roomba 980"],
     ["e515020", "Roomba e5"],
     ["i755020", "Roomba i7+"],

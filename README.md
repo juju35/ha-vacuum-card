@@ -620,7 +620,7 @@ Models the cards recognize from the model id the integration reports (drawn pict
 
 </details>
 
-<details><summary>iRobot (21)</summary>
+<details><summary>iRobot (22)</summary>
 
 | Model | Model id |
 |---|---|
@@ -630,6 +630,7 @@ Models the cards recognize from the model id the integration reports (drawn pict
 | Roomba 696 | `r696020` |
 | Roomba 960 | `r960020` |
 | Roomba 974 | `r974020` |
+| Roomba 976 | `r976020` |
 | Roomba 980 | `r980020` |
 | Roomba Combo j7+ | `c755020` |
 | Roomba Combo j9+ | `c975020` |
