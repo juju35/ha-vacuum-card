@@ -955,3 +955,113 @@ test("area sensors keep their own unit (ft² set in the entity settings), m² wh
   assert.match(html, /48 m²/);
   assert.match(html, /6,240 m²/);
 });
+
+// Room selection beyond Roborock: Xiaomi Miio from the `rooms` option, Dreame from the vacuum's `rooms` attribute.
+const openAndClean = (card, entity, rooms) => {
+  click(card, { action: "open_rooms", entity });
+  for (const room of rooms) click(card, { action: "toggle_room", entity, room });
+  click(card, { action: "clean_rooms", entity });
+};
+
+test("Xiaomi Miio: the rooms option opens the room selector and cleans with xiaomi_miio.vacuum_clean_segment", () => {
+  const hass = makeHass();
+  const card = new vc.VacuumCard();
+  card.setConfig({ device: "q5", rooms: [{ id: 17, name: "Kitchen" }, { id: 16, name: "Bedroom" }, { name: "no id" }] });
+  card.hass = hass;
+  assert.match(card.shadowRoot.innerHTML, /data-action="open_rooms"/);
+  click(card, { action: "open_rooms", entity: "vacuum.dustbusters" });
+  const html = card.shadowRoot.innerHTML;
+  // The option's order is kept, entries without an id are left out.
+  assert.ok(html.indexOf(">Kitchen<") < html.indexOf(">Bedroom<"));
+  assert.doesNotMatch(html, /no id/);
+  click(card, { action: "toggle_room", entity: "vacuum.dustbusters", room: "16" });
+  click(card, { action: "clean_rooms", entity: "vacuum.dustbusters" });
+  assert.equal(JSON.stringify(hass.calls), JSON.stringify([["xiaomi_miio", "vacuum_clean_segment", { entity_id: "vacuum.dustbusters", segments: [16] }]]));
+  // room_selection: false still starts a full cleaning right away.
+  card.setConfig({ device: "q5", rooms: [{ id: 17, name: "Kitchen" }], room_selection: false });
+  assert.doesNotMatch(card.shadowRoot.innerHTML, /open_rooms/);
+});
+
+test("Dreame Vacuum: rooms of the selected map from the vacuum's attribute, cleaned with dreame_vacuum.vacuum_clean_segment", () => {
+  const vac = states["vacuum.etage"];
+  const rooms = { "Ground floor": [{ id: 9, name: "Hall" }], Upstairs: [{ id: 3, name: "Office", icon: "mdi:desk" }, { id: 2, name: "Bathroom" }] };
+  const hass = makeHass({ ...states, "vacuum.etage": { ...vac, attributes: { ...vac.attributes, rooms, selected_map: "Upstairs" } } });
+  const card = new vc.VacuumCard();
+  card.setConfig({ device: "l10" });
+  card.hass = hass;
+  click(card, { action: "open_rooms", entity: "vacuum.etage" });
+  const html = card.shadowRoot.innerHTML;
+  assert.match(html, /data-room="3">Office</);
+  assert.match(html, /data-room="2">Bathroom</);
+  assert.doesNotMatch(html, /Hall/);
+  openAndClean(card, "vacuum.etage", ["3", "2"]);
+  assert.equal(JSON.stringify(hass.calls), JSON.stringify([["dreame_vacuum", "vacuum_clean_segment", { entity_id: "vacuum.etage", segments: [3, 2] }]]));
+});
+
+test("Dreame Vacuum without a rooms attribute and other integrations keep Start cleaning right away", () => {
+  const card = new vc.VacuumCard();
+  card.setConfig({ device: "l10" });
+  card.hass = makeHass();
+  assert.doesNotMatch(card.shadowRoot.innerHTML, /open_rooms/);
+  // Ecovacs has no segment cleaning the card knows: the option does nothing there.
+  card.setConfig({ device: "x1", rooms: [{ id: 1, name: "Hall" }] });
+  assert.doesNotMatch(card.shadowRoot.innerHTML, /open_rooms/);
+});
+
+test("Roborock: the rooms option replaces roborock.get_maps", () => {
+  const hass = { ...makeHass(), callWS: () => assert.fail("get_maps called") };
+  const card = new vc.VacuumCard();
+  card.setConfig({ device: "saros", show_map: "never", rooms: [{ id: "21", name: "Lounge" }] });
+  card.hass = hass;
+  const vacuum = vc.resolve(hass).devices.find((d) => d.id === "saros").vacuum;
+  openAndClean(card, vacuum, ["21"]);
+  assert.equal(JSON.stringify(hass.calls), JSON.stringify([["vacuum", "send_command", { entity_id: vacuum, command: "app_segment_clean", params: [{ segments: [21] }] }]]));
+});
+
+test("the enlarged map is a modal dialog that takes the focus and gives it back", () => {
+  const card = newCard(makeHass());
+  const opener = { focused: 0, focus() {
+    this.focused++;
+  } };
+  card.shadowRoot.activeElement = opener;
+  card.isConnected = true;
+  card._zoomMap(MAP_ID);
+  const overlay = vc.document.body.children.at(-1);
+  assert.equal(overlay.getAttribute("role"), "dialog");
+  assert.equal(overlay.getAttribute("aria-modal"), "true");
+  assert.equal(overlay.getAttribute("aria-label"), "Map");
+  assert.equal(overlay.focused, 1);
+  let prevented = 0;
+  vc.window.fire("keydown", { key: "Tab", preventDefault: () => prevented++ });
+  assert.equal(prevented, 1, "Tab stays in the dialog");
+  vc.window.fire("keydown", { key: "Escape" });
+  assert.equal(vc.document.body.children.length, 0);
+  assert.equal(opener.focused, 1);
+});
+
+test("the enlarged map shows the new map frames", async () => {
+  // Next frame loaded aside and decoded right away.
+  vc.window.Image = class {
+    getAttribute(name) {
+      return name === "src" ? this.src : null;
+    }
+    decode() {
+      return Promise.resolve();
+    }
+  };
+  const hass = makeHass();
+  const card = new vc.VacuumCard();
+  card.setConfig({ device: "q5", show_map: "always", map_entity: MAP_ID });
+  card.hass = hass;
+  card._zoomMap(MAP_ID);
+  const img = vc.document.body.children.at(-1).children[0].children[0];
+  assert.equal(img.getAttribute("src"), states[MAP_ID].attributes.entity_picture);
+  const next = { ...states[MAP_ID], attributes: { ...states[MAP_ID].attributes, entity_picture: "/api/camera_proxy/camera.dustbusters_map?token=2" } };
+  card.hass = { ...hass, states: { ...states, [MAP_ID]: next } };
+  await new Promise((r) => setTimeout(r));
+  assert.equal(img.getAttribute("src"), "/api/camera_proxy/camera.dustbusters_map?token=2");
+  vc.window.fire("keydown", { key: "Escape" });
+  // Closed: no frame is loaded for it any more.
+  assert.equal(card._zoomImg, null);
+  delete vc.window.Image;
+});

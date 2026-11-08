@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.7.0 - 2026-11-07
+
+### Features
+- Room selection: the Start button also opens the room selector with Dreame Vacuum (rooms of the current map, cleaned with `dreame_vacuum.vacuum_clean_segment`) and Xiaomi Miio (cleaned with `xiaomi_miio.vacuum_clean_segment`).
+- New `rooms` option: a list of rooms (`id`, `name`) for the room selector, needed with Xiaomi Miio, which cannot list them, and replacing the rooms read from the robot elsewhere.
+- Durations (cleaning time, maintenance, mop drying, totals) are written with the units of the card's language ("2 h 30 min", "2 Std. 30 Min.", "2 ч 30 мин").
+- Enlarged map: it shows the new map frames while open, and it is a modal dialog for screen readers that takes the keyboard focus and gives it back on close.
+
 ## 2.6.0 - 2026-11-07
 
 ### Features

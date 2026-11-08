@@ -5,22 +5,43 @@ import { load } from "./load.mjs";
 
 const vc = load();
 
+// Intl puts non-breaking spaces between a number and its unit: compared with plain spaces.
+const fh = (h, locale = "fr") => vc.fmtHours(h, locale)?.replace(/[\u00a0\u202f]/g, " ");
+
 test("fmtHours carries rounded minutes over to the hours", () => {
-  assert.equal(vc.fmtHours(1.995), "2 h");
-  assert.equal(vc.fmtHours(9.996), "10 h");
-  assert.equal(vc.fmtHours(0.999), "1 h");
-  assert.equal(vc.fmtHours(0.9999), "1 h");
+  assert.equal(fh(1.995), "2 h");
+  assert.equal(fh(9.996), "10 h");
+  assert.equal(fh(0.999), "1 h");
+  assert.equal(fh(0.9999), "1 h");
 });
 
 test("fmtHours keeps its other formats", () => {
-  assert.equal(vc.fmtHours(null), "—");
-  assert.equal(vc.fmtHours(0), "0 h");
-  assert.equal(vc.fmtHours(0.001), "1 min");
-  assert.equal(vc.fmtHours(0.5), "30 min");
-  assert.equal(vc.fmtHours(1), "1 h");
-  assert.equal(vc.fmtHours(2.5), "2 h 30");
-  assert.equal(vc.fmtHours(1.05), "1 h 03");
-  assert.equal(vc.fmtHours(12.4), "12 h");
+  assert.equal(fh(null), "—");
+  assert.equal(fh(0), "0 h");
+  assert.equal(fh(0.001), "1 min");
+  assert.equal(fh(0.5), "30 min");
+  assert.equal(fh(1), "1 h");
+  assert.equal(fh(2.5), "2 h 30 min");
+  assert.equal(fh(1.05), "1 h 3 min");
+  assert.equal(fh(12.4), "12 h");
+  assert.equal(fh(1234), "1 234 h");
+});
+
+test("fmtHours writes the units of the language", () => {
+  assert.equal(fh(2.5, "en"), "2 hr 30 min");
+  assert.equal(fh(2.5, "de"), "2 Std. 30 Min.");
+  assert.equal(fh(2.5, "ru"), "2 ч 30 мин");
+  assert.equal(fh(0.5, "sr"), "30 мин");
+});
+
+test("the card writes durations in its language", () => {
+  const hass = { entities, devices, states, language: "de", callService() {} };
+  const card = new vc.VacuumCard();
+  card.setConfig({ device: "l10", collapsed: [] });
+  card.hass = hass;
+  const html = card.shadowRoot.innerHTML.replace(/[\u00a0\u202f]/g, " ");
+  assert.match(html, /242 Std\./); // total cleaning time, 14,520 min
+  assert.doesNotMatch(html, /\d h\b/);
 });
 
 test("hours converts duration units", () => {
