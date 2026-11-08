@@ -161,12 +161,14 @@ const dysonSvg = ({ visnav = false, white = false, activity = null } = {}) => {
   return svgDoc(160, 104, s, "", cleaning || activity === "returning");
 };
 // iRobot: Roomba (round, no LiDAR turret, its CLEAN button with a light ring on top and a single side brush; the
-// s series D-shaped, the j series with a front camera) or Braava jet (a rounded square mopping robot with its water
+// s series D-shaped, the j series with a front camera, the 974 / 976 with a silver faceplate) or Braava jet (a rounded square mopping robot with its water
 // tank), alone or in front of a slim Clean Base (the "+" models). Vacuuming: the robot sways, its side brush spins and
 // dust trails behind; mopping (Braava, Combo): wet trail and spray; returning: it slides in front of its base;
 // emptying (Clean Base): dust rises up the base's duct.
-const roombaShape = (cx, cy, r, col, { shape = "round", camera = false, ring = "#bfe9ff" } = {}) => {
+const roombaShape = (cx, cy, r, col, { shape = "round", camera = false, silver = false, ring = "#bfe9ff" } = {}) => {
   const ry = r * 0.3, h = r * 0.2;
+  // 974 / 976: the dark body of the 900 series under a silver faceplate.
+  if (silver) col = { ...col, top: "#a8adb3", rim: "#6f757c" };
   let s = `<ellipse cx="${cx}" cy="${cy + h + ry * 0.35}" rx="${r * 0.98}" ry="${ry * 0.7}" opacity=".22"/>`;
   if (shape === "square") {
     // Braava jet: a rounded square seen from above (deeper than a disc), its CLEAN button in the middle of the
@@ -201,14 +203,14 @@ const roombaShape = (cx, cy, r, col, { shape = "round", camera = false, ring = "
   if (camera) s += `<circle cx="${cx}" cy="${cy + ry + h * 0.5}" r="${h * 0.26}" fill="${col.lens}" stroke="#6fa8ff" stroke-width="${h * 0.07}"/>`;
   return s;
 };
-const roombaSvg = ({ shape = "round", camera = false, white = false, base = false, combo = false, activity = null } = {}) => {
+const roombaSvg = ({ shape = "round", camera = false, silver = false, white = false, base = false, combo = false, activity = null } = {}) => {
   const col = ROBOT_COLORS[white ? "white" : "dark"];
   const braava = shape === "square";
   const cleaning = ["vacuum", "mop", "vacmop"].includes(activity);
   if (!base || cleaning) {
     // What it cleans comes from the robot: a Braava mops, a Combo vacuums and mops, a Roomba vacuums.
     const act = cleaning ? (braava ? "mop" : combo ? "vacmop" : "vacuum") : null;
-    let robot = roombaShape(80, 50, 72, col, { shape, camera });
+    let robot = roombaShape(80, 50, 72, col, { shape, camera, silver });
     if ((act === "vacuum" || act === "vacmop") && !braava) robot += brush(128, 76, 11);
     return onFloor(robot, act);
   }
@@ -224,7 +226,7 @@ const roombaSvg = ({ shape = "round", camera = false, white = false, base = fals
   if (combo) s += `<rect x="${x + w - 15}" y="48" width="8" height="46" rx="4" fill="#7cc4f2" opacity=".7"/>`;
   s += `<circle cx="80" cy="26" r="2.2" fill="${activity === "emptying" ? "#2fa3ff" : "#64a70b"}"/>`;
   if (activity === "emptying") s += [0, 1, 2, 3, 4].map((i) => `<circle class="evac d${i}" cx="${78 + (i % 3) * 2}" cy="116" r="${2 + (i % 2) * 0.8}" fill="#c9ccd0"/>`).join("");
-  s += `<g class="${activity === "returning" ? "home" : ""}">${roombaShape(80, 122, 52, col, { shape, camera })}</g>`;
+  s += `<g class="${activity === "returning" ? "home" : ""}">${roombaShape(80, 122, 52, col, { shape, camera, silver })}</g>`;
   return svgDoc(160, 160, s, "", activity === "returning" || activity === "emptying");
 };
 const wetdrySvg = ({ white = true, activity = null } = {}) => {
@@ -273,7 +275,7 @@ const irobotName = (model) => {
 // The iRobot models offered in the editor and recognized out of the box (European SKUs; the others are named by
 // irobotName all the same).
 const IROBOT_SKUS = [
-  "r675020", "r694020", "r696020", "r960020", "r974020", "r980020", "e515020", "i315020", "i355020", "i515020", "i555020",
+  "r675020", "r694020", "r696020", "r960020", "r974020", "r976020", "r980020", "e515020", "i315020", "i355020", "i515020", "i555020",
   "i715020", "i755020", "s915020", "s955020", "j715020", "j755020", "j955020", "c755020", "c975020", "m611020",
 ];
 // Commercial names of the common Roborock models, by the model id the integrations report (Roborock, Xiaomi Miio
@@ -444,6 +446,7 @@ const autoSvg = (dev, activity = null, white = undefined) => {
     return roombaSvg({
       shape: braava ? "square" : /\bs9/i.test(name) ? "d" : "round",
       camera: /\bj\d/i.test(name),
+      silver: white === undefined && /\b97[46]\b/.test(name),
       white: white ?? braava,
       base: /\+|clean base/i.test(name),
       combo: /combo/i.test(name),

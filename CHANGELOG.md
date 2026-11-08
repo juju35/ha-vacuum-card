@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.7.2 - 2026-11-08
+
+### Features
+- iRobot: Roomba 976 (`r976020`) recognized and offered as an `image` preset; the 974 and 976 are drawn with their silver faceplate (picture added to the README gallery).
+
 ## 2.7.1 - 2026-11-08
 
 ### Fixes
