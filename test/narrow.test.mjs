@@ -153,6 +153,13 @@ test("the mini card keeps the full card's logo size in its compact view", () => 
   assert.match(logo(vc.VacuumMiniCard), /width:\s*40px;\s*height:\s*40px/);
 });
 
+test("the mini card's 40 px type icon never shrinks, even in its narrowest compact view", () => {
+  const sheet = css(render(vc.VacuumMiniCard, { device: "dustbusters" }));
+  assert.match(rule(sheet, ".type-icon"), /width:\s*40px;\s*height:\s*40px/);
+  assert.doesNotMatch(sheet, /@container[^{]*\{[^@]*\.type-icon \{[^}]*width:\s*(?!40px)\d+px/);
+  assert.doesNotMatch(sheet, /\.type-icon \{ width:\s*28px/);
+});
+
 test("the README screenshots show both cards at a narrow width, so a narrow-layout break shows in review", () => {
   for (const type of ["vacuum-card", "vacuum-mini-card"]) {
     const narrow = shots.filter((s) => s.type === type && s.width <= 246);

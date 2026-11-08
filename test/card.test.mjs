@@ -118,6 +118,41 @@ test("the relative time formatter is built once per language", () => {
   assert.ok(vc.RTF.fr && vc.RTF.fr !== fmt);
 });
 
+test("the relative last clean time moves on: the card re-checks it every minute while it is on the page", () => {
+  const card = newCard(makeHass());
+  const { intervals, Date: SDate } = vc.window;
+  const before = intervals.size;
+  card.connectedCallback();
+  assert.equal(intervals.size, before + 1);
+  assert.match(card.shadowRoot.innerHTML, /20 hours ago/);
+  const now = SDate.now;
+  try {
+    // Two hours later, with no new hass from Home Assistant.
+    const t0 = now();
+    SDate.now = () => t0 + 2 * 3600e3;
+    [...intervals.values()].at(-1)();
+    assert.match(card.shadowRoot.innerHTML, /22 hours ago/);
+    // Unchanged text: no rebuild.
+    let renders = 0;
+    const render = card._render.bind(card);
+    card._render = () => {
+      renders++;
+      return render();
+    };
+    [...intervals.values()].at(-1)();
+    assert.equal(renders, 0);
+  } finally {
+    SDate.now = now;
+  }
+  card.disconnectedCallback();
+  assert.equal(intervals.size, before);
+  // Reattached: one timer again, not two.
+  card.connectedCallback();
+  card.connectedCallback();
+  assert.equal(intervals.size, before + 1);
+  card.disconnectedCallback();
+});
+
 test("the full and mini cards share the room, error and picture blocks", () => {
   const err = "sensor.aspirateur_erreur";
   const hass = makeHass({ ...states, [err]: { ...states[err], state: "main_brush_jammed" } });

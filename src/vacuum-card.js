@@ -4308,11 +4308,9 @@ const BASE_STYLE = `
     .chip { padding: 4px; flex: none; }
     .chip-text { display: none; }
   }
+  /* The 40 px type icon keeps its size at every width: the name gives way (ellipsis) instead. */
   @container (max-width: 200px) {
     .header { gap: 6px; }
-    .header .type-icon { width: 28px; height: 28px; }
-    .header .type-icon .icon.type { width: 18px; height: 18px; }
-    .header .type-icon .logo { width: 13px; height: 13px; right: -3px; bottom: -3px; border-radius: 4px; }
   }
 `;
 
@@ -4474,9 +4472,17 @@ class VacuumBase extends HTMLElement {
       });
       this._observer.observe(this);
     }
+    // "Last clean 5 minutes ago" moves on its own: re-checked every minute while the card is on the page (set hass
+    // only rebuilds the card when the text, part of _deps, changed).
+    clearInterval(this._tick);
+    this._tick = setInterval(() => {
+      if (this._hass) this.hass = this._hass;
+    }, 60000);
   }
 
   disconnectedCallback() {
+    clearInterval(this._tick);
+    this._tick = null;
     document.removeEventListener("click", this._onOutside, true);
     window.removeEventListener("keydown", this._onKey);
     document.removeEventListener("visibilitychange", this._onVisibility);
