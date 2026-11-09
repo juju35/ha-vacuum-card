@@ -3,6 +3,7 @@
 // Usage: node scripts/build.mjs  (dist/ is not committed: CI and the release workflow build it)
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { splitDist } from "./i18n-split.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const pkg = JSON.parse(readFileSync(`${root}package.json`, "utf8"));
@@ -25,3 +26,7 @@ writeFileSync(target, out);
 // Same file under the former name, attached to the releases for manual installs that still load it.
 writeFileSync(`${root}dist/roborock-card.js`, out);
 console.log(`Built dist/vacuum-card.js and dist/roborock-card.js (${(out.length / 1024).toFixed(1)} KB)`);
+
+// Translations: English stays in the bundle, each other language goes to dist/vacuum-card.i18n.<lang>.js,
+// fetched when a card needs it (scripts/i18n-split.mjs).
+if (process.argv[1] === fileURLToPath(import.meta.url)) splitDist(`${root}dist`, "vacuum-card.js", { version: pkg.version, aliases: ["roborock-card.js"] });
