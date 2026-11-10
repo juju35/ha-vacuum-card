@@ -4126,6 +4126,9 @@ const statusClass = (state) => {
   return "idle";
 };
 
+// Water tank level in percent → color class (empty at 10 %, low at 25 %).
+const tankClass = (pct) => (pct <= 10 ? "crit" : pct <= 25 ? "warn" : "ok");
+
 const svgIcon = (path, cls = "") => `<svg class="icon ${cls}" viewBox="0 0 24 24"><path d="${path}"/></svg>`;
 
 // ---------------------------------------------------------------------------
@@ -4259,8 +4262,12 @@ const BASE_STYLE = `
   .logo { width: 40px; height: 40px; object-fit: contain; flex: none; }
   a.logo-link { display: flex; flex: none; }
   .type-icon { position: relative; width: 40px; height: 40px; border-radius: 50%; align-items: center; justify-content: center;
-               background: color-mix(in srgb, var(--vc-accent) 16%, transparent); }
-  .type-icon .icon.type { width: 24px; height: 24px; fill: var(--vc-accent); }
+               --vc-tint: var(--c, var(--vc-accent)); background: color-mix(in srgb, var(--vc-tint) 16%, transparent); transition: background-color .3s ease; }
+  /* The state classes (.ok, .warn, .crit, .idle, .active) set --c; without a state, the brand color. State colors are
+     mixed with the text color for contrast, like the chips. */
+  .type-icon .icon.type { width: 24px; height: 24px; fill: var(--vc-accent); transition: fill .3s ease; }
+  .type-icon:is(.ok, .warn, .crit, .idle, .active) .icon.type { fill: color-mix(in srgb, var(--vc-tint) 60%, var(--primary-text-color)); }
+  @media (prefers-reduced-motion: reduce) { .type-icon, .type-icon .icon.type { transition: none; } }
   .type-icon .logo { position: absolute; right: -4px; bottom: -4px; width: 18px; height: 18px; border-radius: 5px;
                      background: var(--card-background-color, #fff);
                      box-shadow: 0 0 0 1px var(--divider-color, rgba(0,0,0,.12)), 0 0 0 3px var(--card-background-color, #fff); }
@@ -4868,9 +4875,24 @@ class VacuumBase extends HTMLElement {
 
   // Icon of the kind of device, tinted with the brand color, with the logo of the brand of the model (else of the
   // integration the device comes from) as a badge, linking to its site.
-  _logo(dev) {
+  // State of the device for the header icon: the worst of the robot status (error, offline, paused), a robot or
+  // dock error (water shortage, full bin…), the clean and dirty water tanks of the dock and the robot, and the
+  // consumables (worn out: crit, nearly: warn); without any problem, the color of the status (cleaning, docked…).
+  _iconState(dev, status) {
+    const levels = [status ? statusClass(status.state) : ""];
+    if (this._error(dev) || this._dockProblem(dev)) levels.push("crit");
+    for (const id of [dev.entities.tank_level, dev.entities.dock_tank_level]) {
+      const s = this._s(id);
+      const pct = valid(s) ? num(s) : null;
+      if (pct !== null) levels.push(tankClass(pct));
+    }
+    for (const { cls } of this._consumableLevels(dev)) levels.push(cls);
+    return levels.includes("crit") ? "crit" : levels.includes("warn") ? "warn" : levels[0];
+  }
+
+  _logo(dev, state) {
     const b = brandFor(dev);
-    return `<a class="logo-link type-icon" href="${b.site}" target="_blank" rel="noopener noreferrer" title="${esc(b.name)}">${imgTag(b.logo, `class="logo" alt="${esc(b.name)}"`)}${svgIcon(ICONS[deviceTypeOf(dev)], "type")}</a>`;
+    return `<a class="logo-link type-icon${state ? ` ${state}` : ""}" href="${b.site}" target="_blank" rel="noopener noreferrer" title="${esc(b.name)}">${imgTag(b.logo, `class="logo" alt="${esc(b.name)}"`)}${svgIcon(ICONS[deviceTypeOf(dev)], "type")}</a>`;
   }
 
   _header(dev, status, sub) {
@@ -4878,7 +4900,7 @@ class VacuumBase extends HTMLElement {
     return `
       <div class="header">
         ${
-          c.show_logo !== false ? this._logo(dev) : ""
+          c.show_logo !== false ? this._logo(dev, this._iconState(dev, status)) : ""
         }
         <div class="titles">
           <div class="name">${esc(c.title || dev.name)}</div>
@@ -5332,7 +5354,7 @@ class VacuumCard extends VacuumBase {
     const dockTank = this._s(dev.entities.dock_tank_level);
     const tankPct = valid(dockTank) ? num(dockTank) : null;
     if (tankPct !== null)
-      tiles.push(this._tile(dockTank.entity_id, ICONS.water, this._t("clean_water"), `${Math.round(tankPct)} %`, tankPct <= 10 ? "crit" : tankPct <= 25 ? "warn" : "ok"));
+      tiles.push(this._tile(dockTank.entity_id, ICONS.water, this._t("clean_water"), `${Math.round(tankPct)} %`, tankClass(tankPct)));
     const dust = this._s(d.dust_collection_mode);
     if (valid(dust)) tiles.push(this._tile(dust.entity_id, ICONS.bin, this._t("dust_mode"), this._fmt(dust)));
     // Drying: the remaining time only refreshes on the next poll of the integration (about 30 s after
@@ -5376,9 +5398,10 @@ class VacuumCard extends VacuumBase {
     return btns.length ? `<div class="dock-actions">${btns.join("")}</div>` : "";
   }
 
-  _consumables(dev) {
-    const rows = [];
-    const resets = this._config.show_controls !== false && CONSUMABLES.some(([key, , , , r]) => (dev.entities[key] || dev.dock[key]) && this._resetId(dev, r));
+  // Consumables the device exposes, each with its remaining life: { s, label, icon, resetKey, pct, text, cls }
+  // (cls: "crit" worn out, "warn" under 10 %, or 10 h without a known lifetime, "ok", "" unknown).
+  _consumableLevels(dev) {
+    const out = [];
     for (const [key, label, icon, life, resetKey] of CONSUMABLES) {
       const s = this._s(dev.entities[key]) || this._s(dev.dock[key]);
       if (!s) continue;
@@ -5396,6 +5419,15 @@ class VacuumCard extends VacuumBase {
         text = fmtHours(h, this._locale());
         cls = h === null ? "" : h <= 0 ? "crit" : (pct !== null ? pct < 10 : h < 10) ? "warn" : "ok";
       }
+      out.push({ s, label, icon, resetKey, pct, text, cls });
+    }
+    return out;
+  }
+
+  _consumables(dev) {
+    const rows = [];
+    const resets = this._config.show_controls !== false && CONSUMABLES.some(([key, , , , r]) => (dev.entities[key] || dev.dock[key]) && this._resetId(dev, r));
+    for (const { s, label, icon, resetKey, pct, text, cls } of this._consumableLevels(dev)) {
       rows.push(`
         ${svgIcon(icon)}<span class="lbl clickable" role="button" tabindex="0" data-entity="${esc(s.entity_id)}">${esc(this._t(label))}</span>
         ${pct !== null ? `<div class="bar ${cls}"><div style="width:${Math.max(0, Math.min(100, pct))}%"></div></div>` : `<div class="nobar"></div>`}

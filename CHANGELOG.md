@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.9.0 - 2026-11-10
+
+### Features
+- The header icon takes the color of the device state, on the full and the mini card: red on an error, offline, an empty clean water tank, a full dirty water tank, an empty cleaning fluid tank or a worn-out consumable; orange when paused, a water tank is low (25 % or less) or a consumable is nearly due; otherwise the color of the status (blue while cleaning, green docked or charging, grey idle). It keeps the brand color when the device reports no status.
+
 ## 2.8.1 - 2026-11-09
 
 ### Fixes

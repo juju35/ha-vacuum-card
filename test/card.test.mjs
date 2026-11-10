@@ -1100,3 +1100,16 @@ test("the enlarged map shows the new map frames", async () => {
   assert.equal(card._zoomImg, null);
   delete vc.window.Image;
 });
+
+test("the header icon takes the worst of the status, the water tanks and the consumables", () => {
+  const icon = (st) => newCard(makeHass(st)).shadowRoot.innerHTML.match(/class="logo-link type-icon( [a-z]+)?"/)?.[1]?.trim();
+  // The mock's sensors are nearly due (2.5 h of 30 h).
+  assert.equal(icon(states), "warn");
+  const fresh = { ...states, "sensor.aspirateur_capteurs": { ...states["sensor.aspirateur_capteurs"], state: "25" } };
+  assert.equal(icon(fresh), "ok");
+  const set = (id, state) => ({ ...fresh, [id]: { ...fresh[id], state } });
+  assert.equal(icon(set("sensor.aspirateur_etat", "cleaning")), "active");
+  assert.equal(icon(set("binary_sensor.station_eau_sale", "on")), "crit");
+  assert.equal(icon(set("sensor.aspirateur_brosse_principale", "5")), "warn");
+  assert.equal(icon(set("sensor.aspirateur_brosse_principale", "0")), "crit");
+});
