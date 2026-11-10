@@ -40,6 +40,7 @@ The cards work on top of the integrations you already use — [Roborock](https:/
 - Robot vacuums and wet-dry vacuums, several devices supported, Roborock dock merged with its robot
 - Drawn device picture that follows the model (about 130 Roborock, Xiaomi / Mijia, Dreame, Ecovacs, Dyson and iRobot models recognized, see [Recognized models](#recognized-models) from their model id, even when the device was renamed), animated by what the robot is doing, white or dark (`color`), or your own picture
 - Header icon of the kind of device (robot vacuum, mopping robot or wet-dry vacuum) with the brand logo (Roborock, Xiaomi, Mi Home, Dreame, Ecovacs, Dyson or iRobot) as a badge, opening the brand's site, and buttons in the brand's color, readable in the light and dark themes
+- The header icon takes the color of the device state, the worst of the robot status, the water tanks and the consumables: red on an error, offline, an empty clean water tank, a full dirty water tank, an empty cleaning fluid tank or a worn-out consumable; orange when paused, a water tank is at 25 % or less or a consumable is nearly due; otherwise the color of the status (blue cleaning, green docked or charging, grey idle). Without a status, it keeps the brand color
 - Battery (sensor, or the vacuum's attribute when the integration has no sensor), status, current room, cleaning progress and errors
 - Cleaning settings: mode, suction power, mop intensity and route
 - Start / pause, stop, return to dock and locate buttons
@@ -183,7 +184,7 @@ language: fr
 | `title` | both | Device name | Card title |
 | `image` | both | `auto` | Device picture: `auto` (per model), a model id to draw another model (e.g. `roborock.vacuum.a72` for the Q5 Pro — the visual editor lists the models by brand and name), `none`, or the URL of your own picture (e.g. `/local/my-robot.png`). The former presets `saros_20`, `s8_maxv_ultra`, `qrevo`, `q7`, `f25_ultra` and `dyad_pro` still work |
 | `color` | both | `auto` | Color of the drawn picture: `auto` (per model), `white` or `dark` — for models sold in both colors (F25 Ultra, S7, Q5…) |
-| `show_logo` | both | `true` | Show the header icon of the kind of device with the brand logo (opens the brand's site in a new tab), see [Brands](#brands) |
+| `show_logo` | both | `true` | Show the header icon of the kind of device, colored with the device state, with the brand logo (opens the brand's site in a new tab), see [Brands](#brands) |
 | `show_controls` | both | `true` | Start / pause, stop, dock and locate buttons (robot vacuums), dock actions (empty bin, wash and dry mop) and maintenance reset buttons |
 | `room_selection` | both | `true` | Roborock, Dreame Vacuum and Xiaomi Miio (with `rooms`): the Start button opens the room selector; `false` starts a full cleaning right away |
 | `rooms` | both | — | Rooms of the room selector, as a list of `id` (segment id) and `name`, in the order shown: needed with Xiaomi Miio, which cannot list them; with Roborock and Dreame Vacuum, replaces the rooms read from the robot. See [Room selection](#room-selection) |
