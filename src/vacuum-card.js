@@ -693,6 +693,8 @@ const STRINGS = {
     color_white: "White",
     color_dark: "Black",
     show_logo: "Show the brand logo",
+    show_title: "Show title",
+    show_subtitle: "Show subtitle",
     show_controls: "Show control buttons",
     show_modes: "Show cleaning settings",
     show_routines: "Show routines",
@@ -846,6 +848,8 @@ const STRINGS = {
     color_white: "Blanc",
     color_dark: "Noir",
     show_logo: "Afficher le logo de la marque",
+    show_title: "Afficher le titre",
+    show_subtitle: "Afficher le sous-titre",
     show_controls: "Afficher les boutons de commande",
     show_modes: "Afficher les réglages de nettoyage",
     show_routines: "Afficher les routines",
@@ -1000,6 +1004,8 @@ const STRINGS = {
     color_white: "Weiß",
     color_dark: "Schwarz",
     show_logo: "Markenlogo anzeigen",
+    show_title: "Titel anzeigen",
+    show_subtitle: "Untertitel anzeigen",
     show_controls: "Steuerungsschaltflächen anzeigen",
     show_modes: "Reinigungseinstellungen anzeigen",
     show_routines: "Routinen anzeigen",
@@ -1155,6 +1161,8 @@ const STRINGS = {
     color_white: "Blanco",
     color_dark: "Negro",
     show_logo: "Mostrar el logotipo de la marca",
+    show_title: "Mostrar el título",
+    show_subtitle: "Mostrar el subtítulo",
     show_controls: "Mostrar los botones de control",
     show_modes: "Mostrar los ajustes de limpieza",
     show_routines: "Mostrar las rutinas",
@@ -1309,6 +1317,8 @@ const STRINGS = {
     color_white: "Бела",
     color_dark: "Црна",
     show_logo: "Прикажи лого бренда",
+    show_title: "Прикажи наслов",
+    show_subtitle: "Прикажи поднаслов",
     show_controls: "Прикажи дугмад за контролу",
     show_modes: "Прикажи подешавања чишћења",
     show_routines: "Прикажи рутине",
@@ -1463,6 +1473,8 @@ const STRINGS = {
     color_white: "Bela",
     color_dark: "Crna",
     show_logo: "Prikaži logo brenda",
+    show_title: "Prikaži naslov",
+    show_subtitle: "Prikaži podnaslov",
     show_controls: "Prikaži dugmad za kontrolu",
     show_modes: "Prikaži podešavanja čišćenja",
     show_routines: "Prikaži rutine",
@@ -1617,6 +1629,8 @@ const STRINGS = {
     color_white: "Bianco",
     color_dark: "Nero",
     show_logo: "Mostra il logo del marchio",
+    show_title: "Mostra il titolo",
+    show_subtitle: "Mostra il sottotitolo",
     show_controls: "Mostra i pulsanti di controllo",
     show_modes: "Mostra le impostazioni di pulizia",
     show_routines: "Mostra le routine",
@@ -1771,6 +1785,8 @@ const STRINGS = {
     color_white: "Wit",
     color_dark: "Zwart",
     show_logo: "Merklogo tonen",
+    show_title: "Titel tonen",
+    show_subtitle: "Ondertitel tonen",
     show_controls: "Bedieningsknoppen tonen",
     show_modes: "Reinigingsinstellingen tonen",
     show_routines: "Routines tonen",
@@ -1925,6 +1941,8 @@ const STRINGS = {
     color_white: "Branco",
     color_dark: "Preto",
     show_logo: "Mostrar o logótipo da marca",
+    show_title: "Mostrar o título",
+    show_subtitle: "Mostrar o subtítulo",
     show_controls: "Mostrar os botões de controlo",
     show_modes: "Mostrar as definições de limpeza",
     show_routines: "Mostrar as rotinas",
@@ -2079,6 +2097,8 @@ const STRINGS = {
     color_white: "Biały",
     color_dark: "Czarny",
     show_logo: "Pokaż logo marki",
+    show_title: "Pokaż tytuł",
+    show_subtitle: "Pokaż podtytuł",
     show_controls: "Pokaż przyciski sterowania",
     show_modes: "Pokaż ustawienia sprzątania",
     show_routines: "Pokaż procedury",
@@ -2233,6 +2253,8 @@ const STRINGS = {
     color_white: "Alb",
     color_dark: "Negru",
     show_logo: "Afișează logo-ul mărcii",
+    show_title: "Afișează titlul",
+    show_subtitle: "Afișează subtitlul",
     show_controls: "Afișează butoanele de control",
     show_modes: "Afișează setările de curățare",
     show_routines: "Afișează rutinele",
@@ -2387,6 +2409,8 @@ const STRINGS = {
     color_white: "Hvid",
     color_dark: "Sort",
     show_logo: "Vis mærkets logo",
+    show_title: "Vis titel",
+    show_subtitle: "Vis undertitel",
     show_controls: "Vis betjeningsknapper",
     show_modes: "Vis rengøringsindstillinger",
     show_routines: "Vis rutiner",
@@ -2541,6 +2565,8 @@ const STRINGS = {
     color_white: "Vit",
     color_dark: "Svart",
     show_logo: "Visa varumärkets logotyp",
+    show_title: "Visa rubrik",
+    show_subtitle: "Visa underrubrik",
     show_controls: "Visa kontrollknappar",
     show_modes: "Visa städinställningar",
     show_routines: "Visa rutiner",
@@ -2695,6 +2721,8 @@ const STRINGS = {
     color_white: "Бял",
     color_dark: "Черен",
     show_logo: "Показване на логото на марката",
+    show_title: "Показване на заглавието",
+    show_subtitle: "Показване на подзаглавието",
     show_controls: "Показване на бутоните за управление",
     show_modes: "Показване на настройките за почистване",
     show_routines: "Показване на рутините",
@@ -2849,6 +2877,8 @@ const STRINGS = {
     color_white: "Белый",
     color_dark: "Чёрный",
     show_logo: "Показывать логотип бренда",
+    show_title: "Показывать заголовок",
+    show_subtitle: "Показывать подзаголовок",
     show_controls: "Показывать кнопки управления",
     show_modes: "Показывать настройки уборки",
     show_routines: "Показывать сценарии",
@@ -3003,6 +3033,8 @@ const STRINGS = {
     color_white: "Білий",
     color_dark: "Чорний",
     show_logo: "Показувати логотип бренду",
+    show_title: "Показувати заголовок",
+    show_subtitle: "Показувати підзаголовок",
     show_controls: "Показувати кнопки керування",
     show_modes: "Показувати налаштування прибирання",
     show_routines: "Показувати сценарії",
@@ -3157,6 +3189,8 @@ const STRINGS = {
     color_white: "Fehér",
     color_dark: "Fekete",
     show_logo: "Márkalogó megjelenítése",
+    show_title: "Cím megjelenítése",
+    show_subtitle: "Alcím megjelenítése",
     show_controls: "Vezérlőgombok megjelenítése",
     show_modes: "Takarítási beállítások megjelenítése",
     show_routines: "Rutinok megjelenítése",
@@ -3311,6 +3345,8 @@ const STRINGS = {
     color_white: "Biela",
     color_dark: "Čierna",
     show_logo: "Zobraziť logo značky",
+    show_title: "Zobraziť názov",
+    show_subtitle: "Zobraziť podnázov",
     show_controls: "Zobraziť ovládacie tlačidlá",
     show_modes: "Zobraziť nastavenia upratovania",
     show_routines: "Zobraziť rutiny",
@@ -3465,6 +3501,8 @@ const STRINGS = {
     color_white: "Bílá",
     color_dark: "Černá",
     show_logo: "Zobrazit logo značky",
+    show_title: "Zobrazit název",
+    show_subtitle: "Zobrazit podnázev",
     show_controls: "Zobrazit ovládací tlačítka",
     show_modes: "Zobrazit nastavení úklidu",
     show_routines: "Zobrazit rutiny",
@@ -3619,6 +3657,8 @@ const STRINGS = {
     color_white: "Bela",
     color_dark: "Črna",
     show_logo: "Prikaži logotip znamke",
+    show_title: "Prikaži naslov",
+    show_subtitle: "Prikaži podnaslov",
     show_controls: "Prikaži gumbe za upravljanje",
     show_modes: "Prikaži nastavitve čiščenja",
     show_routines: "Prikaži rutine",
@@ -3773,6 +3813,8 @@ const STRINGS = {
     color_white: "Balta",
     color_dark: "Melna",
     show_logo: "Rādīt zīmola logotipu",
+    show_title: "Rādīt virsrakstu",
+    show_subtitle: "Rādīt apakšvirsrakstu",
     show_controls: "Rādīt vadības pogas",
     show_modes: "Rādīt uzkopšanas iestatījumus",
     show_routines: "Rādīt rutīnas",
@@ -3927,6 +3969,8 @@ const STRINGS = {
     color_white: "Λευκό",
     color_dark: "Μαύρο",
     show_logo: "Εμφάνιση του λογότυπου της μάρκας",
+    show_title: "Εμφάνιση τίτλου",
+    show_subtitle: "Εμφάνιση υπότιτλου",
     show_controls: "Εμφάνιση κουμπιών ελέγχου",
     show_modes: "Εμφάνιση ρυθμίσεων καθαρισμού",
     show_routines: "Εμφάνιση ρουτινών",
@@ -4274,6 +4318,7 @@ const BASE_STYLE = `
   /* The title takes the room the chip leaves (flex-basis 0: a long name does not push the chip into its ellipsis)
      and keeps about four characters and its ellipsis; the chip shrinks only when even that does not fit. */
   .titles { flex: 1 1 0; min-width: 5ch; font-size: 16px; }
+  :host([hide-title]) .titles > .name, :host([hide-subtitle]) .titles > .sub { display: none; }
   .name { font-size: 16px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .sub { font-size: 12px; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .warning { padding: 16px; color: color-mix(in srgb, var(--vc-warn) 50%, var(--primary-text-color)); }
@@ -4510,6 +4555,9 @@ class VacuumBase extends HTMLElement {
   setConfig(config) {
     if (!config) throw new Error("Invalid configuration");
     this._config = { ...config };
+    // show_title / show_subtitle: the header's title / subtitle, hidden by the stylesheet
+    this.toggleAttribute?.("hide-title", config.show_title === false);
+    this.toggleAttribute?.("hide-subtitle", config.show_subtitle === false);
     this._html = "";
     this._lastDeps = null;
     this._update();
@@ -5877,6 +5925,8 @@ class VacuumEditorBase extends HTMLElement {
 class VacuumCardEditor extends VacuumEditorBase {
   static get toggles() {
     return [
+      ["show_title", true],
+      ["show_subtitle", true],
       ["show_controls", true],
       ["room_selection", true],
       ["show_modes", true],
@@ -5932,6 +5982,8 @@ class VacuumCardEditor extends VacuumEditorBase {
 class VacuumMiniCardEditor extends VacuumEditorBase {
   static get toggles() {
     return [
+      ["show_title", true],
+      ["show_subtitle", true],
       ["show_controls", true],
       ["room_selection", true],
       ["zoom", true],
