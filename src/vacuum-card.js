@@ -704,6 +704,7 @@ const STRINGS = {
     show_map: "Show map",
     collapsed: "Sections folded by default",
     map_entity: "Map entity (optional, e.g. Xiaomi Cloud Map Extractor camera)",
+    vector_map: "Vacuum Map map instead of the picture (when installed)",
     crop: "Map crop (pixels)",
     map_size: "Map image size: {w} × {h} px. Values are in pixels of this image.",
     top: "Top",
@@ -859,6 +860,7 @@ const STRINGS = {
     show_map: "Afficher la carte",
     collapsed: "Sections repliées par défaut",
     map_entity: "Entité de la carte (facultatif, ex. caméra Xiaomi Cloud Map Extractor)",
+    vector_map: "Carte Vacuum Map à la place de l'image (si installée)",
     crop: "Recadrage de la carte (pixels)",
     map_size: "Taille de l'image de la carte : {w} × {h} px. Les valeurs sont en pixels de cette image.",
     top: "Haut",
@@ -1015,6 +1017,7 @@ const STRINGS = {
     show_map: "Karte anzeigen",
     collapsed: "Abschnitte standardmäßig eingeklappt",
     map_entity: "Karten-Entität (optional, z. B. Kamera von Xiaomi Cloud Map Extractor)",
+    vector_map: "Vacuum-Map-Karte statt des Bildes (wenn installiert)",
     crop: "Kartenausschnitt (Pixel)",
     map_size: "Kartengröße: {w} × {h} px. Die Werte beziehen sich auf die Pixel dieses Bildes.",
     top: "Oben",
@@ -1172,6 +1175,7 @@ const STRINGS = {
     show_map: "Mostrar el mapa",
     collapsed: "Secciones plegadas por defecto",
     map_entity: "Entidad del mapa (opcional, p. ej. cámara de Xiaomi Cloud Map Extractor)",
+    vector_map: "Mapa de Vacuum Map en lugar de la imagen (si está instalado)",
     crop: "Recorte del mapa (píxeles)",
     map_size: "Tamaño de la imagen del mapa: {w} × {h} px. Los valores están en píxeles de esta imagen.",
     top: "Arriba",
@@ -1328,6 +1332,7 @@ const STRINGS = {
     show_map: "Прикажи мапу",
     collapsed: "Одељци су подразумевано скупљени",
     map_entity: "Ентитет мапе (опционо, нпр. Xiaomi Cloud Map Extractor камера)",
+    vector_map: "Vacuum Map мапа уместо слике (ако је инсталирана)",
     crop: "Исецање мапе (пиксели)",
     map_size: "Величина слике мапе: {w} × {h} px. Вредности су у пикселима ове слике.",
     top: "Горе",
@@ -1484,6 +1489,7 @@ const STRINGS = {
     show_map: "Prikaži mapu",
     collapsed: "Odeljci su podrazumevano skupljeni",
     map_entity: "Entitet mape (opciono, npr. Xiaomi Cloud Map Extractor kamera)",
+    vector_map: "Vacuum Map mapa umesto slike (ako je instalirana)",
     crop: "Isecanje mape (pikseli)",
     map_size: "Veličina slike mape: {w} × {h} px. Vrednosti su u pikselima ove slike.",
     top: "Gore",
@@ -1640,6 +1646,7 @@ const STRINGS = {
     show_map: "Mostra la mappa",
     collapsed: "Sezioni compresse per impostazione predefinita",
     map_entity: "Entità della mappa (facoltativa, ad es. telecamera di Xiaomi Cloud Map Extractor)",
+    vector_map: "Mappa di Vacuum Map al posto dell'immagine (se installata)",
     crop: "Ritaglio della mappa (pixel)",
     map_size: "Dimensioni dell'immagine della mappa: {w} × {h} px. I valori sono in pixel di questa immagine.",
     top: "Alto",
@@ -1796,6 +1803,7 @@ const STRINGS = {
     show_map: "Kaart tonen",
     collapsed: "Standaard ingeklapte secties",
     map_entity: "Kaartentiteit (optioneel, bijv. camera van Xiaomi Cloud Map Extractor)",
+    vector_map: "Vacuum Map-kaart in plaats van de afbeelding (indien geïnstalleerd)",
     crop: "Kaart bijsnijden (pixels)",
     map_size: "Grootte van de kaartafbeelding: {w} × {h} px. De waarden zijn in pixels van deze afbeelding.",
     top: "Boven",
@@ -1952,6 +1960,7 @@ const STRINGS = {
     show_map: "Mostrar o mapa",
     collapsed: "Secções recolhidas por predefinição",
     map_entity: "Entidade do mapa (opcional, p. ex. câmara do Xiaomi Cloud Map Extractor)",
+    vector_map: "Mapa do Vacuum Map em vez da imagem (se instalado)",
     crop: "Recorte do mapa (píxeis)",
     map_size: "Tamanho da imagem do mapa: {w} × {h} px. Os valores estão em píxeis desta imagem.",
     top: "Cima",
@@ -2108,6 +2117,7 @@ const STRINGS = {
     show_map: "Pokaż mapę",
     collapsed: "Sekcje domyślnie zwinięte",
     map_entity: "Encja mapy (opcjonalna, np. kamera Xiaomi Cloud Map Extractor)",
+    vector_map: "Mapa Vacuum Map zamiast obrazu (jeśli zainstalowana)",
     crop: "Przycięcie mapy (piksele)",
     map_size: "Rozmiar obrazu mapy: {w} × {h} px. Wartości są w pikselach tego obrazu.",
     top: "Góra",
@@ -2264,6 +2274,7 @@ const STRINGS = {
     show_map: "Afișează harta",
     collapsed: "Secțiuni restrânse implicit",
     map_entity: "Entitate hartă (opțional, de ex. camera Xiaomi Cloud Map Extractor)",
+    vector_map: "Harta Vacuum Map în locul imaginii (dacă este instalată)",
     crop: "Decupare hartă (pixeli)",
     map_size: "Dimensiunea imaginii hărții: {w} × {h} px. Valorile sunt în pixeli ai acestei imagini.",
     top: "Sus",
@@ -2420,6 +2431,7 @@ const STRINGS = {
     show_map: "Vis kort",
     collapsed: "Sektioner foldet sammen som standard",
     map_entity: "Kortentitet (valgfri, f.eks. kamera fra Xiaomi Cloud Map Extractor)",
+    vector_map: "Vacuum Map-kort i stedet for billedet (hvis installeret)",
     crop: "Beskæring af kort (pixels)",
     map_size: "Kortbilledets størrelse: {w} × {h} px. Værdierne er i pixels i dette billede.",
     top: "Top",
@@ -2576,6 +2588,7 @@ const STRINGS = {
     show_map: "Visa karta",
     collapsed: "Avsnitt som är hopfällda som standard",
     map_entity: "Kartentitet (valfri, t.ex. kamera från Xiaomi Cloud Map Extractor)",
+    vector_map: "Vacuum Map-karta i stället för bilden (om installerad)",
     crop: "Beskärning av kartan (pixlar)",
     map_size: "Kartbildens storlek: {w} × {h} px. Värdena anges i pixlar i den här bilden.",
     top: "Överkant",
@@ -2732,6 +2745,7 @@ const STRINGS = {
     show_map: "Показване на картата",
     collapsed: "Секции, свити по подразбиране",
     map_entity: "Обект за карта (по избор, напр. камера на Xiaomi Cloud Map Extractor)",
+    vector_map: "Карта на Vacuum Map вместо изображението (ако е инсталирана)",
     crop: "Изрязване на картата (пиксели)",
     map_size: "Размер на изображението на картата: {w} × {h} px. Стойностите са в пиксели на това изображение.",
     top: "Горе",
@@ -2888,6 +2902,7 @@ const STRINGS = {
     show_map: "Показывать карту",
     collapsed: "Разделы, свёрнутые по умолчанию",
     map_entity: "Объект карты (необязательно, например камера Xiaomi Cloud Map Extractor)",
+    vector_map: "Карта Vacuum Map вместо изображения (если установлена)",
     crop: "Обрезка карты (пиксели)",
     map_size: "Размер изображения карты: {w} × {h} px. Значения указываются в пикселях этого изображения.",
     top: "Сверху",
@@ -3044,6 +3059,7 @@ const STRINGS = {
     show_map: "Показувати мапу",
     collapsed: "Розділи, згорнуті за замовчуванням",
     map_entity: "Сутність мапи (необов'язково, наприклад камера Xiaomi Cloud Map Extractor)",
+    vector_map: "Мапа Vacuum Map замість зображення (якщо встановлена)",
     crop: "Обрізання мапи (пікселі)",
     map_size: "Розмір зображення мапи: {w} × {h} px. Значення вказуються в пікселях цього зображення.",
     top: "Згори",
@@ -3200,6 +3216,7 @@ const STRINGS = {
     show_map: "Térkép megjelenítése",
     collapsed: "Alapértelmezés szerint összecsukott szakaszok",
     map_entity: "Térkép entitás (opcionális, pl. a Xiaomi Cloud Map Extractor kamerája)",
+    vector_map: "Vacuum Map térkép a kép helyett (ha telepítve van)",
     crop: "Térkép körülvágása (képpont)",
     map_size: "A térképkép mérete: {w} × {h} px. Az értékek ennek a képnek a képpontjaiban értendők.",
     top: "Fent",
@@ -3356,6 +3373,7 @@ const STRINGS = {
     show_map: "Zobraziť mapu",
     collapsed: "Predvolene zbalené sekcie",
     map_entity: "Entita mapy (voliteľná, napr. kamera Xiaomi Cloud Map Extractor)",
+    vector_map: "Mapa Vacuum Map namiesto obrázka (ak je nainštalovaná)",
     crop: "Orezanie mapy (pixely)",
     map_size: "Veľkosť obrázka mapy: {w} × {h} px. Hodnoty sú v pixeloch tohto obrázka.",
     top: "Hore",
@@ -3512,6 +3530,7 @@ const STRINGS = {
     show_map: "Zobrazit mapu",
     collapsed: "Ve výchozím stavu sbalené sekce",
     map_entity: "Entita mapy (volitelná, např. kamera Xiaomi Cloud Map Extractor)",
+    vector_map: "Mapa Vacuum Map místo obrázku (pokud je nainstalována)",
     crop: "Oříznutí mapy (pixely)",
     map_size: "Velikost obrázku mapy: {w} × {h} px. Hodnoty jsou v pixelech tohoto obrázku.",
     top: "Nahoře",
@@ -3668,6 +3687,7 @@ const STRINGS = {
     show_map: "Prikaži zemljevid",
     collapsed: "Privzeto strnjeni razdelki",
     map_entity: "Entiteta zemljevida (neobvezno, npr. kamera Xiaomi Cloud Map Extractor)",
+    vector_map: "Zemljevid Vacuum Map namesto slike (če je nameščen)",
     crop: "Obrezovanje zemljevida (slikovne pike)",
     map_size: "Velikost slike zemljevida: {w} × {h} px. Vrednosti so v slikovnih pikah te slike.",
     top: "Zgoraj",
@@ -3824,6 +3844,7 @@ const STRINGS = {
     show_map: "Rādīt karti",
     collapsed: "Pēc noklusējuma sakļautās sadaļas",
     map_entity: "Kartes vienība (neobligāta, piem., Xiaomi Cloud Map Extractor kamera)",
+    vector_map: "Vacuum Map karte attēla vietā (ja instalēta)",
     crop: "Kartes apgriešana (pikseļi)",
     map_size: "Kartes attēla izmērs: {w} × {h} px. Vērtības ir šī attēla pikseļos.",
     top: "Augša",
@@ -3980,6 +4001,7 @@ const STRINGS = {
     show_map: "Εμφάνιση χάρτη",
     collapsed: "Ενότητες συμπτυγμένες από προεπιλογή",
     map_entity: "Οντότητα χάρτη (προαιρετική, π.χ. κάμερα του Xiaomi Cloud Map Extractor)",
+    vector_map: "Χάρτης Vacuum Map αντί για την εικόνα (αν είναι εγκατεστημένος)",
     crop: "Περικοπή χάρτη (pixel)",
     map_size: "Μέγεθος εικόνας χάρτη: {w} × {h} px. Οι τιμές είναι σε pixel αυτής της εικόνας.",
     top: "Πάνω",
@@ -4255,6 +4277,13 @@ const resolve = (hass) => {
 // Same dependency list (same length, same objects): what a memoized value was built from has not changed.
 const sameDeps = (a, b) => !!a && a.length === b.length && a.every((d, i) => d === b[i]);
 const mapIds = (dev, config) => (config?.map_entity ? [config.map_entity] : [...(dev.extra.image || []), ...(dev.extra.camera || [])]);
+
+// Vacuum Map (https://github.com/juju35/ha-vacuum-map): its integration loads the vacuum-map-card element on every
+// dashboard. A Roborock robot then gets that live vector map (rooms, path, robot) instead of the map picture, unless
+// map_entity is set or vector_map is false. Its own options go in vector_map_options (view, rotation, rooms…).
+const VECTOR_MAP = "vacuum-map-card";
+const vectorMapOn = (dev, config) =>
+  dev.platform === "roborock" && !config.map_entity && config.vector_map !== false && !!customElements.get?.(VECTOR_MAP);
 
 const listDevices = (hass) => {
   const m = hass && resolve(hass);
@@ -4622,6 +4651,10 @@ class VacuumBase extends HTMLElement {
     this.toggleAttribute?.("hide-subtitle", config.show_subtitle === false);
     this._html = "";
     this._lastDeps = null;
+    // vacuum-map-card may be defined after this card's first render (resources load in any order)
+    if (!this._vectorWait && config.vector_map !== false && !customElements.get?.(VECTOR_MAP) && customElements.whenDefined) {
+      this._vectorWait = customElements.whenDefined(VECTOR_MAP).then(() => this._update());
+    }
     this._update();
   }
 
@@ -4657,6 +4690,7 @@ class VacuumBase extends HTMLElement {
       this.shadowRoot.innerHTML = html;
       this._placeImages();
       this._placeMaps();
+      this._placeVectorMap();
       if (kept) this._restoreFocus(kept);
       if (this._confirm) {
         const sel = focused === "confirm_cancel" ? '[data-action="confirm_cancel"]' : ".modal .primary";
@@ -4665,6 +4699,27 @@ class VacuumBase extends HTMLElement {
       }
     }
     this._syncMaps();
+    if (this._vectorMap) this._vectorMap.hass = this._hass;
+  }
+
+  // The vacuum-map-card element outlives the renders, as the map pictures do: moved back into each new render, it
+  // keeps its subscription (it only ends a few seconds after leaving the page) and its drawing.
+  _placeVectorMap() {
+    const slot = this.shadowRoot.querySelector("[data-vector-map]");
+    if (!slot) return;
+    const config = this._vectorMapConfig(slot.dataset.vectorMap);
+    this._vectorMap ??= document.createElement(VECTOR_MAP);
+    const key = JSON.stringify(config);
+    if (key !== this._vectorKey) {
+      this._vectorKey = key;
+      this._vectorMap.setConfig(config);
+    }
+    this._vectorMap.hass = this._hass;
+    slot.replaceWith(this._vectorMap);
+  }
+
+  _vectorMapConfig(entity) {
+    return { ...(this._config.vector_map_options || {}), entity, embedded: true };
   }
 
   // The focused element of the card, as what identifies it in the next render: its tag and data attributes, and its
@@ -4823,6 +4878,7 @@ class VacuumBase extends HTMLElement {
     if ((VACUUM_ACTIONS.has(action) || (action === "routine" && this._dev?.vacuum)) && this._offline(this._dev)) return;
     if (this._roomAction(action, entity, el.dataset.room)) return;
     if (action === "zoom_map") return this._zoomMap(entity);
+    if (action === "zoom_vector") return this._vectorMap?.openFullscreen?.();
     if (action === "zoom") return this._toggleZoom(ev);
     if (action === "toggle_section") {
       const key = el.dataset.section;
@@ -5265,6 +5321,7 @@ const FULL_STYLE = `
   .map img { width: 100%; border-radius: 10px; display: block; background: var(--secondary-background-color, rgba(127,127,127,.08)); }
   .map .crop { overflow: hidden; border-radius: 10px; }
   .map { cursor: zoom-in; }
+  .map.vector { border-radius: 10px; padding: 6px; background: var(--secondary-background-color, rgba(127,127,127,.08)); }
   .dock-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
   .dock-actions .btn { flex: 1 1 auto; }
   .dock-actions .btn .icon { color: var(--vc-accent); }
@@ -5604,6 +5661,10 @@ class VacuumCard extends VacuumBase {
   }
 
   _map(dev) {
+    if (vectorMapOn(dev, this._config)) {
+      const attrs = `class="map vector clickable" role="button" tabindex="0" data-action="zoom_vector" data-entity="${esc(dev.vacuum)}" title="${esc(this._t("map"))}"`;
+      return `<div ${attrs}><div data-vector-map="${esc(dev.vacuum)}"></div></div>`;
+    }
     const maps = mapIds(dev, this._config).map((id) => this._s(id)).filter((s) => s?.attributes?.entity_picture);
     if (!maps.length) return "";
     const selected = this._s(dev.entities.selected_map)?.state;
@@ -6005,6 +6066,7 @@ class VacuumCardEditor extends VacuumEditorBase {
       ["show_dock", true],
       ["show_consumables", true],
       ["show_stats", true],
+      ["vector_map", true],
     ];
   }
 

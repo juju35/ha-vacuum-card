@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.11.0 - 2026-11-13
+
+### Features
+- Roborock: with [Vacuum Map](https://github.com/juju35/ha-vacuum-map) installed, the map section shows its live map instead of the Roborock map picture — rooms with their name and icon, walls, dock, zones, the robot travelling its path, a **2D / 3D** switch and a full screen button. A click on the map opens it full screen. Nothing to configure: `vector_map: false` brings the picture back, `vector_map_options` passes options to the map (`view: 3d`, `rotation`, `rooms`…). `map_entity` still wins over both.
+
 ## 2.10.2 - 2026-11-13
 
 ### Fixes
