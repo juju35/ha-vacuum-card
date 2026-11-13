@@ -200,9 +200,24 @@ language: fr
 | `show_stats` | full | `true` | Cleaning statistics |
 | `show_map` | full | `cleaning` | Map of the current floor: `cleaning` (only while the robot is cleaning), `always` (or `true`) or `never` (or `false`) |
 | `collapsed` | full | `[stats, dock]` | Sections folded by default, among `routines`, `dock`, `consumables` and `stats` (`[]` to unfold everything). Click a section title (or Tab to it and press Enter or Space) to fold or unfold it. The dock section unfolds on its own when the dock reports a problem |
+| `vector_map` | full | `true` | Roborock: the live map of [Vacuum Map](https://github.com/juju35/ha-vacuum-map) (rooms, path, robot, 2D / 3D, full screen) instead of the map picture, when it is installed |
+| `vector_map_options` | full | — | Options of the Vacuum Map card, e.g. `{view: 3d, rotation: 90}` (see its [options](https://github.com/juju35/ha-vacuum-map#card)) |
 | `map_entity` | full | — | Camera or image entity to show as the map instead of the integration's map, e.g. the camera of [Xiaomi Cloud Map Extractor](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor) |
 | `crop` | full | — | Crop the map, in pixels of the map image: `top`, `bottom`, `left` and/or `right` (see below) |
 | `language` | both | Auto | Force language: `fr`, `en`, `de`, `es`, `sr`, `sr-Latn`, `it`, `nl`, `pt`, `pl`, `ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `sk`, `cs`, `sl`, `lv` or `el` (auto-detects from HA settings) |
+
+### Vacuum Map
+
+With the [Vacuum Map](https://github.com/juju35/ha-vacuum-map) integration installed, a Roborock robot's map section shows its live vector map instead of the Roborock map picture: rooms with their name and icon, walls and doors, dock, no-go zones, the robot travelling its path, a **2D / 3D** switch and a full screen button (a click on the map opens it full screen too). Nothing to configure:
+
+```yaml
+type: custom:vacuum-card
+vector_map_options:
+  view: 3d        # open in 3D
+  rotation: 90
+```
+
+`vector_map: false` brings the map picture back; a `map_entity` is always shown as set.
 
 ### Cropping the map
 

@@ -167,7 +167,7 @@ test("every language has exactly the English keys and placeholders, and no empty
 
 test("Serbian: the Cyrillic and Latin blocks keep to their script", () => {
   // Brand names, Home Assistant, units and placeholders stay in Latin letters in the Cyrillic block.
-  const latin = (s) => String(s).replace(/\{\w+\}|Home Assistant|Roborock|Xiaomi Cloud Map Extractor|Xiaomi|Dreame|Ecovacs|Dyson|iRobot|SmartPlan|px/g, "");
+  const latin = (s) => String(s).replace(/\{\w+\}|Home Assistant|Roborock|Xiaomi Cloud Map Extractor|Vacuum Map|Xiaomi|Dreame|Ecovacs|Dyson|iRobot|SmartPlan|px/g, "");
   for (const [k, v] of Object.entries(vc.STRINGS.sr)) assert.doesNotMatch(latin(v), /[A-Za-z]/, `Latin letter in sr.${k}`);
   for (const [k, v] of Object.entries(vc.STRINGS["sr-Latn"])) assert.doesNotMatch(v, /[\u0400-\u04FF]/, `Cyrillic letter in sr-Latn.${k}`);
 });
