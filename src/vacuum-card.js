@@ -4322,6 +4322,7 @@ const BASE_STYLE = `
   .muted { color: var(--secondary-text-color); }
   .clickable { cursor: pointer; }
   [role="button"]:focus-visible { outline: 2px solid var(--primary-color, var(--vc-accent)); outline-offset: 2px; border-radius: 4px; }
+  :host([pointer]) :focus-visible { outline: none; }
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
   .ok { --c: var(--vc-ok); } .warn { --c: var(--vc-warn); } .crit { --c: var(--vc-crit); } .idle { --c: var(--vc-idle); } .active { --c: var(--vc-active); }
   .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--c, var(--vc-ok)); flex: none; display: inline-block; }
@@ -4530,6 +4531,9 @@ class VacuumBase extends HTMLElement {
     // rewrites for the keyboard: put back after a mouse click or a tap, it would draw the focus ring.
     this.shadowRoot.addEventListener("pointerdown", () => {
       this._byPointer = true;
+      // No focus ring after a tap or a click: Home Assistant gives the focus back to the element that opened its
+      // more-info dialog when it closes, and the browser would then draw the ring as for the keyboard.
+      this.toggleAttribute?.("pointer", true);
       this._pressing = true;
       window.addEventListener("pointerup", this._onPressEnd, true);
       window.addEventListener("pointercancel", this._onPressEnd, true);
@@ -4546,6 +4550,7 @@ class VacuumBase extends HTMLElement {
     // (which clicks on its own: left alone).
     this.shadowRoot.addEventListener("keydown", (ev) => {
       this._byPointer = false;
+      this.toggleAttribute?.("pointer", false);
       if ((ev.key !== "Enter" && ev.key !== " ") || ev.target?.getAttribute?.("role") !== "button") return;
       ev.preventDefault();
       ev.target.click();

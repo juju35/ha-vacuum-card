@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.12.1 - 2026-11-13
+
+### Fixes
+- No more focus ring around the robot picture (or another element) after a tap or a click: Home Assistant gives the focus back to the element that opened its more-info dialog when it closes, and the ring was then drawn as for the keyboard. It is only shown when the card is used with the keyboard.
+
 ## 2.12.0 - 2026-11-13
 
 ### Features
