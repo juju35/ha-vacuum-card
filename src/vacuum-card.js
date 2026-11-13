@@ -4495,9 +4495,28 @@ class VacuumBase extends HTMLElement {
     this.attachShadow({ mode: "open" });
     this._html = "";
     this.shadowRoot.addEventListener("click", (ev) => this._onClick(ev));
+    // No rewrite of the card between the press and the release: Home Assistant updates the card several times a
+    // second, and a rewrite under the pointer replaces the element pressed, so that the click lands on the card itself
+    // and does nothing. The pending render is done once released (after the click). The focus is only kept across
+    // rewrites for the keyboard: put back after a mouse click or a tap, it would draw the focus ring.
+    this.shadowRoot.addEventListener("pointerdown", () => {
+      this._byPointer = true;
+      this._pressing = true;
+      window.addEventListener("pointerup", this._onPressEnd, true);
+      window.addEventListener("pointercancel", this._onPressEnd, true);
+    });
+    this._onPressEnd = () => {
+      window.removeEventListener("pointerup", this._onPressEnd, true);
+      window.removeEventListener("pointercancel", this._onPressEnd, true);
+      setTimeout(() => {
+        this._pressing = false;
+        if (this._dirty) this._update();
+      }, 0);
+    };
     // Enter / Space on an element with the button role (tile, section title, chip…) acts as a click, as on a <button>
     // (which clicks on its own: left alone).
     this.shadowRoot.addEventListener("keydown", (ev) => {
+      this._byPointer = false;
       if ((ev.key !== "Enter" && ev.key !== " ") || ev.target?.getAttribute?.("role") !== "button") return;
       ev.preventDefault();
       ev.target.click();
@@ -4577,6 +4596,9 @@ class VacuumBase extends HTMLElement {
     clearInterval(this._tick);
     this._tick = null;
     this._outside?.off();
+    this._pressing = false;
+    window.removeEventListener("pointerup", this._onPressEnd, true);
+    window.removeEventListener("pointercancel", this._onPressEnd, true);
     // Left (another dashboard view, a conditional card hidden): back to the defaults, so that the card does not come
     // back unfolded or with its popup open.
     this._toggled = new Map();
@@ -4618,6 +4640,11 @@ class VacuumBase extends HTMLElement {
 
   _update() {
     if (!this._hass || !this._config) return;
+    if (this._pressing) {
+      this._dirty = true;
+      return;
+    }
+    this._dirty = false;
     let html = this._render();
     if (this._confirm) {
       html = html.replace(/<ha-card>([\s\S]*)<\/ha-card>\s*$/, (_, inner) => `<ha-card class="dialog-open">${inner}${this._confirmHtml()}</ha-card>`);
@@ -4626,7 +4653,7 @@ class VacuumBase extends HTMLElement {
       // The popup keeps its focus across the rewrite (OK, or Cancel when the user moved to it).
       const focused = this._confirm && this.shadowRoot.activeElement?.dataset?.action;
       // Otherwise, the element of the card that has the focus (keyboard user) gets it back once rewritten.
-      const kept = this._confirm ? null : this._focusedSpot();
+      const kept = this._confirm || this._byPointer ? null : this._focusedSpot();
       this._html = html;
       this.shadowRoot.innerHTML = html;
       this._placeImages();
@@ -4767,6 +4794,8 @@ class VacuumBase extends HTMLElement {
   }
 
   _onClick(ev) {
+    this._pressing = false;
+    if (ev.detail === 0) this._byPointer = false;
     const path = ev.composedPath();
     const el = path.find((n) => n.dataset && (n.dataset.entity || n.dataset.action));
     // Just closed: the rest of a double click on OK does nothing.
