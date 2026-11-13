@@ -8,6 +8,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/juju35/ha-vacuum-card/blob/main/LICENSE)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/julienstep9)
 
+<p align="center"><img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/icon.svg" alt="Vacuum Card" width="120"></p>
+
 <p align="center">
   <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/logo.svg" alt="Roborock" width="64">&nbsp;&nbsp;
   <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/xiaomi.png" alt="Xiaomi" width="64">&nbsp;&nbsp;
