@@ -32,3 +32,14 @@ test("with Vacuum Map, its map instead of the picture, unless vector_map is fals
   assert.doesNotMatch(render({ vector_map: false }), /data-vector-map/);
   assert.doesNotMatch(render({ map_entity: "camera.dustbusters_map" }), /data-vector-map/);
 });
+
+test("the mini card shows the map under the robot as the full card does (show_map, while cleaning by default)", () => {
+  const mini = (config) => {
+    const card = new vc.VacuumMiniCard();
+    card.setConfig({ device: "saros", ...config });
+    card.hass = hass;
+    return card.shadowRoot.innerHTML;
+  };
+  assert.match(mini({ show_map: "always" }), /<div class="map-wrap"><div class="map vector/);
+  assert.doesNotMatch(mini({ show_map: "never" }), /<div class="map-wrap">/);
+});

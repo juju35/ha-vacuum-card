@@ -5768,6 +5768,9 @@ const MINI_STYLE = `
   .line .icon { width: 14px; height: 14px; }
   .controls { display: flex; gap: 6px; flex: none; }
   .rooms-wrap { padding: 0 12px 12px; }
+  /* The map, under the robot while it cleans (show_map, "cleaning" by default) */
+  .map-wrap { padding: 0 12px 12px; }
+  .map-wrap:empty { display: none; }
   /* Narrow mini card (6 of 12 columns, 156-250 px): the round buttons move under the robot, then the picture
      gives way to the battery and the info lines. */
   @container (max-width: 300px) {
@@ -5870,6 +5873,7 @@ class VacuumMiniCard extends VacuumCard {
           ${dev.vacuum && this._config.show_controls !== false ? `<div class="controls">${this._controls(dev, true)}</div>` : ""}
         </div>
         ${rooms ? `<div class="rooms-wrap">${rooms}</div>` : ""}
+        ${this._showMap(dev) ? `<div class="map-wrap">${this._map(dev)}</div>` : ""}
       </ha-card>`;
   }
 }
@@ -6054,6 +6058,12 @@ class VacuumEditorBase extends HTMLElement {
   }
 }
 
+// show_map in the editors: never, while cleaning, always
+const showMapField = (tr) => ({
+  name: "show_map",
+  selector: { select: { mode: "dropdown", options: ["never", "cleaning", "always"].map((v) => ({ value: v, label: tr(`map_${v}`) })) } },
+});
+
 class VacuumCardEditor extends VacuumEditorBase {
   static get toggles() {
     return [
@@ -6076,15 +6086,7 @@ class VacuumCardEditor extends VacuumEditorBase {
 
   static extraFields(tr) {
     return [
-      {
-        name: "show_map",
-        selector: {
-          select: {
-            mode: "dropdown",
-            options: ["never", "cleaning", "always"].map((v) => ({ value: v, label: tr(`map_${v}`) })),
-          },
-        },
-      },
+      showMapField(tr),
       {
         name: "collapsed",
         selector: {
@@ -6121,6 +6123,14 @@ class VacuumMiniCardEditor extends VacuumEditorBase {
       ["room_selection", true],
       ["zoom", true],
     ];
+  }
+
+  static get selects() {
+    return { show_map: "cleaning" };
+  }
+
+  static extraFields(tr) {
+    return [showMapField(tr)];
   }
 }
 
