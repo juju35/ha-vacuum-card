@@ -257,17 +257,18 @@ test("a re-render keeps the popup focus without scrolling the page to the card",
   assert.equal(focusCalls[0]?.preventScroll, true);
 });
 
-test("Escape still closes the popup after the card is detached and attached again", () => {
+test("the popup closes when the card leaves the page, with nothing run", () => {
   const hass = makeHass();
   const card = newCard(hass);
   card.connectedCallback();
   click(card, { action: "routine", entity: "button.routine", label: "Morning" });
+  assert.match(card.shadowRoot.innerHTML, /dialog-open/);
   card.disconnectedCallback();
   card.connectedCallback();
-  assert.match(card.shadowRoot.innerHTML, /dialog-open/);
+  assert.doesNotMatch(card.shadowRoot.innerHTML, /dialog-open/, "closed on the way back");
   vc.window.fire("keydown", { key: "Escape", stopPropagation() {} });
-  assert.doesNotMatch(card.shadowRoot.innerHTML, /dialog-open/);
   assert.equal(hass.calls.length, 0);
+  card.disconnectedCallback();
 });
 
 const newMini = (hass, config = {}) => {
