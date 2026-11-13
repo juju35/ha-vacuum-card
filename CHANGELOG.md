@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.12.0 - 2026-11-13
+
+### Features
+- Mini card: the map under the robot while it cleans, as on the full card — the Vacuum Map live map for a Roborock robot when it is installed, else the map picture. `show_map` (`cleaning` by default, `always`, `never`) now works on the mini card's compact view too, and is in its visual editor.
+
 ## 2.11.0 - 2026-11-13
 
 ### Features
