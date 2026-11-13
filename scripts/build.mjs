@@ -1,7 +1,7 @@
 // Bundles src/vacuum-card.js into the single HACS file dist/vacuum-card.js,
 // inlining the integration logos (Roborock, Xiaomi Mi Home, Xiaomi, Dreame, Ecovacs, Dyson, iRobot) so the card needs no extra resource.
 // Usage: node scripts/build.mjs  (dist/ is not committed: CI and the release workflow build it)
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { splitDist } from "./i18n-split.mjs";
 
@@ -29,4 +29,4 @@ console.log(`Built dist/vacuum-card.js and dist/roborock-card.js (${(out.length 
 
 // Translations: English stays in the bundle, each other language goes to dist/vacuum-card.i18n.<lang>.js,
 // fetched when a card needs it (scripts/i18n-split.mjs).
-if (process.argv[1] === fileURLToPath(import.meta.url)) splitDist(`${root}dist`, "vacuum-card.js", { version: pkg.version, aliases: ["roborock-card.js"] });
+if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) splitDist(`${root}dist`, "vacuum-card.js", { version: pkg.version, aliases: ["roborock-card.js"] });
