@@ -6119,23 +6119,25 @@ class VacuumCardEditor extends VacuumEditorBase {
   }
 }
 
+// The full card's options too: the detail button shows the full card's content with this same configuration.
 class VacuumMiniCardEditor extends VacuumEditorBase {
   static get toggles() {
-    return [
+    const own = [
       ["show_title", true],
       ["show_subtitle", true],
       ["show_controls", true],
       ["room_selection", true],
       ["zoom", true],
     ];
+    return [...own, ...VacuumCardEditor.toggles.filter(([name]) => !own.some(([n]) => n === name))];
   }
 
   static get selects() {
-    return { show_map: "cleaning" };
+    return VacuumCardEditor.selects;
   }
 
   static extraFields(tr) {
-    return [showMapField(tr)];
+    return VacuumCardEditor.extraFields(tr);
   }
 }
 

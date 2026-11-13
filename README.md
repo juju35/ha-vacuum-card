@@ -192,18 +192,18 @@ language: fr
 | `show_controls` | both | `true` | Start / pause, stop, dock and locate buttons (robot vacuums), dock actions (empty bin, wash and dry mop) and maintenance reset buttons |
 | `room_selection` | both | `true` | Roborock, Dreame Vacuum and Xiaomi Miio (with `rooms`): the Start button opens the room selector; `false` starts a full cleaning right away |
 | `rooms` | both | — | Rooms of the room selector, as a list of `id` (segment id) and `name`, in the order shown: needed with Xiaomi Miio, which cannot list them; with Roborock and Dreame Vacuum, replaces the rooms read from the robot. See [Room selection](#room-selection) |
-| `zoom` | mini | `true` | Detail button at the top right of the mini card: it shows the full card's content (with the same options, so `show_dock`, `show_map`, `collapsed`… can be set on the mini card too) and switches back to the compact view; a click outside the card also brings the compact view back. `false` removes the button |
-| `show_modes` | full | `true` | Cleaning mode, suction power, mop intensity and route |
-| `show_routines` | full | `true` | Routines buttons (Roborock integration) |
-| `show_dock` | full | `true` | Dock status (Roborock integration; the Clean Base water tank of the iRobot Combo j9+) |
-| `show_consumables` | full | `true` | Maintenance (remaining time of brushes, filter, sensors…) |
-| `show_stats` | full | `true` | Cleaning statistics |
+| `zoom` | mini | `true` | Detail button at the top right of the mini card: it shows the full card's content (with the same options, so `show_modes`, `show_dock`, `show_map`, `collapsed`, `map_entity`, `crop`… can be set on the mini card too, in YAML or in its visual editor) and switches back to the compact view; a click outside the card also brings the compact view back. `false` removes the button |
+| `show_modes` | both | `true` | Cleaning mode, suction power, mop intensity and route |
+| `show_routines` | both | `true` | Routines buttons (Roborock integration) |
+| `show_dock` | both | `true` | Dock status (Roborock integration; the Clean Base water tank of the iRobot Combo j9+) |
+| `show_consumables` | both | `true` | Maintenance (remaining time of brushes, filter, sensors…) |
+| `show_stats` | both | `true` | Cleaning statistics |
 | `show_map` | both | `cleaning` | Map of the current floor: `cleaning` (only while the robot is cleaning), `always` (or `true`) or `never` (or `false`). On the mini card, under the robot in the compact view |
-| `collapsed` | full | `[stats, dock]` | Sections folded by default, among `routines`, `dock`, `consumables` and `stats` (`[]` to unfold everything). Click a section title (or Tab to it and press Enter or Space) to fold or unfold it. The dock section unfolds on its own when the dock reports a problem |
-| `vector_map` | full | `true` | Roborock: the live map of [Vacuum Map](https://github.com/juju35/ha-vacuum-map) (rooms, path, robot, 2D / 3D, full screen) instead of the map picture, when it is installed |
-| `vector_map_options` | full | — | Options of the Vacuum Map card, e.g. `{view: 3d, rotation: 90}` (see its [options](https://github.com/juju35/ha-vacuum-map#card)) |
-| `map_entity` | full | — | Camera or image entity to show as the map instead of the integration's map, e.g. the camera of [Xiaomi Cloud Map Extractor](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor) |
-| `crop` | full | — | Crop the map, in pixels of the map image: `top`, `bottom`, `left` and/or `right` (see below) |
+| `collapsed` | both | `[stats, dock]` | Sections folded by default, among `routines`, `dock`, `consumables` and `stats` (`[]` to unfold everything). Click a section title (or Tab to it and press Enter or Space) to fold or unfold it. The dock section unfolds on its own when the dock reports a problem |
+| `vector_map` | both | `true` | Roborock: the live map of [Vacuum Map](https://github.com/juju35/ha-vacuum-map) (rooms, path, robot, 2D / 3D, full screen) instead of the map picture, when it is installed |
+| `vector_map_options` | both | — | Options of the Vacuum Map card, e.g. `{view: 3d, rotation: 90}` (see its [options](https://github.com/juju35/ha-vacuum-map#card)). YAML only (the visual editor keeps it) |
+| `map_entity` | both | — | Camera or image entity to show as the map instead of the integration's map, e.g. the camera of [Xiaomi Cloud Map Extractor](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor) |
+| `crop` | both | — | Crop the map, in pixels of the map image: `top`, `bottom`, `left` and/or `right` (see below) |
 | `language` | both | Auto | Force language: `fr`, `en`, `de`, `es`, `sr`, `sr-Latn`, `it`, `nl`, `pt`, `pl`, `ro`, `da`, `sv`, `bg`, `ru`, `uk`, `hu`, `sk`, `cs`, `sl`, `lv` or `el` (auto-detects from HA settings) |
 
 ### Vacuum Map
@@ -217,7 +217,7 @@ vector_map_options:
   rotation: 90
 ```
 
-`vector_map: false` brings the map picture back; a `map_entity` is always shown as set.
+`vector_map: false` brings the map picture back; a `map_entity` is always shown as set. `vector_map_options` is YAML only (the visual editor keeps it).
 
 ### Cropping the map
 
