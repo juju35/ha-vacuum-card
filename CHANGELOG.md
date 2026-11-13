@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.10.2 - 2026-11-13
+
+### Fixes
+- The confirmation popup closes when the card leaves the page (another dashboard view, a conditional card hidden), like the rest of the card: it no longer comes back open, and nothing is run.
+
 ## 2.10.1 - 2026-11-13
 
 ### Fixes

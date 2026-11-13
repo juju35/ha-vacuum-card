@@ -4571,8 +4571,6 @@ class VacuumBase extends HTMLElement {
     (this._outside ??= watchOutside(this, (ev) => this._onOutside(ev))).on();
     // Back on the page after leaving it: rendered again in its default state.
     if (this._hass && this._config) this._update();
-    // Reattached with the popup still open (view switch, editor): Escape keeps closing it.
-    if (this._confirm) window.addEventListener("keydown", this._onKey);
     // No new map frame is loaded while the card is off-screen or the tab hidden (see _mapsPaused); the latest one
     // is loaded as soon as the card can be seen again.
     this._onVisibility ??= () => this._syncMaps();
@@ -4602,6 +4600,7 @@ class VacuumBase extends HTMLElement {
     // Left (another dashboard view, a conditional card hidden): back to the defaults, so that the card does not come
     // back unfolded or with its popup open.
     this._toggled = new Map();
+    this._confirm = null;
     window.removeEventListener("keydown", this._onKey);
     document.removeEventListener("visibilitychange", this._onVisibility);
     this._observer?.disconnect();
