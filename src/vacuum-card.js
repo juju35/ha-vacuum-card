@@ -4391,6 +4391,42 @@ const isOutside = (card, ev) => {
   return !path.includes(card) && !(card._zoomOverlay && path.includes(card._zoomOverlay)) && !path.some((n) => DIALOG_TAGS.has(n.tagName));
 };
 
+// "A click elsewhere" is caught on the pointer, not only on the click event: on iOS (Safari and the companion app)
+// a tap on something that is not clickable (the background, an empty spot, a card with no action) sends no click to
+// the page. It counts when the press and the release are both outside the card (a slider dragged out of the card
+// does not fold it), and a scroll does not count (the browser cancels the pointer). Keyboard clicks still go through
+// the click event.
+const watchOutside = (card, handler) => {
+  let downOutside = false;
+  const onDown = (ev) => {
+    downOutside = isOutside(card, ev);
+  };
+  const onUp = (ev) => {
+    if (downOutside && isOutside(card, ev)) handler(ev);
+    downOutside = false;
+  };
+  const onClick = (ev) => {
+    if (ev.detail === 0 && isOutside(card, ev)) handler(ev);
+  };
+  return {
+    on() {
+      document.addEventListener("pointerdown", onDown, true);
+      document.addEventListener("pointerup", onUp, true);
+      document.addEventListener("click", onClick, true);
+    },
+    // A tap (press and release at the same spot), for the tests.
+    tap(ev) {
+      onDown(ev);
+      onUp(ev);
+    },
+    off() {
+      document.removeEventListener("pointerdown", onDown, true);
+      document.removeEventListener("pointerup", onUp, true);
+      document.removeEventListener("click", onClick, true);
+    },
+  };
+};
+
 // After the confirmation popup closes, clicks on the card are ignored for this long: the second click of a double
 // click on OK would otherwise land on what lies under the button (the battery, an action button).
 const CONFIRM_GUARD_MS = 400;
@@ -4459,9 +4495,28 @@ class VacuumBase extends HTMLElement {
     this.attachShadow({ mode: "open" });
     this._html = "";
     this.shadowRoot.addEventListener("click", (ev) => this._onClick(ev));
+    // No rewrite of the card between the press and the release: Home Assistant updates the card several times a
+    // second, and a rewrite under the pointer replaces the element pressed, so that the click lands on the card itself
+    // and does nothing. The pending render is done once released (after the click). The focus is only kept across
+    // rewrites for the keyboard: put back after a mouse click or a tap, it would draw the focus ring.
+    this.shadowRoot.addEventListener("pointerdown", () => {
+      this._byPointer = true;
+      this._pressing = true;
+      window.addEventListener("pointerup", this._onPressEnd, true);
+      window.addEventListener("pointercancel", this._onPressEnd, true);
+    });
+    this._onPressEnd = () => {
+      window.removeEventListener("pointerup", this._onPressEnd, true);
+      window.removeEventListener("pointercancel", this._onPressEnd, true);
+      setTimeout(() => {
+        this._pressing = false;
+        if (this._dirty) this._update();
+      }, 0);
+    };
     // Enter / Space on an element with the button role (tile, section title, chip…) acts as a click, as on a <button>
     // (which clicks on its own: left alone).
     this.shadowRoot.addEventListener("keydown", (ev) => {
+      this._byPointer = false;
       if ((ev.key !== "Enter" && ev.key !== " ") || ev.target?.getAttribute?.("role") !== "button") return;
       ev.preventDefault();
       ev.target.click();
@@ -4504,7 +4559,7 @@ class VacuumBase extends HTMLElement {
   }
 
   // A click elsewhere on the page folds the sections back to their defaults (as in ha-carburants-france).
-  // A click, not a pointerdown: folding on press would shift the layout under the pointer before the click.
+  // Folded on the release, not on the press: folding on press would shift the layout under the pointer before the click.
   connectedCallback() {
     // Clicks inside a dialog (the more-info opened from the card) leave the card as it is.
     this._onOutside ??= (ev) => {
@@ -4513,7 +4568,9 @@ class VacuumBase extends HTMLElement {
       if (this._confirm) this._closeConfirm();
       else this._update();
     };
-    document.addEventListener("click", this._onOutside, true);
+    (this._outside ??= watchOutside(this, (ev) => this._onOutside(ev))).on();
+    // Back on the page after leaving it: rendered again in its default state.
+    if (this._hass && this._config) this._update();
     // Reattached with the popup still open (view switch, editor): Escape keeps closing it.
     if (this._confirm) window.addEventListener("keydown", this._onKey);
     // No new map frame is loaded while the card is off-screen or the tab hidden (see _mapsPaused); the latest one
@@ -4538,7 +4595,13 @@ class VacuumBase extends HTMLElement {
   disconnectedCallback() {
     clearInterval(this._tick);
     this._tick = null;
-    document.removeEventListener("click", this._onOutside, true);
+    this._outside?.off();
+    this._pressing = false;
+    window.removeEventListener("pointerup", this._onPressEnd, true);
+    window.removeEventListener("pointercancel", this._onPressEnd, true);
+    // Left (another dashboard view, a conditional card hidden): back to the defaults, so that the card does not come
+    // back unfolded or with its popup open.
+    this._toggled = new Map();
     window.removeEventListener("keydown", this._onKey);
     document.removeEventListener("visibilitychange", this._onVisibility);
     this._observer?.disconnect();
@@ -4577,6 +4640,11 @@ class VacuumBase extends HTMLElement {
 
   _update() {
     if (!this._hass || !this._config) return;
+    if (this._pressing) {
+      this._dirty = true;
+      return;
+    }
+    this._dirty = false;
     let html = this._render();
     if (this._confirm) {
       html = html.replace(/<ha-card>([\s\S]*)<\/ha-card>\s*$/, (_, inner) => `<ha-card class="dialog-open">${inner}${this._confirmHtml()}</ha-card>`);
@@ -4585,7 +4653,7 @@ class VacuumBase extends HTMLElement {
       // The popup keeps its focus across the rewrite (OK, or Cancel when the user moved to it).
       const focused = this._confirm && this.shadowRoot.activeElement?.dataset?.action;
       // Otherwise, the element of the card that has the focus (keyboard user) gets it back once rewritten.
-      const kept = this._confirm ? null : this._focusedSpot();
+      const kept = this._confirm || this._byPointer ? null : this._focusedSpot();
       this._html = html;
       this.shadowRoot.innerHTML = html;
       this._placeImages();
@@ -4726,6 +4794,8 @@ class VacuumBase extends HTMLElement {
   }
 
   _onClick(ev) {
+    this._pressing = false;
+    if (ev.detail === 0) this._byPointer = false;
     const path = ev.composedPath();
     const el = path.find((n) => n.dataset && (n.dataset.entity || n.dataset.action));
     // Just closed: the rest of a double click on OK does nothing.
@@ -5666,12 +5736,14 @@ class VacuumMiniCard extends VacuumCard {
 
   connectedCallback() {
     super.connectedCallback();
-    document.addEventListener("click", this._onUnzoom, true);
+    (this._unzoom ??= watchOutside(this, (ev) => this._onUnzoom(ev))).on();
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    document.removeEventListener("click", this._onUnzoom, true);
+    this._unzoom?.off();
+    // Back to the compact view once off the screen (see the full card).
+    this._zoomed = false;
   }
 
   getCardSize() {

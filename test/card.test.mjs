@@ -76,6 +76,44 @@ test("a click inside the more-info dialog keeps the sections unfolded", () => {
   assert.equal(card._toggled.size, 0);
 });
 
+test("no rewrite under a press: the pending update is drawn on release, a click renders at once", async () => {
+  const card = newCard(makeHass());
+  card.connectedCallback();
+  click(card, { action: "toggle_section", section: "stats" });
+  const open = card.shadowRoot.innerHTML;
+  card.shadowRoot.listeners.pointerdown({});
+  card._outside.tap({ composedPath: () => [{ tagName: "DIV" }] });
+  assert.equal(card.shadowRoot.innerHTML, open, "no rewrite under the pointer");
+  card._onPressEnd();
+  await new Promise((r) => setTimeout(r, 10));
+  assert.notEqual(card.shadowRoot.innerHTML, open, "drawn once released");
+  // A click during a press renders at once.
+  card.shadowRoot.listeners.pointerdown({});
+  const before = card.shadowRoot.innerHTML;
+  click(card, { action: "toggle_section", section: "stats" });
+  assert.notEqual(card.shadowRoot.innerHTML, before);
+  assert.equal(card._pressing, false);
+  card.disconnectedCallback();
+});
+
+test("folding: a tap elsewhere (pointer), not a press in the card released outside; leaving the page folds back", () => {
+  const card = newCard(makeHass());
+  card.connectedCallback();
+  click(card, { action: "toggle_section", section: "stats" });
+  // A slider pressed in the card and released outside of it: nothing folds.
+  card._outside.tap({ composedPath: () => [card] });
+  assert.equal(card._toggled.size, 1);
+  // A tap on a spot that sends no click (iOS): the pointer alone folds it.
+  card._outside.tap({ composedPath: () => [{ tagName: "DIV" }] });
+  assert.equal(card._toggled.size, 0);
+  // Left with a section unfolded and back: folded.
+  click(card, { action: "toggle_section", section: "stats" });
+  card.disconnectedCallback();
+  card.connectedCallback();
+  assert.equal(card._toggled.size, 0);
+  card.disconnectedCallback();
+});
+
 test("a failed dock switch call drops the pending state and leaves no unhandled rejection", async () => {
   const rejections = [];
   const onRejection = (e) => rejections.push(e);
