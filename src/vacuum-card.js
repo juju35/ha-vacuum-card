@@ -4391,6 +4391,42 @@ const isOutside = (card, ev) => {
   return !path.includes(card) && !(card._zoomOverlay && path.includes(card._zoomOverlay)) && !path.some((n) => DIALOG_TAGS.has(n.tagName));
 };
 
+// "A click elsewhere" is caught on the pointer, not only on the click event: on iOS (Safari and the companion app)
+// a tap on something that is not clickable (the background, an empty spot, a card with no action) sends no click to
+// the page. It counts when the press and the release are both outside the card (a slider dragged out of the card
+// does not fold it), and a scroll does not count (the browser cancels the pointer). Keyboard clicks still go through
+// the click event.
+const watchOutside = (card, handler) => {
+  let downOutside = false;
+  const onDown = (ev) => {
+    downOutside = isOutside(card, ev);
+  };
+  const onUp = (ev) => {
+    if (downOutside && isOutside(card, ev)) handler(ev);
+    downOutside = false;
+  };
+  const onClick = (ev) => {
+    if (ev.detail === 0 && isOutside(card, ev)) handler(ev);
+  };
+  return {
+    on() {
+      document.addEventListener("pointerdown", onDown, true);
+      document.addEventListener("pointerup", onUp, true);
+      document.addEventListener("click", onClick, true);
+    },
+    // A tap (press and release at the same spot), for the tests.
+    tap(ev) {
+      onDown(ev);
+      onUp(ev);
+    },
+    off() {
+      document.removeEventListener("pointerdown", onDown, true);
+      document.removeEventListener("pointerup", onUp, true);
+      document.removeEventListener("click", onClick, true);
+    },
+  };
+};
+
 // After the confirmation popup closes, clicks on the card are ignored for this long: the second click of a double
 // click on OK would otherwise land on what lies under the button (the battery, an action button).
 const CONFIRM_GUARD_MS = 400;
@@ -4504,7 +4540,7 @@ class VacuumBase extends HTMLElement {
   }
 
   // A click elsewhere on the page folds the sections back to their defaults (as in ha-carburants-france).
-  // A click, not a pointerdown: folding on press would shift the layout under the pointer before the click.
+  // Folded on the release, not on the press: folding on press would shift the layout under the pointer before the click.
   connectedCallback() {
     // Clicks inside a dialog (the more-info opened from the card) leave the card as it is.
     this._onOutside ??= (ev) => {
@@ -4513,7 +4549,9 @@ class VacuumBase extends HTMLElement {
       if (this._confirm) this._closeConfirm();
       else this._update();
     };
-    document.addEventListener("click", this._onOutside, true);
+    (this._outside ??= watchOutside(this, (ev) => this._onOutside(ev))).on();
+    // Back on the page after leaving it: rendered again in its default state.
+    if (this._hass && this._config) this._update();
     // Reattached with the popup still open (view switch, editor): Escape keeps closing it.
     if (this._confirm) window.addEventListener("keydown", this._onKey);
     // No new map frame is loaded while the card is off-screen or the tab hidden (see _mapsPaused); the latest one
@@ -4538,7 +4576,10 @@ class VacuumBase extends HTMLElement {
   disconnectedCallback() {
     clearInterval(this._tick);
     this._tick = null;
-    document.removeEventListener("click", this._onOutside, true);
+    this._outside?.off();
+    // Left (another dashboard view, a conditional card hidden): back to the defaults, so that the card does not come
+    // back unfolded or with its popup open.
+    this._toggled = new Map();
     window.removeEventListener("keydown", this._onKey);
     document.removeEventListener("visibilitychange", this._onVisibility);
     this._observer?.disconnect();
@@ -5666,12 +5707,14 @@ class VacuumMiniCard extends VacuumCard {
 
   connectedCallback() {
     super.connectedCallback();
-    document.addEventListener("click", this._onUnzoom, true);
+    (this._unzoom ??= watchOutside(this, (ev) => this._onUnzoom(ev))).on();
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    document.removeEventListener("click", this._onUnzoom, true);
+    this._unzoom?.off();
+    // Back to the compact view once off the screen (see the full card).
+    this._zoomed = false;
   }
 
   getCardSize() {
