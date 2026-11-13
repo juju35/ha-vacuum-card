@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.12.2 - 2026-11-14
+
+### Fixes
+- The mini card's visual editor now offers the full card's options its detail view uses (`show_modes`, `show_routines`, `show_dock`, `show_consumables`, `show_stats`, `vector_map`, `collapsed`, `map_entity`, `crop`): they could only be set in YAML. `vector_map_options` stays YAML only, as documented.
+
 ## 2.12.1 - 2026-11-13
 
 ### Fixes

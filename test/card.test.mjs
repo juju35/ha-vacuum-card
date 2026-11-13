@@ -1152,3 +1152,20 @@ test("the header icon takes the worst of the status, the water tanks and the con
   assert.equal(icon(set("sensor.aspirateur_brosse_principale", "5")), "warn");
   assert.equal(icon(set("sensor.aspirateur_brosse_principale", "0")), "crit");
 });
+
+test("the mini card editor offers the full card's options its detail view uses, not vector_map_options", () => {
+  const names = (tag) => {
+    const editor = new (vc.window.customElements.get(tag))();
+    editor.setConfig({ device: "saros" });
+    editor._hass = makeHass();
+    return editor._schema().flatMap((f) => (f.type === "grid" ? f.schema.map((x) => x.name) : [f.name]));
+  };
+  const full = names("vacuum-card-editor");
+  const mini = names("vacuum-mini-card-editor");
+  for (const name of full) assert.ok(mini.includes(name), name);
+  for (const name of ["show_modes", "show_routines", "show_dock", "show_consumables", "show_stats", "collapsed", "vector_map", "map_entity", "crop", "show_map", "zoom"])
+    assert.ok(mini.includes(name), name);
+  assert.ok(!mini.includes("vector_map_options") && !full.includes("vector_map_options"));
+  // Every label in every language.
+  for (const [l, table] of Object.entries(vc.STRINGS)) for (const name of mini) assert.ok(table[name], `${l}: ${name}`);
+});
