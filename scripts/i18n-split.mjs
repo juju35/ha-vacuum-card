@@ -147,21 +147,41 @@ var ${ns} = (() => {
   const data = {};
   const loads = {};
   const tags = new Set();
-  let base;
-  const baseUrl = () => {
-    if (base !== undefined) return base;
-    base = null;
-    const re = /\\/(${names.map((n) => n.replace(/[.*+?^${}()|[\]\\]/g, "\\\\$&")).join("|")})\\.js(\\?|$)/;
+  // This bundle's own URL, read from the stack of an error raised while it runs: a dashboard resource is a
+  // module, where document.currentScript is null, and another card may ship a file of the same name (the
+  // community vacuum-card also installs a vacuum-card.js), so a lookup by file name alone can pick the wrong one.
+  const NAME = /\\/(${names.map((n) => n.replace(/[.*+?^${}()|[\]\\]/g, "\\\\$&")).join("|")})\\.js(\\?|$)/;
+  const SELF = (() => {
+    try {
+      const stack = new Error().stack || "";
+      for (const m of stack.matchAll(/(https?:\\/\\/[^\\s()@]+?\\.js(?:\\?[^\\s():]*)?):\\d+(?::\\d+)?/g)) if (NAME.test(m[1])) return m[1];
+    } catch (_err) {
+      /* no stack */
+    }
+    return null;
+  })();
+  let bases;
+  // Where the language files may be: next to this bundle first, then next to any loaded file of the same name.
+  const baseUrls = () => {
+    if (bases) return bases;
+    const found = SELF ? [SELF] : [];
     try {
       const src = document.currentScript?.src;
-      if (src && re.test(src)) base = src;
-      const entries = base ? [] : performance.getEntriesByType("resource");
-      for (let i = entries.length - 1; i >= 0 && !base; i--) if (re.test(entries[i].name)) base = entries[i].name;
-      if (!base) for (const s of document.querySelectorAll("script[src]")) if (re.test(s.src)) base = s.src;
+      if (src && NAME.test(src)) found.push(src);
+      const entries = performance.getEntriesByType("resource");
+      for (let i = entries.length - 1; i >= 0; i--) if (NAME.test(entries[i].name)) found.push(entries[i].name);
+      for (const s of document.querySelectorAll("script[src]")) if (NAME.test(s.src)) found.push(s.src);
     } catch (_err) {
       /* no DOM */
     }
-    return base;
+    const seen = new Set();
+    bases = found.filter((u) => {
+      const dir = new URL(".", u).href;
+      if (seen.has(dir)) return false;
+      seen.add(dir);
+      return true;
+    });
+    return bases;
   };
   const own = [];
   const compose = ${COMPOSE};
@@ -185,14 +205,15 @@ var ${ns} = (() => {
   };
   const load = (lang) => {
     if (!LANGS.has(lang) || loads[lang]) return loads[lang];
-    const url = baseUrl();
-    if (!url) {
+    const urls = baseUrls();
+    if (!urls.length) {
       // Bundle injected as content (screenshot harness): no file to fetch, English stays.
       loads[lang] = Promise.resolve();
       return undefined;
     }
-    const file = new URL(\`${stem}.i18n.\${lang}.js?v=${version}\`, url).href;
-    loads[lang] = import(file).then(
+    const attempt = (i) =>
+      import(new URL(\`${stem}.i18n.\${lang}.js?v=${version}\`, urls[i]).href).catch((err) => (i + 1 < urls.length ? attempt(i + 1) : Promise.reject(err)));
+    loads[lang] = attempt(0).then(
       (m) => {
         data[lang] = m.default;
         tables.forEach((_t, n) => compose(tables, own, SPREADS, data, lang, n));
