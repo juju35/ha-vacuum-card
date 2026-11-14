@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.12.3 - 2026-11-14
+
+### Fixes
+- Translations load again when another card ships a file of the same name, such as the community vacuum-card (`vacuum-card.js`): the card looked for its language files next to the first `vacuum-card.js` it found, which could be the other card's, and stayed in English. It now finds its own file, and tries the other candidates before falling back to English.
+
 ## 2.12.2 - 2026-11-14
 
 ### Fixes
