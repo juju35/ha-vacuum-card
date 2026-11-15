@@ -1169,3 +1169,21 @@ test("the mini card editor offers the full card's options its detail view uses, 
   // Every label in every language.
   for (const [l, table] of Object.entries(vc.STRINGS)) for (const name of mini) assert.ok(table[name], `${l}: ${name}`);
 });
+
+test("show_map always_folded: a collapsible Map section, folded when idle and unfolded while cleaning", () => {
+  const vacuum = "vacuum.aspirateur";
+  const build = (hass) => {
+    const card = new vc.VacuumCard();
+    card.setConfig({ device: "saros", show_map: "always_folded" });
+    card.hass = hass;
+    return card.shadowRoot.innerHTML;
+  };
+  // Idle (docked): the Map section header is there but folded, so no map body is drawn.
+  const idle = build(makeHass());
+  assert.match(idle, /data-action="toggle_section" data-section="map" aria-expanded="false"/);
+  assert.doesNotMatch(idle, /class="map /);
+  // Cleaning: the same section, unfolded, with the map shown.
+  const clean = build(makeHass({ ...states, [vacuum]: { ...states[vacuum], state: "cleaning" } }));
+  assert.match(clean, /data-section="map" aria-expanded="true"/);
+  assert.match(clean, /class="map /);
+});

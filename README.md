@@ -48,7 +48,7 @@ The cards work on top of the integrations you already use — [Roborock](https:/
 - Start / pause, stop, return to dock and locate buttons
 - Maintenance: main brush, side brush, filter, sensors, mop, dock strainer… with remaining time or percentage, and a reset button (with confirmation) when the integration provides one
 - Statistics: last clean, number of cleanings, total area and time
-- Map of the current floor while the robot is cleaning (or always, or never), with optional cropping, enlarged full screen on click; any camera or image entity can be used (`map_entity`)
+- Map of the current floor while the robot is cleaning (or always, always folded when idle, or never), with optional cropping, enlarged full screen on click; any camera or image entity can be used (`map_entity`)
 - Room selector on the Start button: Roborock, Dreame Vacuum, and Xiaomi Miio with the `rooms` option (see [Room selection](#room-selection))
 - Roborock: routines of the Roborock app as one-tap buttons, dock (water tanks, detergent, auto-empty mode, mop drying, Empty bin / Wash mop / Dry mop buttons)
 - Collapsible sections (statistics and dock folded by default)
@@ -198,7 +198,7 @@ language: fr
 | `show_dock` | both | `true` | Dock status (Roborock integration; the Clean Base water tank of the iRobot Combo j9+) |
 | `show_consumables` | both | `true` | Maintenance (remaining time of brushes, filter, sensors…) |
 | `show_stats` | both | `true` | Cleaning statistics |
-| `show_map` | both | `cleaning` | Map of the current floor: `cleaning` (only while the robot is cleaning), `always` (or `true`) or `never` (or `false`). On the mini card, under the robot in the compact view |
+| `show_map` | both | `cleaning` | Map of the current floor: `cleaning` (only while the robot is cleaning), `always` (or `true`), `always_folded` (always shown, as a collapsible **Map** section that is folded while the robot is idle and unfolds while it cleans — fold or unfold it by hand anytime) or `never` (or `false`). On the mini card, under the robot in the compact view |
 | `collapsed` | both | `[stats, dock]` | Sections folded by default, among `routines`, `dock`, `consumables` and `stats` (`[]` to unfold everything). Click a section title (or Tab to it and press Enter or Space) to fold or unfold it. The dock section unfolds on its own when the dock reports a problem |
 | `vector_map` | both | `true` | Roborock: the live map of [Vacuum Map](https://github.com/juju35/ha-vacuum-map) (rooms, path, robot, 2D / 3D, full screen) instead of the map picture, when it is installed |
 | `vector_map_options` | both | — | Options of the Vacuum Map card, e.g. `{view: 3d, rotation: 90}` (see its [options](https://github.com/juju35/ha-vacuum-map#card)). YAML only (the visual editor keeps it) |
