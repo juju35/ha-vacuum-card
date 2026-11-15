@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.13.0 - 2026-11-15
+
+### Features
+- New `show_map: always_folded`: the map is always available but shown as a collapsible **Map** section — folded while the robot is idle, unfolded while it cleans, and foldable by hand anytime. On both the card and the mini card.
+
 ## 2.12.3 - 2026-11-14
 
 ### Fixes

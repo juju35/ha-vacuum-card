@@ -714,6 +714,7 @@ const STRINGS = {
     map_never: "Never",
     map_cleaning: "While cleaning",
     map_always: "Always",
+    map_always_folded: "Always, folded when idle",
     language: "Language",
     lang_auto: "Automatic",
     zoom: "Detail button",
@@ -870,6 +871,7 @@ const STRINGS = {
     map_never: "Jamais",
     map_cleaning: "Pendant le nettoyage",
     map_always: "Toujours",
+    map_always_folded: "Toujours, repliée au repos",
     language: "Langue",
     lang_auto: "Automatique",
     zoom: "Bouton de détail",
@@ -1027,6 +1029,7 @@ const STRINGS = {
     map_never: "Nie",
     map_cleaning: "Während der Reinigung",
     map_always: "Immer",
+    map_always_folded: "Immer, eingeklappt im Leerlauf",
     language: "Sprache",
     lang_auto: "Automatisch",
     zoom: "Detailansicht",
@@ -1185,6 +1188,7 @@ const STRINGS = {
     map_never: "Nunca",
     map_cleaning: "Durante la limpieza",
     map_always: "Siempre",
+    map_always_folded: "Siempre, plegado en reposo",
     language: "Idioma",
     lang_auto: "Automático",
     zoom: "Botón de detalle",
@@ -1342,6 +1346,7 @@ const STRINGS = {
     map_never: "Никада",
     map_cleaning: "Током чишћења",
     map_always: "Увек",
+    map_always_folded: "Увек, скупљено у мировању",
     language: "Језик",
     lang_auto: "Аутоматски",
     zoom: "Дугме за детаље",
@@ -1499,6 +1504,7 @@ const STRINGS = {
     map_never: "Nikada",
     map_cleaning: "Tokom čišćenja",
     map_always: "Uvek",
+    map_always_folded: "Uvek, skupljeno u mirovanju",
     language: "Jezik",
     lang_auto: "Automatski",
     zoom: "Dugme za detalje",
@@ -1656,6 +1662,7 @@ const STRINGS = {
     map_never: "Mai",
     map_cleaning: "Durante la pulizia",
     map_always: "Sempre",
+    map_always_folded: "Sempre, compressa a riposo",
     language: "Lingua",
     lang_auto: "Automatica",
     zoom: "Pulsante dettagli",
@@ -1813,6 +1820,7 @@ const STRINGS = {
     map_never: "Nooit",
     map_cleaning: "Tijdens het reinigen",
     map_always: "Altijd",
+    map_always_folded: "Altijd, ingeklapt bij inactiviteit",
     language: "Taal",
     lang_auto: "Automatisch",
     zoom: "Detailknop",
@@ -1970,6 +1978,7 @@ const STRINGS = {
     map_never: "Nunca",
     map_cleaning: "Durante a limpeza",
     map_always: "Sempre",
+    map_always_folded: "Sempre, recolhido quando inativo",
     language: "Idioma",
     lang_auto: "Automático",
     zoom: "Botão de detalhe",
@@ -2127,6 +2136,7 @@ const STRINGS = {
     map_never: "Nigdy",
     map_cleaning: "Podczas sprzątania",
     map_always: "Zawsze",
+    map_always_folded: "Zawsze, zwinięta w spoczynku",
     language: "Język",
     lang_auto: "Automatyczny",
     zoom: "Przycisk szczegółów",
@@ -2284,6 +2294,7 @@ const STRINGS = {
     map_never: "Niciodată",
     map_cleaning: "În timpul curățării",
     map_always: "Întotdeauna",
+    map_always_folded: "Întotdeauna, restrânsă în repaus",
     language: "Limbă",
     lang_auto: "Automat",
     zoom: "Buton de detalii",
@@ -2441,6 +2452,7 @@ const STRINGS = {
     map_never: "Aldrig",
     map_cleaning: "Under rengøring",
     map_always: "Altid",
+    map_always_folded: "Altid, foldet sammen i hvile",
     language: "Sprog",
     lang_auto: "Automatisk",
     zoom: "Detaljeknap",
@@ -2598,6 +2610,7 @@ const STRINGS = {
     map_never: "Aldrig",
     map_cleaning: "Under städning",
     map_always: "Alltid",
+    map_always_folded: "Alltid, hopfälld i viloläge",
     language: "Språk",
     lang_auto: "Automatiskt",
     zoom: "Detaljknapp",
@@ -2755,6 +2768,7 @@ const STRINGS = {
     map_never: "Никога",
     map_cleaning: "По време на почистване",
     map_always: "Винаги",
+    map_always_folded: "Винаги, свита в покой",
     language: "Език",
     lang_auto: "Автоматично",
     zoom: "Бутон за подробности",
@@ -2912,6 +2926,7 @@ const STRINGS = {
     map_never: "Никогда",
     map_cleaning: "Во время уборки",
     map_always: "Всегда",
+    map_always_folded: "Всегда, свёрнута в покое",
     language: "Язык",
     lang_auto: "Автоматически",
     zoom: "Кнопка подробностей",
@@ -3069,6 +3084,7 @@ const STRINGS = {
     map_never: "Ніколи",
     map_cleaning: "Під час прибирання",
     map_always: "Завжди",
+    map_always_folded: "Завжди, згорнута в спокої",
     language: "Мова",
     lang_auto: "Автоматично",
     zoom: "Кнопка подробиць",
@@ -3226,6 +3242,7 @@ const STRINGS = {
     map_never: "Soha",
     map_cleaning: "Takarítás közben",
     map_always: "Mindig",
+    map_always_folded: "Mindig, összecsukva üresjáratban",
     language: "Nyelv",
     lang_auto: "Automatikus",
     zoom: "Részletek gomb",
@@ -3383,6 +3400,7 @@ const STRINGS = {
     map_never: "Nikdy",
     map_cleaning: "Počas upratovania",
     map_always: "Vždy",
+    map_always_folded: "Vždy, zbalené v pokoji",
     language: "Jazyk",
     lang_auto: "Automaticky",
     zoom: "Tlačidlo podrobností",
@@ -3540,6 +3558,7 @@ const STRINGS = {
     map_never: "Nikdy",
     map_cleaning: "Během úklidu",
     map_always: "Vždy",
+    map_always_folded: "Vždy, sbalené v klidu",
     language: "Jazyk",
     lang_auto: "Automaticky",
     zoom: "Tlačítko podrobností",
@@ -3697,6 +3716,7 @@ const STRINGS = {
     map_never: "Nikoli",
     map_cleaning: "Med čiščenjem",
     map_always: "Vedno",
+    map_always_folded: "Vedno, strnjeno v mirovanju",
     language: "Jezik",
     lang_auto: "Samodejno",
     zoom: "Gumb za podrobnosti",
@@ -3854,6 +3874,7 @@ const STRINGS = {
     map_never: "Nekad",
     map_cleaning: "Uzkopšanas laikā",
     map_always: "Vienmēr",
+    map_always_folded: "Vienmēr, sakļauts dīkstāvē",
     language: "Valoda",
     lang_auto: "Automātiski",
     zoom: "Detaļu poga",
@@ -4011,6 +4032,7 @@ const STRINGS = {
     map_never: "Ποτέ",
     map_cleaning: "Κατά τον καθαρισμό",
     map_always: "Πάντα",
+    map_always_folded: "Πάντα, συμπτυγμένο σε αδράνεια",
     language: "Γλώσσα",
     lang_auto: "Αυτόματα",
     zoom: "Κουμπί λεπτομερειών",
@@ -5387,7 +5409,7 @@ class VacuumCard extends VacuumBase {
     if (c.show_dock !== false) parts.push(this._dock(dev));
     if (c.show_consumables !== false) parts.push(this._consumables(dev));
     if (c.show_stats !== false) parts.push(this._stats(dev));
-    if (this._showMap(dev)) parts.push(this._map(dev));
+    if (this._showMap(dev)) parts.push(this._mapSection(dev));
     return `<style>${BASE_STYLE}${FULL_STYLE}${accentStyle(dev, this._hass)}</style>
       <ha-card>
         ${this._header(dev, status, this._lastClean(dev))}
@@ -5497,6 +5519,8 @@ class VacuumCard extends VacuumBase {
   _defaultCollapsed(key) {
     // A dock reporting a problem is always shown unfolded (it can still be folded by hand).
     if (key === "dock" && this._dev && this._dockProblem(this._dev)) return false;
+    // The always_folded map follows the job: unfolded while cleaning, folded otherwise (either still foldable by hand).
+    if (key === "map") return this._dev ? !this._isCleaning(this._dev) : true;
     const c = this._config.collapsed ?? DEFAULT_COLLAPSED;
     return (Array.isArray(c) ? c : [c]).includes(key);
   }
@@ -5657,12 +5681,40 @@ class VacuumCard extends VacuumBase {
     </div>`;
   }
 
-  // show_map: true / "always", false / "never", or "cleaning" (default) to show it only during a cleaning job.
+  // The robot is out on a cleaning job (used for the map and its folded state).
+  _isCleaning(dev) {
+    return this._s(dev.vacuum)?.state === "cleaning" || this._s(dev.entities.in_cleaning)?.state === "on";
+  }
+
+  // show_map: true / "always", false / "never", "always_folded" (shown as a collapsible section, folded while
+  // the robot is not cleaning), or "cleaning" (default) to show it only during a cleaning job.
   _showMap(dev) {
     const m = this._config.show_map ?? "cleaning";
-    if (m === true || m === "always") return true;
+    if (m === true || m === "always" || m === "always_folded") return true;
     if (m !== "cleaning") return false;
-    return this._s(dev.vacuum)?.state === "cleaning" || this._s(dev.entities.in_cleaning)?.state === "on";
+    return this._isCleaning(dev);
+  }
+
+  // "always_folded": the map is wrapped in a collapsible "Map" section (default folded when idle, unfolded while
+  // cleaning); the other modes draw it plain, with no header.
+  _mapFoldable() {
+    return this._config.show_map === "always_folded";
+  }
+
+  // A map is available to draw (vector map, or at least one camera/image with a picture).
+  _hasMap(dev) {
+    if (vectorMapOn(dev, this._config)) return true;
+    return mapIds(dev, this._config).some((id) => this._s(id)?.attributes?.entity_picture);
+  }
+
+  _mapSection(dev) {
+    if (!this._mapFoldable()) return this._map(dev);
+    // No dangling header when there is no map, and no vector map mounted while the section is folded.
+    if (!this._hasMap(dev)) return "";
+    return `<div>
+      ${this._sectionTitle("map", ICONS.map, this._t("map"))}
+      ${this._isCollapsed("map") ? "" : this._map(dev)}
+    </div>`;
   }
 
   _map(dev) {
@@ -5776,6 +5828,15 @@ const MINI_STYLE = `
   /* The map, under the robot while it cleans (show_map, "cleaning" by default) */
   .map-wrap { padding: 0 12px 12px; }
   .map-wrap:empty { display: none; }
+  /* The "always_folded" map header (section-title lives in FULL_STYLE; the mini card needs it too). */
+  .section-title { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; text-transform: uppercase;
+                   letter-spacing: .04em; color: var(--secondary-text-color); margin-bottom: 6px; }
+  .section-title .icon { width: 16px; height: 16px; }
+  .section-title span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .section-title.toggle { cursor: pointer; user-select: none; }
+  .section-title.toggle[aria-expanded="false"] { margin-bottom: 0; }
+  .section-title .chevron { margin-left: auto; width: 16px; height: 16px; transition: transform .2s ease; }
+  .section-title.toggle[aria-expanded="false"] .chevron { transform: rotate(-90deg); }
   /* Narrow mini card (6 of 12 columns, 156-250 px): the round buttons move under the robot, then the picture
      gives way to the battery and the info lines. */
   @container (max-width: 300px) {
@@ -5878,7 +5939,7 @@ class VacuumMiniCard extends VacuumCard {
           ${dev.vacuum && this._config.show_controls !== false ? `<div class="controls">${this._controls(dev, true)}</div>` : ""}
         </div>
         ${rooms ? `<div class="rooms-wrap">${rooms}</div>` : ""}
-        ${this._showMap(dev) ? `<div class="map-wrap">${this._map(dev)}</div>` : ""}
+        ${this._showMap(dev) ? `<div class="map-wrap">${this._mapSection(dev)}</div>` : ""}
       </ha-card>`;
   }
 }
@@ -6063,10 +6124,10 @@ class VacuumEditorBase extends HTMLElement {
   }
 }
 
-// show_map in the editors: never, while cleaning, always
+// show_map in the editors: never, while cleaning, always, always folded
 const showMapField = (tr) => ({
   name: "show_map",
-  selector: { select: { mode: "dropdown", options: ["never", "cleaning", "always"].map((v) => ({ value: v, label: tr(`map_${v}`) })) } },
+  selector: { select: { mode: "dropdown", options: ["never", "cleaning", "always", "always_folded"].map((v) => ({ value: v, label: tr(`map_${v}`) })) } },
 });
 
 class VacuumCardEditor extends VacuumEditorBase {
