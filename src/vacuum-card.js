@@ -4990,9 +4990,14 @@ class VacuumBase extends HTMLElement {
       const name = row.querySelector(":scope > .name");
       const gap = parseFloat(getComputedStyle(row).columnGap) || 0;
       const widths = chips.map((c) => c.getBoundingClientRect().width);
-      let need = name && getComputedStyle(name).display !== "none" ? name.scrollWidth : -gap;
+      let need = -gap;
+      if (name && getComputedStyle(name).display !== "none") {
+        name.style.flex = "none";
+        need = name.getBoundingClientRect().width;
+        name.style.flex = "";
+      }
       for (const w of widths) need += gap + w;
-      const room = row.getBoundingClientRect().width + 0.5;
+      const room = row.getBoundingClientRect().width + 0.01;
       if (need <= room) continue;
       t.classList.add("below");
       const banner = t.closest(".banner");
