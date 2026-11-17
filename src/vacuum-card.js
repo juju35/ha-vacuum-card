@@ -699,7 +699,7 @@ const STRINGS = {
     color_dark: "Black",
     illustration: "Animated illustration",
     illustration_theme: "Illustration theme",
-    theme_auto: "Automatic (sun or dark theme)",
+    theme_auto: "Automatic: night with a dark theme, day with a light theme",
     theme_day: "Day",
     theme_night: "Night",
     show_logo: "Show the brand logo",
@@ -861,7 +861,7 @@ const STRINGS = {
     color_dark: "Noir",
     illustration: "Illustration animée",
     illustration_theme: "Thème de l’illustration",
-    theme_auto: "Automatique (soleil ou thème sombre)",
+    theme_auto: "Automatique : nuit avec un thème sombre, jour avec un thème clair",
     theme_day: "Jour",
     theme_night: "Nuit",
     show_logo: "Afficher le logo de la marque",
@@ -1024,7 +1024,7 @@ const STRINGS = {
     color_dark: "Schwarz",
     illustration: "Animierte Illustration",
     illustration_theme: "Thema der Illustration",
-    theme_auto: "Automatisch (Sonne oder dunkles Design)",
+    theme_auto: "Automatisch: Nacht bei dunklem Thema, Tag bei hellem Thema",
     theme_day: "Tag",
     theme_night: "Nacht",
     show_logo: "Markenlogo anzeigen",
@@ -1188,7 +1188,7 @@ const STRINGS = {
     color_dark: "Negro",
     illustration: "Ilustración animada",
     illustration_theme: "Tema de la ilustración",
-    theme_auto: "Automático (sol o tema oscuro)",
+    theme_auto: "Automático: noche con un tema oscuro, día con un tema claro",
     theme_day: "Día",
     theme_night: "Noche",
     show_logo: "Mostrar el logotipo de la marca",
@@ -1351,7 +1351,7 @@ const STRINGS = {
     color_dark: "Црна",
     illustration: "Анимирана илустрација",
     illustration_theme: "Тема илустрације",
-    theme_auto: "Аутоматски (сунце или тамна тема)",
+    theme_auto: "Аутоматски: ноћ уз тамну тему, дан уз светлу тему",
     theme_day: "Дан",
     theme_night: "Ноћ",
     show_logo: "Прикажи лого бренда",
@@ -1514,7 +1514,7 @@ const STRINGS = {
     color_dark: "Crna",
     illustration: "Animirana ilustracija",
     illustration_theme: "Tema ilustracije",
-    theme_auto: "Automatski (sunce ili tamna tema)",
+    theme_auto: "Automatski: noć uz tamnu temu, dan uz svetlu temu",
     theme_day: "Dan",
     theme_night: "Noć",
     show_logo: "Prikaži logo brenda",
@@ -1677,7 +1677,7 @@ const STRINGS = {
     color_dark: "Nero",
     illustration: "Illustrazione animata",
     illustration_theme: "Tema dell’illustrazione",
-    theme_auto: "Automatico (sole o tema scuro)",
+    theme_auto: "Automatico: notte con un tema scuro, giorno con un tema chiaro",
     theme_day: "Giorno",
     theme_night: "Notte",
     show_logo: "Mostra il logo del marchio",
@@ -1840,7 +1840,7 @@ const STRINGS = {
     color_dark: "Zwart",
     illustration: "Geanimeerde illustratie",
     illustration_theme: "Thema van de illustratie",
-    theme_auto: "Automatisch (zon of donker thema)",
+    theme_auto: "Automatisch: nacht met een donker thema, dag met een licht thema",
     theme_day: "Dag",
     theme_night: "Nacht",
     show_logo: "Merklogo tonen",
@@ -2003,7 +2003,7 @@ const STRINGS = {
     color_dark: "Preto",
     illustration: "Ilustração animada",
     illustration_theme: "Tema da ilustração",
-    theme_auto: "Automático (sol ou tema escuro)",
+    theme_auto: "Automático: noite com um tema escuro, dia com um tema claro",
     theme_day: "Dia",
     theme_night: "Noite",
     show_logo: "Mostrar o logótipo da marca",
@@ -2166,7 +2166,7 @@ const STRINGS = {
     color_dark: "Czarny",
     illustration: "Animowana ilustracja",
     illustration_theme: "Motyw ilustracji",
-    theme_auto: "Automatycznie (słońce lub ciemny motyw)",
+    theme_auto: "Automatycznie: noc przy ciemnym motywie, dzień przy jasnym motywie",
     theme_day: "Dzień",
     theme_night: "Noc",
     show_logo: "Pokaż logo marki",
@@ -2329,7 +2329,7 @@ const STRINGS = {
     color_dark: "Negru",
     illustration: "Ilustrație animată",
     illustration_theme: "Tema ilustrației",
-    theme_auto: "Automat (soare sau temă întunecată)",
+    theme_auto: "Automat: noapte cu o temă întunecată, zi cu o temă luminoasă",
     theme_day: "Zi",
     theme_night: "Noapte",
     show_logo: "Afișează logo-ul mărcii",
@@ -2492,7 +2492,7 @@ const STRINGS = {
     color_dark: "Sort",
     illustration: "Animeret illustration",
     illustration_theme: "Illustrationens tema",
-    theme_auto: "Automatisk (sol eller mørkt tema)",
+    theme_auto: "Automatisk: nat med et mørkt tema, dag med et lyst tema",
     theme_day: "Dag",
     theme_night: "Nat",
     show_logo: "Vis mærkets logo",
@@ -2655,7 +2655,7 @@ const STRINGS = {
     color_dark: "Svart",
     illustration: "Animerad illustration",
     illustration_theme: "Illustrationens tema",
-    theme_auto: "Automatiskt (sol eller mörkt tema)",
+    theme_auto: "Automatiskt: natt med ett mörkt tema, dag med ett ljust tema",
     theme_day: "Dag",
     theme_night: "Natt",
     show_logo: "Visa varumärkets logotyp",
@@ -2818,7 +2818,7 @@ const STRINGS = {
     color_dark: "Черен",
     illustration: "Анимирана илюстрация",
     illustration_theme: "Тема на илюстрацията",
-    theme_auto: "Автоматично (слънце или тъмна тема)",
+    theme_auto: "Автоматично: нощ с тъмна тема, ден със светла тема",
     theme_day: "Ден",
     theme_night: "Нощ",
     show_logo: "Показване на логото на марката",
@@ -2981,7 +2981,7 @@ const STRINGS = {
     color_dark: "Чёрный",
     illustration: "Анимированная иллюстрация",
     illustration_theme: "Тема иллюстрации",
-    theme_auto: "Автоматически (солнце или тёмная тема)",
+    theme_auto: "Автоматически: ночь при тёмной теме, день при светлой теме",
     theme_day: "День",
     theme_night: "Ночь",
     show_logo: "Показывать логотип бренда",
@@ -3144,7 +3144,7 @@ const STRINGS = {
     color_dark: "Чорний",
     illustration: "Анімована ілюстрація",
     illustration_theme: "Тема ілюстрації",
-    theme_auto: "Автоматично (сонце або темна тема)",
+    theme_auto: "Автоматично: ніч з темною темою, день зі світлою темою",
     theme_day: "День",
     theme_night: "Ніч",
     show_logo: "Показувати логотип бренду",
@@ -3307,7 +3307,7 @@ const STRINGS = {
     color_dark: "Fekete",
     illustration: "Animált illusztráció",
     illustration_theme: "Az illusztráció témája",
-    theme_auto: "Automatikus (nap vagy sötét téma)",
+    theme_auto: "Automatikus: éjszaka sötét témával, nappal világos témával",
     theme_day: "Nappal",
     theme_night: "Éjszaka",
     show_logo: "Márkalogó megjelenítése",
@@ -3470,7 +3470,7 @@ const STRINGS = {
     color_dark: "Čierna",
     illustration: "Animovaná ilustrácia",
     illustration_theme: "Téma ilustrácie",
-    theme_auto: "Automaticky (slnko alebo tmavá téma)",
+    theme_auto: "Automaticky: noc s tmavou témou, deň so svetlou témou",
     theme_day: "Deň",
     theme_night: "Noc",
     show_logo: "Zobraziť logo značky",
@@ -3633,7 +3633,7 @@ const STRINGS = {
     color_dark: "Černá",
     illustration: "Animovaná ilustrace",
     illustration_theme: "Motiv ilustrace",
-    theme_auto: "Automaticky (slunce nebo tmavý motiv)",
+    theme_auto: "Automaticky: noc s tmavým motivem, den se světlým motivem",
     theme_day: "Den",
     theme_night: "Noc",
     show_logo: "Zobrazit logo značky",
@@ -3796,7 +3796,7 @@ const STRINGS = {
     color_dark: "Črna",
     illustration: "Animirana ilustracija",
     illustration_theme: "Tema ilustracije",
-    theme_auto: "Samodejno (sonce ali temna tema)",
+    theme_auto: "Samodejno: noč s temno temo, dan s svetlo temo",
     theme_day: "Dan",
     theme_night: "Noč",
     show_logo: "Prikaži logotip znamke",
@@ -3959,7 +3959,7 @@ const STRINGS = {
     color_dark: "Melna",
     illustration: "Animēta ilustrācija",
     illustration_theme: "Ilustrācijas motīvs",
-    theme_auto: "Automātiski (saule vai tumšais motīvs)",
+    theme_auto: "Automātiski: nakts ar tumšu tēmu, diena ar gaišu tēmu",
     theme_day: "Diena",
     theme_night: "Nakts",
     show_logo: "Rādīt zīmola logotipu",
@@ -4122,7 +4122,7 @@ const STRINGS = {
     color_dark: "Μαύρο",
     illustration: "Κινούμενη εικονογράφηση",
     illustration_theme: "Θέμα εικονογράφησης",
-    theme_auto: "Αυτόματα (ήλιος ή σκούρο θέμα)",
+    theme_auto: "Αυτόματο: νύχτα με σκούρο θέμα, μέρα με ανοιχτό θέμα",
     theme_day: "Ημέρα",
     theme_night: "Νύχτα",
     show_logo: "Εμφάνιση του λογότυπου της μάρκας",
@@ -4443,14 +4443,14 @@ const findDevice = (hass, config) => {
 // ---------------------------------------------------------------------------
 // Illustrated header ("banner", 90 px): the title on the wall of a living room at the left, the card's own picture of
 // the device drawn big at the right (with its dock or Clean Base when it has one, animated by what it does), on a
-// 10 px parquet strip edge to edge. Day or night: illustration_theme, else night with the sun below the horizon or
-// Home Assistant's dark theme (an unknown or unavailable sun leaves the theme alone to decide).
+// 10 px parquet strip edge to edge. Day or night: illustration_theme, else Home Assistant's dark theme alone (a light
+// theme keeps the day picture after sunset).
 // ---------------------------------------------------------------------------
 const vcIsNight = (hass, config) => {
   const theme = config?.illustration_theme;
   if (theme === "night") return true;
   if (theme === "day") return false;
-  return hass?.states?.["sun.sun"]?.state === "below_horizon" || !!hass?.themes?.darkMode;
+  return !!hass?.themes?.darkMode;
 };
 // The living room (200 × 80, its floor at y 80): a sofa and a floor lamp (lit at night), zoomed in from its bottom right corner so that the sofa and the lamp
 // stand beside the device. No id inside: several cards on a page cannot clash.
@@ -4838,7 +4838,7 @@ class VacuumBase extends HTMLElement {
     if (!dev) return null;
     // map_entity (Xiaomi Cloud Map Extractor, Valetudo…) belongs to no device: its new map / rotated token re-renders too.
     const ids = [dev.vacuum, ...Object.values(dev.entities), ...Object.values(dev.dock), ...Object.values(dev.extra).flat(), this._config.map_entity];
-    return [h.entities, h.devices, h.language, h.locale, h.localize, h.formatEntityState, h.themes?.darkMode, h.states["sun.sun"], h.config?.unit_system?.length, this._lastClean(dev), ...ids.map((id) => h.states[id])];
+    return [h.entities, h.devices, h.language, h.locale, h.localize, h.formatEntityState, h.themes?.darkMode, h.config?.unit_system?.length, this._lastClean(dev), ...ids.map((id) => h.states[id])];
   }
 
   get hass() {
