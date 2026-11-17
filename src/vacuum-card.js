@@ -4983,7 +4983,15 @@ class VacuumBase extends HTMLElement {
     const text = banner?.querySelector?.(".trow .chip-text");
     if (!text?.getBoundingClientRect) return;
     banner.removeAttribute("data-wrap");
-    if (text.scrollWidth > text.clientWidth + 0.5) banner.setAttribute("data-wrap", "");
+    // Fractional widths: scrollWidth / clientWidth are rounded and miss a label cut by less than a pixel.
+    const chip = text.parentElement;
+    const have = chip.getBoundingClientRect().width;
+    chip.style.maxWidth = "none";
+    chip.style.flex = "none";
+    const need = chip.getBoundingClientRect().width;
+    chip.style.maxWidth = "";
+    chip.style.flex = "";
+    if (need > have + 0.01) banner.setAttribute("data-wrap", "");
   }
 
   // The vacuum-map-card element outlives the renders, as the map pictures do: moved back into each new render, it
