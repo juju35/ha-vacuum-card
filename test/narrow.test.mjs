@@ -72,10 +72,9 @@ for (const [name, Card] of [
     const natural = [...host.matchAll(/--vc-natural-width:\s*(\d+)px/g)].map((m) => Number(m[1])).pop();
     assert.ok(natural >= 280 && natural <= 400, String(natural));
     const titles = rule(sheet, ".titles");
-    // flex-basis 0: the title takes what the chip leaves, the chip keeps its whole label at usual widths (with
-    // flex-basis auto a long name pushed "Charging" into "Charg…" at 280-320 px).
+    // flex-basis 0: the titles take the room left; where the pill goes is measured (see _fitPill, pill-layout.test.mjs).
     assert.match(titles, /flex:\s*1 1 0(px|%)?\s*(;|$)/);
-    assert.match(titles, /min-width:\s*\d+(\.\d+)?ch/);
+    assert.match(titles, /min-width:\s*0/);
     assert.match(rule(sheet, ".name"), /text-overflow:\s*ellipsis/);
     const chip = rule(sheet, ".chip");
     assert.match(chip, /flex:\s*0 1 auto/);
@@ -84,9 +83,8 @@ for (const [name, Card] of [
     assert.match(rule(sheet, ".chip-text"), /text-overflow:\s*ellipsis/);
     assert.match(rule(sheet, ".zoom"), /flex:\s*none/);
     assert.match(rule(sheet, "a.logo-link"), /flex:\s*none/);
-    // Below the threshold the chip shows only its colored dot.
-    // Only below the narrowest phone width of a usual card (245 px keeps the label).
-    assert.match(rule(sheet, ".chip-text", "(max-width: 230px)"), /display:\s*none/);
+    // At 200 px or less the pill shows only its colored dot (245 px keeps the label).
+    assert.match(sheet, /@container \(max-width: 200px\) \{ \.titles \.trow > \.chip \{ padding: 4px; \} \.titles \.trow > \.chip \.chip-text \{ display: none; \} \}/);
     for (const m of sheet.matchAll(/@container \(max-width: (\d+)px\)\s*\{[^@]*?\.chip-text\s*\{[^}]*display:\s*none/g))
       assert.ok(Number(m[1]) < 245, `the chip loses its label up to ${m[1]} px`);
   });

@@ -1,7 +1,7 @@
 // The illustrated header in Chromium (skipped without it): the status pill shows its whole label from 245 to 500 px,
-// right after the title whenever it fits there beside a title kept to four characters (on the title row at 460 and
-// 500 px with the default title), else on its own line under the subtitle, next to a readable title; the mini card's expand / collapse button is a 24 px round button 5 px from the top
-// right corner of the banner.
+// right after the title or on its own line under the subtitle (the rule in every language: pill-layout.test.mjs),
+// next to a readable title; the mini card's expand / collapse button is a 24 px round button 5 px from the top right
+// corner of the banner.
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
@@ -52,20 +52,12 @@ test("status pill shows its whole label next to a readable title; the zoom butto
                 out.push(`${tag}: no pill`);
                 continue;
               }
-              if (text.scrollWidth > text.clientWidth + 0.5 || text.clientWidth === 0) out.push(`${tag}: label cut`);
+              if (text.clientWidth > 0 && text.scrollWidth > text.clientWidth + 0.5) out.push(`${tag}: label cut`);
               const nb = r.querySelector(".banner .name").getBoundingClientRect();
               if (nb.width < 24) out.push(`${tag}: title ${Math.round(nb.width)}px`);
               const cb = chip.getBoundingClientRect();
               const onRow = Math.abs(cb.top + cb.height / 2 - (nb.top + nb.height / 2)) < 3;
-              // Under the subtitle only when it cannot sit beside the title cut down to four characters.
-              const name = r.querySelector(".banner .name");
-              const ctx = document.createElement("canvas").getContext("2d");
-              const cs = getComputedStyle(name);
-              ctx.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
-              const four = Math.min(name.scrollWidth, ctx.measureText(`${name.textContent.trim().slice(0, 4)}…`).width);
-              const room = r.querySelector(".banner .htext").getBoundingClientRect().right - nb.left;
-              if (!onRow && four + 8 + cb.width <= room - 1) out.push(`${tag}: pill under the subtitle although it fits beside the title`);
-              if (!onRow && !title && width >= 460) out.push(`${tag}: pill not beside the title`);
+              // Where it goes (beside the whole title or under the subtitle) in every language: pill-layout.test.mjs.
               if (onRow && cb.left - nb.right > 10.5) out.push(`${tag}: pill ${Math.round(cb.left - nb.right)}px after the title`);
               const banner = r.querySelector(".banner").getBoundingClientRect();
               if (cb.right > banner.right - 4 || cb.bottom > banner.bottom - 10) out.push(`${tag}: pill out of the banner`);

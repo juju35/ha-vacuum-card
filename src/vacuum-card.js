@@ -4510,16 +4510,12 @@ const BANNER_STYLE = `
                background: repeating-linear-gradient(90deg, #c99a6b 0 38px, #b98a5c 38px 40px); box-shadow: inset 0 2px 0 #a97c50; }
   .night .vc-ground { background: repeating-linear-gradient(90deg, #4a3a2c 0 38px, #3e3024 38px 40px); box-shadow: inset 0 2px 0 #5c4836; }
   .htext { position: absolute; left: 12px; top: 0; bottom: 10px; right: calc(var(--vc-scene-w) + 4px); display: flex; align-items: center; gap: 10px; min-width: 0; }
-  .htext .titles { min-width: 0; }
+  .htext .titles { flex: 1 1 0; min-width: 0; }
   .htext .name { font-size: 16px; }
   .line2 { font-size: 13px; line-height: 18px; color: #3b5b78; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .night .line2 { color: rgba(255,255,255,.78); }
   :host([hide-subtitle]) .line2 { display: none; }
-  /* Status pill right after the title, on a frosted tint of the state colour, with its whole label; the title is cut
-     first (four characters kept). When it does not fit there (measured by the card, see _fitPill) it goes on its own
-     line under the subtitle, where it may run over the left of the scene. */
-  .trow { display: flex; align-items: center; gap: 8px; min-width: 0; }
-  .trow .name { flex: 0 100 auto; min-width: 4ch; }
+  /* Status pill on a frosted tint of the state colour (placement: see _fitPill). */
   .banner .chip { flex: none; max-width: none; line-height: 16px; background: color-mix(in srgb, var(--c, var(--vc-ok)) 18%, rgba(255,255,255,.78));
                   color: color-mix(in srgb, var(--c, var(--vc-ok)) 45%, #0d2a45); }
   .banner.night .chip { background: color-mix(in srgb, var(--c, var(--vc-ok)) 30%, rgba(8,18,38,.55)); color: color-mix(in srgb, var(--c, var(--vc-ok)) 35%, #ffffff); }
@@ -4527,9 +4523,6 @@ const BANNER_STYLE = `
   /* Same colour as the header icon: at rest (docked, charging) neutral grey. */
   .banner .chip.ok { --c: var(--vc-idle); }
   .banner .chip.active { --c: var(--state-vacuum-active-color, var(--vc-active)); }
-  .banner[data-wrap] .titles { display: flex; flex-direction: column; }
-  .banner[data-wrap] .trow { display: contents; }
-  .banner[data-wrap] .chip { order: 9; align-self: flex-start; max-width: calc(100cqw - 76px); margin-top: 3px; }
   /* The detail button (mini card) sits at the top right: the device steps aside. */
   .banner:has(> .zoom) .vc-dev { transform: translateX(calc(var(--vc-scene-w) * -.15)); }
   .line2 .sub { font-size: inherit; color: inherit; }
@@ -4595,8 +4588,8 @@ const BASE_STYLE = `
                      box-shadow: 0 0 0 1px var(--divider-color, rgba(0,0,0,.12)), 0 0 0 3px var(--card-background-color, #fff); }
   /* The title takes the room the chip leaves (flex-basis 0: a long name does not push the chip into its ellipsis)
      and keeps about four characters and its ellipsis; the chip shrinks only when even that does not fit. */
-  .titles { flex: 1 1 0; min-width: 5ch; font-size: 16px; }
-  :host([hide-title]) .titles > .name, :host([hide-subtitle]) .titles > .sub { display: none; }
+  .titles { flex: 1 1 0; min-width: 0; font-size: 16px; }
+  :host([hide-title]) .titles .name, :host([hide-subtitle]) .titles > .sub { display: none; }
   .name { font-size: 16px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .sub { font-size: 12px; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .warning { padding: 16px; color: color-mix(in srgb, var(--vc-warn) 50%, var(--primary-text-color)); }
@@ -4636,11 +4629,23 @@ const BASE_STYLE = `
   .zoom .icon { width: 16px; height: 16px; }
   .zoom:hover { background: color-mix(in srgb, var(--vc-idle) 16%, transparent); color: var(--primary-text-color); }
   .zoom:focus-visible { outline: 2px solid var(--primary-color, var(--vc-accent)); outline-offset: 1px; }
-  /* Narrow card: the status chip keeps only its colored dot (its text stays in title and aria-label). */
-  @container (max-width: 230px) {
-    .chip { padding: 4px; flex: none; }
-    .chip-text { display: none; }
-  }
+  /* The status pill, in every header: on the title row right after the title only when the whole title and the pill's
+     whole label fit there; otherwise on its own line under the subtitle, cut to one line; its dot alone, beside the
+     title, when the banner has no room left above its ground strip, or on a card of 200 px or less. Decided by
+     measurement (see _fitPill), so that every language and every width gets it right. */
+  .titles .trow { display: flex; align-items: center; gap: 8px; min-width: 0; width: 100%; }
+  .titles .trow > .name { flex: 0 1 auto; min-width: 0; }
+  .titles .trow > .chip { flex: none; max-width: none; margin: 0; align-self: center; }
+  .titles.below { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; }
+  .titles.below > * { max-width: 100%; }
+  .titles.below .trow { display: contents; }
+  .titles.below .trow > .name { max-width: 100%; }
+  .titles.below .trow > .chip { order: 9; max-width: 100%; margin-top: 2px; align-self: flex-start; }
+  /* In the banner, a pill on its own line may run over the picture, up to the banner's edge. */
+  .banner .titles.below .trow > .chip { max-width: none; }
+  .titles.below > :is(.sub, .line2) { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .titles.dotonly .trow > .chip { padding: 4px; } .titles.dotonly .trow > .chip .chip-text { display: none; }
+  @container (max-width: 200px) { .titles .trow > .chip { padding: 4px; } .titles .trow > .chip .chip-text { display: none; } }
   /* The 40 px type icon keeps its size at every width: the name gives way (ellipsis) instead. */
   @container (max-width: 200px) {
     .header { gap: 6px; }
@@ -4664,16 +4669,6 @@ const DIALOG_TAGS = new Set(["HA-MORE-INFO-DIALOG", "HA-DIALOG", "DIALOG"]);
 
 // True for a click outside `card` that is not in a dialog opened from it (more-info, say) nor on its enlarged map
 // (appended to the document body, see _zoomMap: the click that closes it is not a click elsewhere on the page).
-// The width of an element's first four characters and an ellipsis, in its own font: the least a cut title keeps.
-let fourCtx;
-const fourChars = (el) => {
-  const cs = getComputedStyle(el);
-  fourCtx ??= document.createElement("canvas").getContext?.("2d");
-  if (!fourCtx) return 0;
-  fourCtx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
-  return fourCtx.measureText(`${[...el.textContent.trim()].slice(0, 4).join("")}\u2026`).width;
-};
-
 const isOutside = (card, ev) => {
   const path = ev.composedPath();
   return !path.includes(card) && !(card._zoomOverlay && path.includes(card._zoomOverlay)) && !path.some((n) => DIALOG_TAGS.has(n.tagName));
@@ -4878,6 +4873,7 @@ class VacuumBase extends HTMLElement {
       });
       this._resize.observe(this);
     }
+    document.fonts?.ready?.then(() => this._fitPill());
     if (typeof IntersectionObserver === "function") {
       this._observer ??= new IntersectionObserver((entries) => {
         this._offscreen = !entries.at(-1).isIntersecting;
@@ -4980,20 +4976,38 @@ class VacuumBase extends HTMLElement {
     if (this._vectorMap) this._vectorMap.hass = this._hass;
   }
 
-  // The banner's status pill goes right after the title when its whole label fits there beside a title cut down to
-  // four characters; otherwise it takes a line of its own under the subtitle. Measured (in fractional pixels), so
-  // that a short title keeps its pill beside it whatever room the picture leaves.
+  // The status pill goes right after the title only when the whole title and the pill's whole label fit on that row;
+  // otherwise it takes a line of its own under the subtitle (.titles.below, the subtitle cut to one line). In the
+  // banner (where that line may run over the picture), when the titles still run below the top of the ground strip or
+  // out of the banner, and in the classic header when the label does not fit even alone, the pill keeps its dot alone,
+  // beside the title (.titles.dotonly). Measured in fractional pixels.
   _fitPill() {
-    const banner = this.shadowRoot.querySelector?.(".banner");
-    const chip = banner?.querySelector?.(".trow > .chip");
-    if (!chip?.getBoundingClientRect) return;
-    banner.removeAttribute("data-wrap");
-    const row = chip.parentElement;
-    const name = row.querySelector(".name");
-    const shown = name && getComputedStyle(name).display !== "none";
-    const gap = parseFloat(getComputedStyle(row).columnGap) || 0;
-    const title = shown ? Math.min(name.scrollWidth, Math.max(parseFloat(getComputedStyle(name).minWidth) || 0, fourChars(name))) + gap : 0;
-    if (title + chip.getBoundingClientRect().width > row.getBoundingClientRect().width + 0.5) banner.setAttribute("data-wrap", "");
+    for (const t of this.shadowRoot?.querySelectorAll?.(".titles") || []) {
+      const row = t.querySelector(".trow");
+      const chips = row ? [...row.querySelectorAll(":scope > .chip")] : [];
+      if (!chips.length || !row.getBoundingClientRect) continue;
+      t.classList.remove("below", "dotonly");
+      const name = row.querySelector(":scope > .name");
+      const gap = parseFloat(getComputedStyle(row).columnGap) || 0;
+      const widths = chips.map((c) => c.getBoundingClientRect().width);
+      let need = name && getComputedStyle(name).display !== "none" ? name.scrollWidth : -gap;
+      for (const w of widths) need += gap + w;
+      const room = row.getBoundingClientRect().width + 0.5;
+      if (need <= room) continue;
+      t.classList.add("below");
+      const banner = t.closest(".banner");
+      const cut = !banner && widths.some((w) => w > room);
+      let out = false;
+      if (banner) {
+        const b = banner.getBoundingClientRect();
+        const floor = b.bottom - (banner.querySelector(".vc-ground")?.getBoundingClientRect().height ?? 10) + 0.5;
+        out = [...t.querySelectorAll(".name, .line2, .titles > .sub, .chip")].some((e) => {
+          const r = e.getBoundingClientRect();
+          return r.height && (r.bottom > floor || r.top < b.top - 0.5 || r.right > b.right + 0.5);
+        });
+      }
+      if (cut || out) t.classList.replace("below", "dotonly");
+    }
   }
 
   // The vacuum-map-card element outlives the renders, as the map pictures do: moved back into each new render, it
@@ -5389,7 +5403,7 @@ class VacuumBase extends HTMLElement {
           ${c.show_logo !== false ? this._logo(dev, this._iconState(dev, status)) : ""}
           <div class="titles">
             <div class="trow"><div class="name">${esc(c.title || dev.name)}</div>${st}</div>
-            ${sub ? `<div class="line2"><span class="sub">${esc(sub)}</span></div>` : ""}
+            ${sub ? `<div class="line2" title="${esc(sub)}"><span class="sub">${esc(sub)}</span></div>` : ""}
           </div>
         </div>
         ${zoom}
@@ -5405,16 +5419,15 @@ class VacuumBase extends HTMLElement {
           c.show_logo !== false ? this._logo(dev, this._iconState(dev, status)) : ""
         }
         <div class="titles">
-          <div class="name">${esc(c.title || dev.name)}</div>
-          ${sub ? `<div class="sub">${esc(sub)}</div>` : ""}
+          <div class="trow"><div class="name">${esc(c.title || dev.name)}</div>${
+            status
+              ? `<span class="chip clickable ${statusClass(status.state)}" role="button" tabindex="0" data-entity="${esc(status.entity)}" title="${esc(status.text)}" aria-label="${esc(
+                  status.text,
+                )}"><span class="dot"></span><span class="chip-text">${esc(status.text)}</span></span>`
+              : ""
+          }</div>
+          ${sub ? `<div class="sub" title="${esc(sub)}">${esc(sub)}</div>` : ""}
         </div>
-        ${
-          status
-            ? `<span class="chip clickable ${statusClass(status.state)}" role="button" tabindex="0" data-entity="${esc(status.entity)}" title="${esc(status.text)}" aria-label="${esc(
-                status.text,
-              )}"><span class="dot"></span><span class="chip-text">${esc(status.text)}</span></span>`
-            : ""
-        }
         ${this._zoomButton()}
       </div>`;
   }
