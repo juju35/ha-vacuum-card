@@ -4515,12 +4515,12 @@ const BANNER_STYLE = `
   .line2 { font-size: 13px; line-height: 18px; color: #3b5b78; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .night .line2 { color: rgba(255,255,255,.78); }
   :host([hide-subtitle]) .line2 { display: none; }
-  /* Status pill right after the title, on a frosted tint of the state colour; the title is cut first (about four
-     characters kept). When it does not fit there (measured by the card, or a narrow card) it goes on its own line
-     under the subtitle, where it may run over the left of the scene. */
+  /* Status pill right after the title, on a frosted tint of the state colour, with its whole label; the title is cut
+     first (four characters kept). When it does not fit there (measured by the card, see _fitPill) it goes on its own
+     line under the subtitle, where it may run over the left of the scene. */
   .trow { display: flex; align-items: center; gap: 8px; min-width: 0; }
   .trow .name { flex: 0 100 auto; min-width: 4ch; }
-  .banner .chip { max-width: 51%; line-height: 16px; background: color-mix(in srgb, var(--c, var(--vc-ok)) 18%, rgba(255,255,255,.78));
+  .banner .chip { flex: none; max-width: none; line-height: 16px; background: color-mix(in srgb, var(--c, var(--vc-ok)) 18%, rgba(255,255,255,.78));
                   color: color-mix(in srgb, var(--c, var(--vc-ok)) 45%, #0d2a45); }
   .banner.night .chip { background: color-mix(in srgb, var(--c, var(--vc-ok)) 30%, rgba(8,18,38,.55)); color: color-mix(in srgb, var(--c, var(--vc-ok)) 35%, #ffffff); }
   .banner .chip .dot { width: 7px; height: 7px; }
@@ -4530,11 +4530,6 @@ const BANNER_STYLE = `
   .banner[data-wrap] .titles { display: flex; flex-direction: column; }
   .banner[data-wrap] .trow { display: contents; }
   .banner[data-wrap] .chip { order: 9; align-self: flex-start; max-width: calc(100cqw - 76px); margin-top: 3px; }
-  @container (max-width: 260px) {
-    .banner .titles { display: flex; flex-direction: column; }
-    .banner .trow { display: contents; }
-    .banner .chip { order: 9; align-self: flex-start; max-width: calc(100cqw - 76px); margin-top: 3px; }
-  }
   /* The detail button (mini card) sits at the top right: the device steps aside. */
   .banner:has(> .zoom) .vc-dev { transform: translateX(calc(var(--vc-scene-w) * -.15)); }
   .line2 .sub { font-size: inherit; color: inherit; }
@@ -4669,6 +4664,16 @@ const DIALOG_TAGS = new Set(["HA-MORE-INFO-DIALOG", "HA-DIALOG", "DIALOG"]);
 
 // True for a click outside `card` that is not in a dialog opened from it (more-info, say) nor on its enlarged map
 // (appended to the document body, see _zoomMap: the click that closes it is not a click elsewhere on the page).
+// The width of an element's first four characters and an ellipsis, in its own font: the least a cut title keeps.
+let fourCtx;
+const fourChars = (el) => {
+  const cs = getComputedStyle(el);
+  fourCtx ??= document.createElement("canvas").getContext?.("2d");
+  if (!fourCtx) return 0;
+  fourCtx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+  return fourCtx.measureText(`${[...el.textContent.trim()].slice(0, 4).join("")}\u2026`).width;
+};
+
 const isOutside = (card, ev) => {
   const path = ev.composedPath();
   return !path.includes(card) && !(card._zoomOverlay && path.includes(card._zoomOverlay)) && !path.some((n) => DIALOG_TAGS.has(n.tagName));
@@ -4975,21 +4980,20 @@ class VacuumBase extends HTMLElement {
     if (this._vectorMap) this._vectorMap.hass = this._hass;
   }
 
-  // The banner's status pill goes on its own line under the subtitle when it is cut next to the title.
+  // The banner's status pill goes right after the title when its whole label fits there beside a title cut down to
+  // four characters; otherwise it takes a line of its own under the subtitle. Measured (in fractional pixels), so
+  // that a short title keeps its pill beside it whatever room the picture leaves.
   _fitPill() {
     const banner = this.shadowRoot.querySelector?.(".banner");
-    const text = banner?.querySelector?.(".trow .chip-text");
-    if (!text?.getBoundingClientRect) return;
+    const chip = banner?.querySelector?.(".trow > .chip");
+    if (!chip?.getBoundingClientRect) return;
     banner.removeAttribute("data-wrap");
-    // Fractional widths: scrollWidth / clientWidth are rounded and miss a label cut by less than a pixel.
-    const chip = text.parentElement;
-    const have = chip.getBoundingClientRect().width;
-    chip.style.maxWidth = "none";
-    chip.style.flex = "none";
-    const need = chip.getBoundingClientRect().width;
-    chip.style.maxWidth = "";
-    chip.style.flex = "";
-    if (need > have + 0.01) banner.setAttribute("data-wrap", "");
+    const row = chip.parentElement;
+    const name = row.querySelector(".name");
+    const shown = name && getComputedStyle(name).display !== "none";
+    const gap = parseFloat(getComputedStyle(row).columnGap) || 0;
+    const title = shown ? Math.min(name.scrollWidth, Math.max(parseFloat(getComputedStyle(name).minWidth) || 0, fourChars(name))) + gap : 0;
+    if (title + chip.getBoundingClientRect().width > row.getBoundingClientRect().width + 0.5) banner.setAttribute("data-wrap", "");
   }
 
   // The vacuum-map-card element outlives the renders, as the map pictures do: moved back into each new render, it
