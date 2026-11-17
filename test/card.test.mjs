@@ -1187,3 +1187,20 @@ test("show_map always_folded: a collapsible Map section, folded when idle and un
   assert.match(clean, /data-section="map" aria-expanded="true"/);
   assert.match(clean, /class="map /);
 });
+
+test("night picture: the sun below the horizon or the dark theme, even while the sun is up; forced day or night wins", () => {
+  const banner = (sun, darkMode, theme) => {
+    const st = sun ? { ...states, "sun.sun": { entity_id: "sun.sun", state: sun, attributes: {} } } : states;
+    const card = new vc.VacuumCard();
+    card.setConfig({ device: "saros", show_map: "never", ...(theme ? { illustration_theme: theme } : {}) });
+    card.hass = { ...makeHass(st), themes: { darkMode } };
+    return card.shadowRoot.innerHTML.match(/<div class="banner[^"]*"/)[0];
+  };
+  assert.equal(banner("above_horizon", true), '<div class="banner night"', "dark theme, sun up: night");
+  assert.equal(banner("above_horizon", false), '<div class="banner"', "light theme, sun up: day");
+  assert.equal(banner("below_horizon", false), '<div class="banner night"', "sun down: night");
+  assert.equal(banner("unavailable", true), '<div class="banner night"', "no sun: the dark theme decides");
+  assert.equal(banner("unavailable", false), '<div class="banner"');
+  assert.equal(banner("below_horizon", true, "day"), '<div class="banner"', "forced day wins");
+  assert.equal(banner("above_horizon", false, "night"), '<div class="banner night"', "forced night wins");
+});

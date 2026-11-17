@@ -4443,16 +4443,14 @@ const findDevice = (hass, config) => {
 // ---------------------------------------------------------------------------
 // Illustrated header ("banner", 90 px): the title on the wall of a living room at the left, the card's own picture of
 // the device drawn big at the right (with its dock or Clean Base when it has one, animated by what it does), on a
-// 10 px parquet strip edge to edge. Day or night: illustration_theme, else the sun, else Home Assistant's dark mode.
+// 10 px parquet strip edge to edge. Day or night: illustration_theme, else night with the sun below the horizon or
+// Home Assistant's dark theme (an unknown or unavailable sun leaves the theme alone to decide).
 // ---------------------------------------------------------------------------
-const VC_NO_VALUE = new Set(["unknown", "unavailable", ""]);
 const vcIsNight = (hass, config) => {
   const theme = config?.illustration_theme;
   if (theme === "night") return true;
   if (theme === "day") return false;
-  const sun = hass?.states?.["sun.sun"];
-  if (sun && !VC_NO_VALUE.has(String(sun.state))) return sun.state === "below_horizon";
-  return !!hass?.themes?.darkMode;
+  return hass?.states?.["sun.sun"]?.state === "below_horizon" || !!hass?.themes?.darkMode;
 };
 // The living room (200 × 80, its floor at y 80): a sofa and a floor lamp (lit at night), zoomed in from its bottom right corner so that the sofa and the lamp
 // stand beside the device. No id inside: several cards on a page cannot clash.
