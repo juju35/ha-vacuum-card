@@ -69,8 +69,10 @@ const robotShape = (cx, cy, r, turret, col) => {
   }
   return s;
 };
-const svgDoc = (w, h, body, defs = "", anim = false) =>
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}">${anim ? `<style>${ANIM_CSS}</style>` : ""}${defs ? `<defs>${defs}</defs>` : ""}${body}</svg>`;
+// `box`: the bounding box of what is drawn (x0 y0 x1 y1), so that the illustrated header sizes the device by its
+// drawing rather than by its viewBox margins, and sets it on the floor.
+const svgDoc = (w, h, body, defs = "", anim = false, box = null) =>
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}"${box ? ` data-box="${box.join(" ")}"` : ""}>${anim ? `<style>${ANIM_CSS}</style>` : ""}${defs ? `<defs>${defs}</defs>` : ""}${body}</svg>`;
 // Side brush: three spokes turning, at (x, y).
 const brush = (x, y, r) =>
   `<g class="spin"><circle cx="${x}" cy="${y}" r="${r}" fill="none"/>${[0, 120, 240]
@@ -93,7 +95,7 @@ const heat = (cx, y, w) =>
     .join("");
 // A robot drawn on the floor (160 × 104): swaying while it cleans, dust trailing behind when it vacuums, a wet trail
 // and drops when it mops (activity vacuum / mop / vacmop; null: at rest, no animation).
-const onFloor = (robot, activity) => {
+const onFloor = (robot, activity, box = [8, 27, 152, 88]) => {
   const cleaning = ["vacuum", "mop", "vacmop"].includes(activity);
   const vac = activity === "vacuum" || activity === "vacmop";
   const mop = activity === "mop" || activity === "vacmop";
@@ -102,8 +104,11 @@ const onFloor = (robot, activity) => {
   s += `<g class="${cleaning ? "sway" : ""}">${robot}</g>`;
   if (vac) s += [56, 72, 88, 104].map((x, i) => `<circle class="dust d${i + 1}" cx="${x}" cy="94" r="2.6" fill="#c9ccd0"/>`).join("");
   if (mop) s += [40, 66, 94, 120].map((x, i) => `<path class="drop d${i + 1}" d="M${x} 88 q-3 4 0 6 q3 -2 0 -6z" fill="#3f8fd4"/>`).join("");
-  return svgDoc(160, 104, s, "", cleaning);
+  return svgDoc(160, 104, s, "", cleaning, box);
 };
+// Drawing of a dock / Clean Base with its robot: the same box for every brand, so that all the models with a base are
+// drawn at the same size in the illustrated header.
+const BASE_BOX = [14, 8, 146, 158];
 // Robot alone or in front of its dock, animated by `activity`.
 const robotSvg = ({ turret = true, white = false, dock = true, activity = null } = {}) => {
   const col = ROBOT_COLORS[white ? "white" : "dark"];
@@ -129,7 +134,7 @@ const robotSvg = ({ turret = true, white = false, dock = true, activity = null }
   s += `<g class="${activity === "returning" ? "home" : ""}">${robotShape(80, 122, 52, turret, col)}</g>`;
   if (activity === "washing") s += bubbles(80, 112, 100);
   if (activity === "drying") s += heat(80, 108, 100);
-  return svgDoc(160, 160, s, defs, !!activity);
+  return svgDoc(160, 160, s, defs, !!activity, BASE_BOX);
 };
 // Upright wet-dry vacuum: floor head, body with the two water tanks, handle. Cleaning: it rocks back and forth
 // and its roller turns; washing / drying (self-cleaning on its base): bubbles / heat waves at the floor head.
@@ -158,7 +163,7 @@ const dysonSvg = ({ visnav = false, white = false, activity = null } = {}) => {
   r += `<path d="M${80 - cw * 0.7} ${ct - ch * 0.45} h${cw * 1.4}" stroke="#6fa8ff" stroke-width="1.6" opacity=".8"/>`;
   let s = `<g class="${cleaning ? "sway" : activity === "returning" ? "home" : ""}">${r}</g>`;
   if (cleaning) s += [62, 74, 86, 98].map((x, i) => `<circle class="dust d${i + 1}" cx="${x}" cy="98" r="2.6" fill="#c9ccd0"/>`).join("");
-  return svgDoc(160, 104, s, "", cleaning || activity === "returning");
+  return svgDoc(160, 104, s, "", cleaning || activity === "returning", visnav ? [14, 28, 146, 99] : [24, 20, 136, 94]);
 };
 // iRobot: Roomba (round, no LiDAR turret, its CLEAN button with a light ring on top and a single side brush; the
 // s series D-shaped, the j series with a front camera, the 974 / 976 with a silver faceplate) or Braava jet (a rounded square mopping robot with its water
@@ -212,7 +217,7 @@ const roombaSvg = ({ shape = "round", camera = false, silver = false, white = fa
     const act = cleaning ? (braava ? "mop" : combo ? "vacmop" : "vacuum") : null;
     let robot = roombaShape(80, 50, 72, col, { shape, camera, silver });
     if ((act === "vacuum" || act === "vacmop") && !braava) robot += brush(128, 76, 11);
-    return onFloor(robot, act);
+    return onFloor(robot, act, braava ? [15, 17, 145, 100] : undefined);
   }
   // Clean Base: a slim tower (wider for the Combo, its water tank on the side), the robot docked in front.
   const w = combo ? 64 : 50, x = 80 - w / 2;
@@ -227,7 +232,7 @@ const roombaSvg = ({ shape = "round", camera = false, silver = false, white = fa
   s += `<circle cx="80" cy="26" r="2.2" fill="${activity === "emptying" ? "#2fa3ff" : "#64a70b"}"/>`;
   if (activity === "emptying") s += [0, 1, 2, 3, 4].map((i) => `<circle class="evac d${i}" cx="${78 + (i % 3) * 2}" cy="116" r="${2 + (i % 2) * 0.8}" fill="#c9ccd0"/>`).join("");
   s += `<g class="${activity === "returning" ? "home" : ""}">${roombaShape(80, 122, 52, col, { shape, camera, silver })}</g>`;
-  return svgDoc(160, 160, s, "", activity === "returning" || activity === "emptying");
+  return svgDoc(160, 160, s, "", activity === "returning" || activity === "emptying", BASE_BOX);
 };
 const wetdrySvg = ({ white = true, activity = null } = {}) => {
   const [body, edge, accent] = white ? ["#f2f2f0", "#c9cac7", "#3a3d42"] : ["#4a4e54", "#26282c", "#9aa0a6"];
@@ -245,7 +250,7 @@ const wetdrySvg = ({ white = true, activity = null } = {}) => {
   s += cleaning ? `<g class="tilt">${v}</g>` : v;
   if (activity === "washing") s += bubbles(50, 176, 70);
   if (activity === "drying") s += heat(50, 168, 60);
-  return svgDoc(100, 200, s, "", !!activity);
+  return svgDoc(100, 200, s, "", !!activity, [10, 2, 90, 198]);
 };
 // Presets offered in the editor (`image` option); the keys of the former photos still work.
 // `white`: color forced by the `color` option (true / false), undefined to keep the model's.
@@ -692,6 +697,11 @@ const STRINGS = {
     color_auto: "Automatic (per model)",
     color_white: "White",
     color_dark: "Black",
+    illustration: "Animated illustration",
+    illustration_theme: "Illustration theme",
+    theme_auto: "Automatic (sun or dark theme)",
+    theme_day: "Day",
+    theme_night: "Night",
     show_logo: "Show the brand logo",
     show_title: "Show title",
     show_subtitle: "Show subtitle",
@@ -849,6 +859,11 @@ const STRINGS = {
     color_auto: "Automatique (selon le modèle)",
     color_white: "Blanc",
     color_dark: "Noir",
+    illustration: "Illustration animée",
+    illustration_theme: "Thème de l’illustration",
+    theme_auto: "Automatique (soleil ou thème sombre)",
+    theme_day: "Jour",
+    theme_night: "Nuit",
     show_logo: "Afficher le logo de la marque",
     show_title: "Afficher le titre",
     show_subtitle: "Afficher le sous-titre",
@@ -1007,6 +1022,11 @@ const STRINGS = {
     color_auto: "Automatisch (je nach Modell)",
     color_white: "Weiß",
     color_dark: "Schwarz",
+    illustration: "Animierte Illustration",
+    illustration_theme: "Thema der Illustration",
+    theme_auto: "Automatisch (Sonne oder dunkles Design)",
+    theme_day: "Tag",
+    theme_night: "Nacht",
     show_logo: "Markenlogo anzeigen",
     show_title: "Titel anzeigen",
     show_subtitle: "Untertitel anzeigen",
@@ -1166,6 +1186,11 @@ const STRINGS = {
     color_auto: "Automático (según el modelo)",
     color_white: "Blanco",
     color_dark: "Negro",
+    illustration: "Ilustración animada",
+    illustration_theme: "Tema de la ilustración",
+    theme_auto: "Automático (sol o tema oscuro)",
+    theme_day: "Día",
+    theme_night: "Noche",
     show_logo: "Mostrar el logotipo de la marca",
     show_title: "Mostrar el título",
     show_subtitle: "Mostrar el subtítulo",
@@ -1324,6 +1349,11 @@ const STRINGS = {
     color_auto: "Аутоматски (према моделу)",
     color_white: "Бела",
     color_dark: "Црна",
+    illustration: "Анимирана илустрација",
+    illustration_theme: "Тема илустрације",
+    theme_auto: "Аутоматски (сунце или тамна тема)",
+    theme_day: "Дан",
+    theme_night: "Ноћ",
     show_logo: "Прикажи лого бренда",
     show_title: "Прикажи наслов",
     show_subtitle: "Прикажи поднаслов",
@@ -1482,6 +1512,11 @@ const STRINGS = {
     color_auto: "Automatski (prema modelu)",
     color_white: "Bela",
     color_dark: "Crna",
+    illustration: "Animirana ilustracija",
+    illustration_theme: "Tema ilustracije",
+    theme_auto: "Automatski (sunce ili tamna tema)",
+    theme_day: "Dan",
+    theme_night: "Noć",
     show_logo: "Prikaži logo brenda",
     show_title: "Prikaži naslov",
     show_subtitle: "Prikaži podnaslov",
@@ -1640,6 +1675,11 @@ const STRINGS = {
     color_auto: "Automatico (in base al modello)",
     color_white: "Bianco",
     color_dark: "Nero",
+    illustration: "Illustrazione animata",
+    illustration_theme: "Tema dell’illustrazione",
+    theme_auto: "Automatico (sole o tema scuro)",
+    theme_day: "Giorno",
+    theme_night: "Notte",
     show_logo: "Mostra il logo del marchio",
     show_title: "Mostra il titolo",
     show_subtitle: "Mostra il sottotitolo",
@@ -1798,6 +1838,11 @@ const STRINGS = {
     color_auto: "Automatisch (per model)",
     color_white: "Wit",
     color_dark: "Zwart",
+    illustration: "Geanimeerde illustratie",
+    illustration_theme: "Thema van de illustratie",
+    theme_auto: "Automatisch (zon of donker thema)",
+    theme_day: "Dag",
+    theme_night: "Nacht",
     show_logo: "Merklogo tonen",
     show_title: "Titel tonen",
     show_subtitle: "Ondertitel tonen",
@@ -1956,6 +2001,11 @@ const STRINGS = {
     color_auto: "Automática (conforme o modelo)",
     color_white: "Branco",
     color_dark: "Preto",
+    illustration: "Ilustração animada",
+    illustration_theme: "Tema da ilustração",
+    theme_auto: "Automático (sol ou tema escuro)",
+    theme_day: "Dia",
+    theme_night: "Noite",
     show_logo: "Mostrar o logótipo da marca",
     show_title: "Mostrar o título",
     show_subtitle: "Mostrar o subtítulo",
@@ -2114,6 +2164,11 @@ const STRINGS = {
     color_auto: "Automatyczny (według modelu)",
     color_white: "Biały",
     color_dark: "Czarny",
+    illustration: "Animowana ilustracja",
+    illustration_theme: "Motyw ilustracji",
+    theme_auto: "Automatycznie (słońce lub ciemny motyw)",
+    theme_day: "Dzień",
+    theme_night: "Noc",
     show_logo: "Pokaż logo marki",
     show_title: "Pokaż tytuł",
     show_subtitle: "Pokaż podtytuł",
@@ -2272,6 +2327,11 @@ const STRINGS = {
     color_auto: "Automat (după model)",
     color_white: "Alb",
     color_dark: "Negru",
+    illustration: "Ilustrație animată",
+    illustration_theme: "Tema ilustrației",
+    theme_auto: "Automat (soare sau temă întunecată)",
+    theme_day: "Zi",
+    theme_night: "Noapte",
     show_logo: "Afișează logo-ul mărcii",
     show_title: "Afișează titlul",
     show_subtitle: "Afișează subtitlul",
@@ -2430,6 +2490,11 @@ const STRINGS = {
     color_auto: "Automatisk (efter model)",
     color_white: "Hvid",
     color_dark: "Sort",
+    illustration: "Animeret illustration",
+    illustration_theme: "Illustrationens tema",
+    theme_auto: "Automatisk (sol eller mørkt tema)",
+    theme_day: "Dag",
+    theme_night: "Nat",
     show_logo: "Vis mærkets logo",
     show_title: "Vis titel",
     show_subtitle: "Vis undertitel",
@@ -2588,6 +2653,11 @@ const STRINGS = {
     color_auto: "Automatisk (efter modell)",
     color_white: "Vit",
     color_dark: "Svart",
+    illustration: "Animerad illustration",
+    illustration_theme: "Illustrationens tema",
+    theme_auto: "Automatiskt (sol eller mörkt tema)",
+    theme_day: "Dag",
+    theme_night: "Natt",
     show_logo: "Visa varumärkets logotyp",
     show_title: "Visa rubrik",
     show_subtitle: "Visa underrubrik",
@@ -2746,6 +2816,11 @@ const STRINGS = {
     color_auto: "Автоматично (според модела)",
     color_white: "Бял",
     color_dark: "Черен",
+    illustration: "Анимирана илюстрация",
+    illustration_theme: "Тема на илюстрацията",
+    theme_auto: "Автоматично (слънце или тъмна тема)",
+    theme_day: "Ден",
+    theme_night: "Нощ",
     show_logo: "Показване на логото на марката",
     show_title: "Показване на заглавието",
     show_subtitle: "Показване на подзаглавието",
@@ -2904,6 +2979,11 @@ const STRINGS = {
     color_auto: "Автоматически (по модели)",
     color_white: "Белый",
     color_dark: "Чёрный",
+    illustration: "Анимированная иллюстрация",
+    illustration_theme: "Тема иллюстрации",
+    theme_auto: "Автоматически (солнце или тёмная тема)",
+    theme_day: "День",
+    theme_night: "Ночь",
     show_logo: "Показывать логотип бренда",
     show_title: "Показывать заголовок",
     show_subtitle: "Показывать подзаголовок",
@@ -3062,6 +3142,11 @@ const STRINGS = {
     color_auto: "Автоматично (за моделлю)",
     color_white: "Білий",
     color_dark: "Чорний",
+    illustration: "Анімована ілюстрація",
+    illustration_theme: "Тема ілюстрації",
+    theme_auto: "Автоматично (сонце або темна тема)",
+    theme_day: "День",
+    theme_night: "Ніч",
     show_logo: "Показувати логотип бренду",
     show_title: "Показувати заголовок",
     show_subtitle: "Показувати підзаголовок",
@@ -3220,6 +3305,11 @@ const STRINGS = {
     color_auto: "Automatikus (modell szerint)",
     color_white: "Fehér",
     color_dark: "Fekete",
+    illustration: "Animált illusztráció",
+    illustration_theme: "Az illusztráció témája",
+    theme_auto: "Automatikus (nap vagy sötét téma)",
+    theme_day: "Nappal",
+    theme_night: "Éjszaka",
     show_logo: "Márkalogó megjelenítése",
     show_title: "Cím megjelenítése",
     show_subtitle: "Alcím megjelenítése",
@@ -3378,6 +3468,11 @@ const STRINGS = {
     color_auto: "Automaticky (podľa modelu)",
     color_white: "Biela",
     color_dark: "Čierna",
+    illustration: "Animovaná ilustrácia",
+    illustration_theme: "Téma ilustrácie",
+    theme_auto: "Automaticky (slnko alebo tmavá téma)",
+    theme_day: "Deň",
+    theme_night: "Noc",
     show_logo: "Zobraziť logo značky",
     show_title: "Zobraziť názov",
     show_subtitle: "Zobraziť podnázov",
@@ -3536,6 +3631,11 @@ const STRINGS = {
     color_auto: "Automaticky (podle modelu)",
     color_white: "Bílá",
     color_dark: "Černá",
+    illustration: "Animovaná ilustrace",
+    illustration_theme: "Motiv ilustrace",
+    theme_auto: "Automaticky (slunce nebo tmavý motiv)",
+    theme_day: "Den",
+    theme_night: "Noc",
     show_logo: "Zobrazit logo značky",
     show_title: "Zobrazit název",
     show_subtitle: "Zobrazit podnázev",
@@ -3694,6 +3794,11 @@ const STRINGS = {
     color_auto: "Samodejno (glede na model)",
     color_white: "Bela",
     color_dark: "Črna",
+    illustration: "Animirana ilustracija",
+    illustration_theme: "Tema ilustracije",
+    theme_auto: "Samodejno (sonce ali temna tema)",
+    theme_day: "Dan",
+    theme_night: "Noč",
     show_logo: "Prikaži logotip znamke",
     show_title: "Prikaži naslov",
     show_subtitle: "Prikaži podnaslov",
@@ -3852,6 +3957,11 @@ const STRINGS = {
     color_auto: "Automātiski (pēc modeļa)",
     color_white: "Balta",
     color_dark: "Melna",
+    illustration: "Animēta ilustrācija",
+    illustration_theme: "Ilustrācijas motīvs",
+    theme_auto: "Automātiski (saule vai tumšais motīvs)",
+    theme_day: "Diena",
+    theme_night: "Nakts",
     show_logo: "Rādīt zīmola logotipu",
     show_title: "Rādīt virsrakstu",
     show_subtitle: "Rādīt apakšvirsrakstu",
@@ -4010,6 +4120,11 @@ const STRINGS = {
     color_auto: "Αυτόματα (ανά μοντέλο)",
     color_white: "Λευκό",
     color_dark: "Μαύρο",
+    illustration: "Κινούμενη εικονογράφηση",
+    illustration_theme: "Θέμα εικονογράφησης",
+    theme_auto: "Αυτόματα (ήλιος ή σκούρο θέμα)",
+    theme_day: "Ημέρα",
+    theme_night: "Νύχτα",
     show_logo: "Εμφάνιση του λογότυπου της μάρκας",
     show_title: "Εμφάνιση τίτλου",
     show_subtitle: "Εμφάνιση υπότιτλου",
@@ -4325,6 +4440,108 @@ const findDevice = (hass, config) => {
 // Shared styles
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// Illustrated header ("banner", 90 px): the title on the wall of a living room at the left, the card's own picture of
+// the device drawn big at the right (with its dock or Clean Base when it has one, animated by what it does), on a
+// 10 px parquet strip edge to edge. Day or night: illustration_theme, else night with the sun below the horizon or
+// Home Assistant's dark theme (an unknown or unavailable sun leaves the theme alone to decide).
+// ---------------------------------------------------------------------------
+const vcIsNight = (hass, config) => {
+  const theme = config?.illustration_theme;
+  if (theme === "night") return true;
+  if (theme === "day") return false;
+  return hass?.states?.["sun.sun"]?.state === "below_horizon" || !!hass?.themes?.darkMode;
+};
+// The living room (200 × 80, its floor at y 80): a sofa and a floor lamp (lit at night), zoomed in from its bottom right corner so that the sofa and the lamp
+// stand beside the device. No id inside: several cards on a page cannot clash.
+const vcSceneSvg = (n) =>
+  `<svg class="vc-room" viewBox="0 0 200 80" preserveAspectRatio="xMaxYMax meet" aria-hidden="true" focusable="false"><g transform="translate(200 80) scale(1.28) translate(-200 -80)"><rect x="0" y="62" width="200" height="1.2" fill="${n ? "#3a4050" : "#e2d6c6"}"/><g fill="${
+    n ? "#4a4470" : "#9d97e0"
+  }"><rect x="58" y="52" width="56" height="20" rx="5"/><rect x="54" y="46" width="10" height="26" rx="4"/><rect x="108" y="46" width="10" height="26" rx="4"/></g>${
+    n ? `<circle cx="127" cy="38" r="12" fill="#ffcf6e" opacity=".15"/>` : ""
+  }<rect x="126" y="40" width="2" height="34" fill="#888"/><path d="M121 40h12l-3-8h-6z" fill="${n ? "#ffcf6e" : "#e8e0d0"}"/></g></svg>`;
+// Size and right edge of the device in the 200 × 80 scene, by kind of picture: a robot with its dock or Clean Base
+// (square drawing; every brand the same size), a robot on the floor, an upright wet-dry vacuum, any other picture.
+const VC_TARGETS = { base: [104, 70, 196], floor: [90, 42, 190], tall: [56, 76, 190], other: [90, 70, 196] };
+const VC_PICTURES = new Map();
+const vcPct = (v) => `${+(v * 100).toFixed(2)}%`;
+// Position of a picture in the scene (percent of the scene), its drawing standing on the floor. `shift` moves it
+// left (the mini card's detail button sits at the top right).
+const vcPlace = (pic, shift = 0) => {
+  let p = VC_PICTURES.get(pic);
+  if (!p) {
+    p = {};
+    const head = "data:image/svg+xml,";
+    if (String(pic).startsWith(head)) {
+      const svg = decodeURIComponent(pic.slice(head.length));
+      const num4 = (re) => re.exec(svg)?.[1].trim().split(/\s+/).map(Number);
+      p.vb = num4(/viewBox="([^"]+)"/);
+      p.box = num4(/data-box="([^"]+)"/);
+    }
+    VC_PICTURES.set(pic, p);
+  }
+  let left, top, w, h;
+  if (p.vb?.length === 4) {
+    const [, , W, H] = p.vb;
+    const [x0, y0, x1, y1] = p.box?.length === 4 ? p.box : [0, 0, W, H];
+    const [bw, bh, right] = VC_TARGETS[W === H ? "base" : H > W * 1.5 ? "tall" : "floor"];
+    const s = Math.min(bw / (x1 - x0), bh / (y1 - y0));
+    left = right - shift - x1 * s;
+    top = 80 - y1 * s;
+    w = W * s;
+    h = H * s;
+  } else {
+    const [bw, bh, right] = VC_TARGETS.other;
+    [left, top, w, h] = [right - shift - bw, 80 - bh, bw, bh];
+  }
+  return `left:${vcPct(left / 200)};top:${vcPct(top / 80)};width:${vcPct(w / 200)};height:${vcPct(h / 80)}`;
+};
+const BANNER_STYLE = `
+  .banner { position: relative; overflow: hidden; height: 90px; background: #f4ede3; color: #0d2a45; --vc-scene-w: min(200px, 58%); }
+  .banner.night { background: #2a2f3d; color: #fff; }
+  .vc-scene { position: absolute; right: 0; bottom: 10px; width: var(--vc-scene-w); aspect-ratio: 5 / 2; }
+  .vc-room { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .vc-dev { position: absolute; }
+  .vc-dev .picture { width: 100%; height: 100%; }
+  .vc-dev .picture img { width: 100%; height: 100%; max-width: none; max-height: none; object-fit: contain; object-position: 50% 100%;
+                         filter: drop-shadow(0 2px 3px rgba(0,0,0,.16)); }
+  /* Parquet strip under the whole banner, edge to edge. */
+  .vc-ground { position: absolute; left: 0; right: 0; bottom: 0; height: 10px;
+               background: repeating-linear-gradient(90deg, #c99a6b 0 38px, #b98a5c 38px 40px); box-shadow: inset 0 2px 0 #a97c50; }
+  .night .vc-ground { background: repeating-linear-gradient(90deg, #4a3a2c 0 38px, #3e3024 38px 40px); box-shadow: inset 0 2px 0 #5c4836; }
+  .htext { position: absolute; left: 12px; top: 0; bottom: 10px; right: calc(var(--vc-scene-w) + 4px); display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .htext .titles { flex: 1 1 0; min-width: 0; }
+  .htext .name { font-size: 16px; }
+  .line2 { font-size: 13px; line-height: 18px; color: #3b5b78; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .night .line2 { color: rgba(255,255,255,.78); }
+  :host([hide-subtitle]) .line2 { display: none; }
+  /* Status pill on a frosted tint of the state colour (placement: see _fitPill). */
+  .banner .chip { flex: none; max-width: none; line-height: 16px; background: color-mix(in srgb, var(--c, var(--vc-ok)) 18%, rgba(255,255,255,.78));
+                  color: color-mix(in srgb, var(--c, var(--vc-ok)) 45%, #0d2a45); }
+  .banner.night .chip { background: color-mix(in srgb, var(--c, var(--vc-ok)) 30%, rgba(8,18,38,.55)); color: color-mix(in srgb, var(--c, var(--vc-ok)) 35%, #ffffff); }
+  .banner .chip .dot { width: 7px; height: 7px; }
+  /* Same colour as the header icon: at rest (docked, charging) neutral grey. */
+  .banner .chip.ok { --c: var(--vc-idle); }
+  .banner .chip.active { --c: var(--state-vacuum-active-color, var(--vc-active)); }
+  /* The detail button (mini card) sits at the top right: the device steps aside. */
+  .banner:has(> .zoom) .vc-dev { transform: translateX(calc(var(--vc-scene-w) * -.15)); }
+  .line2 .sub { font-size: inherit; color: inherit; }
+  /* The round icon on a light glass disc; its color is the device's state (see .type-icon). */
+  .banner .type-icon { background: rgba(255,255,255,.62); box-shadow: inset 0 0 0 1px rgba(47,128,237,.18); }
+  .banner.night .type-icon { background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
+  .banner .type-icon .icon.type, .banner .type-icon:is(.ok, .warn, .crit, .idle, .active) .icon.type { fill: var(--vc-tint); }
+  .banner .type-icon .logo { background: #fff; box-shadow: 0 0 0 1px rgba(13,42,69,.16), 0 1px 3px rgba(13,42,69,.18); }
+  .banner .zoom { position: absolute; top: 5px; right: 5px; margin: 0; z-index: 2; color: #33506b; background: rgba(255,255,255,.55);
+                  box-shadow: inset 0 0 0 1px rgba(255,255,255,.7); backdrop-filter: blur(4px); }
+  .banner.night .zoom { color: #fff; background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.2); }
+  .banner .zoom:hover { background: rgba(255,255,255,.75); color: #33506b; }
+  .banner.night .zoom:hover { background: rgba(255,255,255,.22); color: #fff; }
+  /* Too narrow for the scene beside the title: the wall and the parquet alone stay. */
+  /* Narrow card (a mini card on 6 columns): the scene takes less room, the title keeps more. */
+  @container (max-width: 300px) { .banner { --vc-scene-w: 44%; } }
+  @container (max-width: 200px) { .vc-scene { display: none; } .htext { right: 36px; } }
+`;
+
 const BASE_STYLE = `
   :host { --vc-accent: #ea0029; --vc-ok: var(--success-color, #43a047); --vc-warn: var(--warning-color, #ffa600);
           --vc-crit: var(--error-color, #db4437); --vc-idle: var(--disabled-text-color, #9e9e9e); --vc-active: var(--info-color, #039be5);
@@ -4358,19 +4575,21 @@ const BASE_STYLE = `
   .logo { width: 40px; height: 40px; object-fit: contain; flex: none; }
   a.logo-link { display: flex; flex: none; }
   .type-icon { position: relative; width: 40px; height: 40px; border-radius: 50%; align-items: center; justify-content: center;
-               --vc-tint: var(--c, var(--vc-accent)); background: color-mix(in srgb, var(--vc-tint) 16%, transparent); transition: background-color .3s ease; }
-  /* The state classes (.ok, .warn, .crit, .idle, .active) set --c; without a state, the brand color. State colors are
-     mixed with the text color for contrast, like the chips. */
-  .type-icon .icon.type { width: 24px; height: 24px; fill: var(--vc-accent); transition: fill .3s ease; }
-  .type-icon:is(.ok, .warn, .crit, .idle, .active) .icon.type { fill: color-mix(in srgb, var(--vc-tint) 60%, var(--primary-text-color)); }
+               --vc-tint: var(--c, var(--vc-idle)); background: color-mix(in srgb, var(--vc-tint) 16%, transparent); transition: background-color .3s ease; }
+  /* The icon's color always tells the device's state: running (cleaning, returning, washing…) in the state color,
+     at rest (docked, charging, idle, off) neutral grey, a warning amber, an error red. State colors are mixed with
+     the text color for contrast, like the chips. */
+  .type-icon.ok { --c: var(--vc-idle); }
+  .type-icon.active { --c: var(--state-vacuum-active-color, var(--vc-active)); }
+  .type-icon .icon.type { width: 24px; height: 24px; fill: color-mix(in srgb, var(--vc-tint) 60%, var(--primary-text-color)); transition: fill .3s ease; }
   @media (prefers-reduced-motion: reduce) { .type-icon, .type-icon .icon.type { transition: none; } }
   .type-icon .logo { position: absolute; right: -4px; bottom: -4px; width: 18px; height: 18px; border-radius: 5px;
                      background: var(--card-background-color, #fff);
                      box-shadow: 0 0 0 1px var(--divider-color, rgba(0,0,0,.12)), 0 0 0 3px var(--card-background-color, #fff); }
   /* The title takes the room the chip leaves (flex-basis 0: a long name does not push the chip into its ellipsis)
      and keeps about four characters and its ellipsis; the chip shrinks only when even that does not fit. */
-  .titles { flex: 1 1 0; min-width: 5ch; font-size: 16px; }
-  :host([hide-title]) .titles > .name, :host([hide-subtitle]) .titles > .sub { display: none; }
+  .titles { flex: 1 1 0; min-width: 0; font-size: 16px; }
+  :host([hide-title]) .titles .name, :host([hide-subtitle]) .titles > .sub { display: none; }
   .name { font-size: 16px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .sub { font-size: 12px; color: var(--secondary-text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .warning { padding: 16px; color: color-mix(in srgb, var(--vc-warn) 50%, var(--primary-text-color)); }
@@ -4410,11 +4629,23 @@ const BASE_STYLE = `
   .zoom .icon { width: 16px; height: 16px; }
   .zoom:hover { background: color-mix(in srgb, var(--vc-idle) 16%, transparent); color: var(--primary-text-color); }
   .zoom:focus-visible { outline: 2px solid var(--primary-color, var(--vc-accent)); outline-offset: 1px; }
-  /* Narrow card: the status chip keeps only its colored dot (its text stays in title and aria-label). */
-  @container (max-width: 230px) {
-    .chip { padding: 4px; flex: none; }
-    .chip-text { display: none; }
-  }
+  /* The status pill, in every header: on the title row right after the title only when the whole title and the pill's
+     whole label fit there; otherwise on its own line under the subtitle, cut to one line; its dot alone, beside the
+     title, when the banner has no room left above its ground strip, or on a card of 200 px or less. Decided by
+     measurement (see _fitPill), so that every language and every width gets it right. */
+  .titles .trow { display: flex; align-items: center; gap: 8px; min-width: 0; width: 100%; }
+  .titles .trow > .name { flex: 0 1 auto; min-width: 0; }
+  .titles .trow > .chip { flex: none; max-width: none; margin: 0; align-self: center; }
+  .titles.below { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; }
+  .titles.below > * { max-width: 100%; }
+  .titles.below .trow { display: contents; }
+  .titles.below .trow > .name { max-width: 100%; }
+  .titles.below .trow > .chip { order: 9; max-width: 100%; margin-top: 2px; align-self: flex-start; }
+  /* In the banner, a pill on its own line may run over the picture, up to the banner's edge. */
+  .banner .titles.below .trow > .chip { max-width: none; }
+  .titles.below > :is(.sub, .line2) { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .titles.dotonly .trow > .chip { padding: 4px; } .titles.dotonly .trow > .chip .chip-text { display: none; }
+  @container (max-width: 200px) { .titles .trow > .chip { padding: 4px; } .titles .trow > .chip .chip-text { display: none; } }
   /* The 40 px type icon keeps its size at every width: the name gives way (ellipsis) instead. */
   @container (max-width: 200px) {
     .header { gap: 6px; }
@@ -4607,7 +4838,7 @@ class VacuumBase extends HTMLElement {
     if (!dev) return null;
     // map_entity (Xiaomi Cloud Map Extractor, Valetudo…) belongs to no device: its new map / rotated token re-renders too.
     const ids = [dev.vacuum, ...Object.values(dev.entities), ...Object.values(dev.dock), ...Object.values(dev.extra).flat(), this._config.map_entity];
-    return [h.entities, h.devices, h.language, h.locale, h.localize, h.formatEntityState, h.themes?.darkMode, h.config?.unit_system?.length, this._lastClean(dev), ...ids.map((id) => h.states[id])];
+    return [h.entities, h.devices, h.language, h.locale, h.localize, h.formatEntityState, h.themes?.darkMode, h.states["sun.sun"], h.config?.unit_system?.length, this._lastClean(dev), ...ids.map((id) => h.states[id])];
   }
 
   get hass() {
@@ -4631,6 +4862,18 @@ class VacuumBase extends HTMLElement {
     // is loaded as soon as the card can be seen again.
     this._onVisibility ??= () => this._syncMaps();
     document.addEventListener("visibilitychange", this._onVisibility);
+    // A new width: the status pill is fitted again (in the next frame, and only for a new width).
+    if (typeof ResizeObserver === "function") {
+      this._resize ??= new ResizeObserver((entries) => {
+        const w = Math.round(entries.at(-1).contentRect.width);
+        if (w === this._fitWidth) return;
+        this._fitWidth = w;
+        cancelAnimationFrame(this._fitFrame);
+        this._fitFrame = requestAnimationFrame(() => this._fitPill());
+      });
+      this._resize.observe(this);
+    }
+    document.fonts?.ready?.then(() => this._fitPill());
     if (typeof IntersectionObserver === "function") {
       this._observer ??= new IntersectionObserver((entries) => {
         this._offscreen = !entries.at(-1).isIntersecting;
@@ -4660,6 +4903,9 @@ class VacuumBase extends HTMLElement {
     window.removeEventListener("keydown", this._onKey);
     document.removeEventListener("visibilitychange", this._onVisibility);
     this._observer?.disconnect();
+    this._resize?.disconnect();
+    this._fitWidth = undefined;
+    if (this._fitFrame) cancelAnimationFrame(this._fitFrame);
     clearTimeout(this._pendingTimer);
     this._closeZoom?.();
   }
@@ -4715,6 +4961,7 @@ class VacuumBase extends HTMLElement {
       const kept = this._confirm || this._byPointer ? null : this._focusedSpot();
       this._html = html;
       this.shadowRoot.innerHTML = html;
+      this._fitPill();
       this._placeImages();
       this._placeMaps();
       this._placeVectorMap();
@@ -4727,6 +4974,45 @@ class VacuumBase extends HTMLElement {
     }
     this._syncMaps();
     if (this._vectorMap) this._vectorMap.hass = this._hass;
+  }
+
+  // The status pill goes right after the title only when the whole title and the pill's whole label fit on that row;
+  // otherwise it takes a line of its own under the subtitle (.titles.below, the subtitle cut to one line). In the
+  // banner (where that line may run over the picture), when the titles still run below the top of the ground strip or
+  // out of the banner, and in the classic header when the label does not fit even alone, the pill keeps its dot alone,
+  // beside the title (.titles.dotonly). Measured in fractional pixels.
+  _fitPill() {
+    for (const t of this.shadowRoot?.querySelectorAll?.(".titles") || []) {
+      const row = t.querySelector(".trow");
+      const chips = row ? [...row.querySelectorAll(":scope > .chip")] : [];
+      if (!chips.length || !row.getBoundingClientRect) continue;
+      t.classList.remove("below", "dotonly");
+      const name = row.querySelector(":scope > .name");
+      const gap = parseFloat(getComputedStyle(row).columnGap) || 0;
+      const widths = chips.map((c) => c.getBoundingClientRect().width);
+      let need = -gap;
+      if (name && getComputedStyle(name).display !== "none") {
+        name.style.flex = "none";
+        need = name.getBoundingClientRect().width;
+        name.style.flex = "";
+      }
+      for (const w of widths) need += gap + w;
+      const room = row.getBoundingClientRect().width + 0.01;
+      if (need <= room) continue;
+      t.classList.add("below");
+      const banner = t.closest(".banner");
+      const cut = !banner && widths.some((w) => w > room);
+      let out = false;
+      if (banner) {
+        const b = banner.getBoundingClientRect();
+        const floor = b.bottom - (banner.querySelector(".vc-ground")?.getBoundingClientRect().height ?? 10) + 0.5;
+        out = [...t.querySelectorAll(".name, .line2, .titles > .sub, .chip")].some((e) => {
+          const r = e.getBoundingClientRect();
+          return r.height && (r.bottom > floor || r.top < b.top - 0.5 || r.right > b.right + 0.5);
+        });
+      }
+      if (cut || out) t.classList.replace("below", "dotonly");
+    }
   }
 
   // The vacuum-map-card element outlives the renders, as the map pictures do: moved back into each new render, it
@@ -5045,8 +5331,7 @@ class VacuumBase extends HTMLElement {
   }
 
   // Picture of the robot (opens the vacuum), or "" when there is none.
-  _pictureBlock(dev, status) {
-    const pic = this._picture(dev, status);
+  _pictureBlock(dev, status, pic = this._picture(dev, status)) {
     return pic
       ? `<div class="picture clickable" role="button" tabindex="0" aria-label="${esc(this._config.title || dev.name || "")}" data-entity="${esc(dev.vacuum || status?.entity || "")}">${imgTag(pic, 'alt=""')}</div>`
       : "";
@@ -5095,24 +5380,59 @@ class VacuumBase extends HTMLElement {
     return `<a class="logo-link type-icon${state ? ` ${state}` : ""}" href="${b.site}" target="_blank" rel="noopener noreferrer" title="${esc(b.name)}">${imgTag(b.logo, `class="logo" alt="${esc(b.name)}"`)}${svgIcon(ICONS[deviceTypeOf(dev)], "type")}</a>`;
   }
 
+  // Illustrated header (the default; `illustration: false` keeps the classic one).
+  _illustrated() {
+    return this._config.illustration !== false;
+  }
+
+  // The banner: the icon, the title and the status (then `sub`) on the wall at the left, the device's picture (opens
+  // the vacuum) standing on the parquet at the right.
+  _banner(dev, status, sub) {
+    const c = this._config;
+    const night = vcIsNight(this._hass, c);
+    const pic = this._picture(dev, status);
+    const zoom = this._zoomButton();
+    const art = pic ? `<div class="vc-dev" style="${vcPlace(pic)}">${this._pictureBlock(dev, status, pic)}</div>` : "";
+    // The status pill right after the title (on its own line under the subtitle when it does not fit there), in
+    // the colour of the header icon.
+    const st = status
+      ? `<span class="chip clickable ${this._iconState(dev, status) || statusClass(status.state)}" role="button" tabindex="0" data-entity="${esc(status.entity)}" title="${esc(status.text)}" aria-label="${esc(
+          status.text,
+        )}"><span class="dot"></span><span class="chip-text">${esc(status.text)}</span></span>`
+      : "";
+    return `
+      <div class="banner${night ? " night" : ""}">
+        <div class="vc-scene">${vcSceneSvg(night)}${art}</div>
+        <div class="vc-ground" aria-hidden="true"></div>
+        <div class="htext">
+          ${c.show_logo !== false ? this._logo(dev, this._iconState(dev, status)) : ""}
+          <div class="titles">
+            <div class="trow"><div class="name">${esc(c.title || dev.name)}</div>${st}</div>
+            ${sub ? `<div class="line2" title="${esc(sub)}"><span class="sub">${esc(sub)}</span></div>` : ""}
+          </div>
+        </div>
+        ${zoom}
+      </div>`;
+  }
+
   _header(dev, status, sub) {
     const c = this._config;
+    if (this._illustrated()) return this._banner(dev, status, sub);
     return `
       <div class="header">
         ${
           c.show_logo !== false ? this._logo(dev, this._iconState(dev, status)) : ""
         }
         <div class="titles">
-          <div class="name">${esc(c.title || dev.name)}</div>
-          ${sub ? `<div class="sub">${esc(sub)}</div>` : ""}
+          <div class="trow"><div class="name">${esc(c.title || dev.name)}</div>${
+            status
+              ? `<span class="chip clickable ${statusClass(status.state)}" role="button" tabindex="0" data-entity="${esc(status.entity)}" title="${esc(status.text)}" aria-label="${esc(
+                  status.text,
+                )}"><span class="dot"></span><span class="chip-text">${esc(status.text)}</span></span>`
+              : ""
+          }</div>
+          ${sub ? `<div class="sub" title="${esc(sub)}">${esc(sub)}</div>` : ""}
         </div>
-        ${
-          status
-            ? `<span class="chip clickable ${statusClass(status.state)}" role="button" tabindex="0" data-entity="${esc(status.entity)}" title="${esc(status.text)}" aria-label="${esc(
-                status.text,
-              )}"><span class="dot"></span><span class="chip-text">${esc(status.text)}</span></span>`
-            : ""
-        }
         ${this._zoomButton()}
       </div>`;
   }
@@ -5410,7 +5730,7 @@ class VacuumCard extends VacuumBase {
     if (c.show_consumables !== false) parts.push(this._consumables(dev));
     if (c.show_stats !== false) parts.push(this._stats(dev));
     if (this._showMap(dev)) parts.push(this._mapSection(dev));
-    return `<style>${BASE_STYLE}${FULL_STYLE}${accentStyle(dev, this._hass)}</style>
+    return `<style>${BASE_STYLE}${FULL_STYLE}${this._illustrated() ? BANNER_STYLE : ""}${accentStyle(dev, this._hass)}</style>
       <ha-card>
         ${this._header(dev, status, this._lastClean(dev))}
         <div class="content">${parts.filter(Boolean).join("")}</div>
@@ -5464,7 +5784,7 @@ class VacuumCard extends VacuumBase {
     }
 
     return `<div class="hero">
-      ${this._pictureBlock(dev, status)}
+      ${this._illustrated() ? "" : this._pictureBlock(dev, status)}
       <div class="info">
         ${
           batt
@@ -5920,11 +6240,11 @@ class VacuumMiniCard extends VacuumCard {
     if (last) lines.push(`<div class="line">${svgIcon(ICONS.clock)}<span>${esc(last)}</span></div>`);
     // Empty when the room list belongs to another device: no padded empty band then.
     const rooms = this._roomPanel(dev);
-    return `<style>${BASE_STYLE}${MINI_STYLE}${accentStyle(dev, this._hass)}</style>
+    return `<style>${BASE_STYLE}${MINI_STYLE}${this._illustrated() ? BANNER_STYLE : ""}${accentStyle(dev, this._hass)}</style>
       <ha-card>
         ${this._header(dev, status, "")}
         <div class="content">
-          ${this._pictureBlock(dev, status)}
+          ${this._illustrated() ? "" : this._pictureBlock(dev, status)}
           <div class="info">
             ${
               batt
@@ -5997,11 +6317,17 @@ class VacuumEditorBase extends HTMLElement {
           select: { mode: "dropdown", options: ["auto", "white", "dark"].map((v) => ({ value: v, label: tr(`color_${v}`) })) },
         },
       },
+      {
+        name: "illustration_theme",
+        selector: {
+          select: { mode: "dropdown", options: ["auto", "day", "night"].map((v) => ({ value: v, label: tr(`theme_${v}`) })) },
+        },
+      },
       ...this.constructor.extraFields(tr),
       {
         type: "grid",
         name: "",
-        schema: [["show_logo", true], ...this.constructor.toggles].map(([name]) => ({ name, selector: { boolean: {} } })),
+        schema: [["show_logo", true], ["illustration", true], ...this.constructor.toggles].map(([name]) => ({ name, selector: { boolean: {} } })),
       },
       {
         name: "language",
@@ -6041,7 +6367,7 @@ class VacuumEditorBase extends HTMLElement {
 
   _render() {
     if (!this._hass || !this._config) return;
-    const toggles = [["show_logo", true], ...this.constructor.toggles];
+    const toggles = [["show_logo", true], ["illustration", true], ...this.constructor.toggles];
     if (!this._form) {
       this._form = document.createElement("ha-form");
       this._form.computeLabel = (s) => t(this._hass, this._config, s.name);
@@ -6052,7 +6378,7 @@ class VacuumEditorBase extends HTMLElement {
       this._form.addEventListener("value-changed", (ev) => {
         ev.stopPropagation();
         const config = { ...ev.detail.value };
-        const defaults = { ...Object.fromEntries(toggles), image: "auto", color: "auto", ...this.constructor.selects };
+        const defaults = { ...Object.fromEntries(toggles), image: "auto", color: "auto", illustration_theme: "auto", ...this.constructor.selects };
         for (let [k, v] of Object.entries(config)) {
           // Keep the YAML minimal: drop empty values and options left at their default.
           if (v && typeof v === "object" && !Array.isArray(v)) {
@@ -6066,7 +6392,7 @@ class VacuumEditorBase extends HTMLElement {
       });
       this.appendChild(this._form);
     }
-    const data = { image: "auto", color: "auto", ...this.constructor.selects, ...this._config };
+    const data = { image: "auto", color: "auto", illustration_theme: "auto", ...this.constructor.selects, ...this._config };
     if (data.show_map === true) data.show_map = "always";
     if (data.show_map === false) data.show_map = "never";
     // The nested form of an expandable section needs an object, even when the option is not set.

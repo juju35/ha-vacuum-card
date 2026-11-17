@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.14.0 - 2026-11-17
+
+### Features
+- Illustrated header on the card and the mini card (90 px): the title and the status on the wall of a living room, the device's own drawing shown big at the right (robot with its dock or Clean Base, robot on the floor, Dyson, wet-dry vacuum), standing on a parquet strip and animated by what it does. Every model with a base is drawn at the same size. Night version after sunset (`sun.sun`) or with the dark theme even while the sun is up, forced with the new `illustration_theme: day | night`; `illustration: false` keeps the classic header. Both options are in the visual editors.
+- The header icon's color always tells the device's state: the state color while it runs, neutral grey at rest (docked, charging, idle), amber on a warning, red on an error.
+- Status pill (dot and state, e.g. "Charging") in the illustrated header, in the icon's colour on a frosted tint. In every header (illustrated or classic, full and mini card) it is placed by measurement, in every language: on the title row right after the title only when the whole title and its whole label fit there, otherwise on its own line under the subtitle (cut to one line); only its dot when the banner has no room left above its ground strip, and on a card of 200 px or less. The mini card's expand / collapse button is a 24 px frosted round button 5 px from the top right corner of the banner.
+
 ## 2.13.0 - 2026-11-15
 
 ### Features
