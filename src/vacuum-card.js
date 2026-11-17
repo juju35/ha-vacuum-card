@@ -4516,10 +4516,27 @@ const BANNER_STYLE = `
   .htext .name { font-size: 16px; }
   .line2 { font-size: 13px; line-height: 18px; color: #3b5b78; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .night .line2 { color: rgba(255,255,255,.78); }
-  :host([hide-subtitle]) .line2 .sub { display: none; }
-  .line2 .chip { display: inline; padding: 0; border-radius: 0; background: none; color: inherit; font-size: inherit; font-weight: inherit; max-width: none; }
-  .line2 .chip .dot { display: none; }
-  .line2 .chip-text { display: inline; }
+  :host([hide-subtitle]) .line2 { display: none; }
+  /* Status pill right after the title, on a frosted tint of the state colour; the title is cut first (about four
+     characters kept). When it does not fit there (measured by the card, or a narrow card) it goes on its own line
+     under the subtitle, where it may run over the left of the scene. */
+  .trow { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .trow .name { flex: 0 100 auto; min-width: 4ch; }
+  .banner .chip { max-width: 51%; line-height: 16px; background: color-mix(in srgb, var(--c, var(--vc-ok)) 18%, rgba(255,255,255,.78));
+                  color: color-mix(in srgb, var(--c, var(--vc-ok)) 45%, #0d2a45); }
+  .banner.night .chip { background: color-mix(in srgb, var(--c, var(--vc-ok)) 30%, rgba(8,18,38,.55)); color: color-mix(in srgb, var(--c, var(--vc-ok)) 35%, #ffffff); }
+  .banner .chip .dot { width: 7px; height: 7px; }
+  /* Same colour as the header icon: at rest (docked, charging) neutral grey. */
+  .banner .chip.ok { --c: var(--vc-idle); }
+  .banner .chip.active { --c: var(--state-vacuum-active-color, var(--vc-active)); }
+  .banner[data-wrap] .titles { display: flex; flex-direction: column; }
+  .banner[data-wrap] .trow { display: contents; }
+  .banner[data-wrap] .chip { order: 9; align-self: flex-start; max-width: calc(100cqw - 76px); margin-top: 3px; }
+  @container (max-width: 260px) {
+    .banner .titles { display: flex; flex-direction: column; }
+    .banner .trow { display: contents; }
+    .banner .chip { order: 9; align-self: flex-start; max-width: calc(100cqw - 76px); margin-top: 3px; }
+  }
   /* The detail button (mini card) sits at the top right: the device steps aside. */
   .banner:has(> .zoom) .vc-dev { transform: translateX(calc(var(--vc-scene-w) * -.15)); }
   .line2 .sub { font-size: inherit; color: inherit; }
@@ -4528,10 +4545,11 @@ const BANNER_STYLE = `
   .banner.night .type-icon { background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
   .banner .type-icon .icon.type, .banner .type-icon:is(.ok, .warn, .crit, .idle, .active) .icon.type { fill: var(--vc-tint); }
   .banner .type-icon .logo { background: #fff; box-shadow: 0 0 0 1px rgba(13,42,69,.16), 0 1px 3px rgba(13,42,69,.18); }
-  .banner .zoom { position: absolute; top: 6px; right: 6px; margin: 0; z-index: 1; color: #10283f; background: rgba(255,255,255,.55); }
-  .banner.night .zoom { color: #fff; background: rgba(10,20,40,.45); }
-  .banner .zoom:hover { background: rgba(255,255,255,.8); color: #10283f; }
-  .banner.night .zoom:hover { background: rgba(10,20,40,.7); color: #fff; }
+  .banner .zoom { position: absolute; top: 5px; right: 5px; margin: 0; z-index: 2; color: #33506b; background: rgba(255,255,255,.55);
+                  box-shadow: inset 0 0 0 1px rgba(255,255,255,.7); backdrop-filter: blur(4px); }
+  .banner.night .zoom { color: #fff; background: rgba(255,255,255,.12); box-shadow: inset 0 0 0 1px rgba(255,255,255,.2); }
+  .banner .zoom:hover { background: rgba(255,255,255,.75); color: #33506b; }
+  .banner.night .zoom:hover { background: rgba(255,255,255,.22); color: #fff; }
   /* Too narrow for the scene beside the title: the wall and the parquet alone stay. */
   /* Narrow card (a mini card on 6 columns): the scene takes less room, the title keeps more. */
   @container (max-width: 300px) { .banner { --vc-scene-w: 44%; } }
@@ -4846,6 +4864,17 @@ class VacuumBase extends HTMLElement {
     // is loaded as soon as the card can be seen again.
     this._onVisibility ??= () => this._syncMaps();
     document.addEventListener("visibilitychange", this._onVisibility);
+    // A new width: the status pill is fitted again (in the next frame, and only for a new width).
+    if (typeof ResizeObserver === "function") {
+      this._resize ??= new ResizeObserver((entries) => {
+        const w = Math.round(entries.at(-1).contentRect.width);
+        if (w === this._fitWidth) return;
+        this._fitWidth = w;
+        cancelAnimationFrame(this._fitFrame);
+        this._fitFrame = requestAnimationFrame(() => this._fitPill());
+      });
+      this._resize.observe(this);
+    }
     if (typeof IntersectionObserver === "function") {
       this._observer ??= new IntersectionObserver((entries) => {
         this._offscreen = !entries.at(-1).isIntersecting;
@@ -4875,6 +4904,9 @@ class VacuumBase extends HTMLElement {
     window.removeEventListener("keydown", this._onKey);
     document.removeEventListener("visibilitychange", this._onVisibility);
     this._observer?.disconnect();
+    this._resize?.disconnect();
+    this._fitWidth = undefined;
+    if (this._fitFrame) cancelAnimationFrame(this._fitFrame);
     clearTimeout(this._pendingTimer);
     this._closeZoom?.();
   }
@@ -4930,6 +4962,7 @@ class VacuumBase extends HTMLElement {
       const kept = this._confirm || this._byPointer ? null : this._focusedSpot();
       this._html = html;
       this.shadowRoot.innerHTML = html;
+      this._fitPill();
       this._placeImages();
       this._placeMaps();
       this._placeVectorMap();
@@ -4942,6 +4975,15 @@ class VacuumBase extends HTMLElement {
     }
     this._syncMaps();
     if (this._vectorMap) this._vectorMap.hass = this._hass;
+  }
+
+  // The banner's status pill goes on its own line under the subtitle when it is cut next to the title.
+  _fitPill() {
+    const banner = this.shadowRoot.querySelector?.(".banner");
+    const text = banner?.querySelector?.(".trow .chip-text");
+    if (!text?.getBoundingClientRect) return;
+    banner.removeAttribute("data-wrap");
+    if (text.scrollWidth > text.clientWidth + 0.5) banner.setAttribute("data-wrap", "");
   }
 
   // The vacuum-map-card element outlives the renders, as the map pictures do: moved back into each new render, it
@@ -5322,13 +5364,13 @@ class VacuumBase extends HTMLElement {
     const pic = this._picture(dev, status);
     const zoom = this._zoomButton();
     const art = pic ? `<div class="vc-dev" style="${vcPlace(pic)}">${this._pictureBlock(dev, status, pic)}</div>` : "";
-    // The status chip, drawn as the plain text of the subtitle.
+    // The status pill right after the title (on its own line under the subtitle when it does not fit there), in
+    // the colour of the header icon.
     const st = status
-      ? `<span class="chip clickable ${statusClass(status.state)}" role="button" tabindex="0" data-entity="${esc(status.entity)}" title="${esc(status.text)}" aria-label="${esc(
+      ? `<span class="chip clickable ${this._iconState(dev, status) || statusClass(status.state)}" role="button" tabindex="0" data-entity="${esc(status.entity)}" title="${esc(status.text)}" aria-label="${esc(
           status.text,
         )}"><span class="dot"></span><span class="chip-text">${esc(status.text)}</span></span>`
       : "";
-    const line2 = [st, sub ? `<span class="sub">${st ? " · " : ""}${esc(sub)}</span>` : ""].join("");
     return `
       <div class="banner${night ? " night" : ""}">
         <div class="vc-scene">${vcSceneSvg(night)}${art}</div>
@@ -5336,8 +5378,8 @@ class VacuumBase extends HTMLElement {
         <div class="htext">
           ${c.show_logo !== false ? this._logo(dev, this._iconState(dev, status)) : ""}
           <div class="titles">
-            <div class="name">${esc(c.title || dev.name)}</div>
-            ${line2 ? `<div class="line2">${line2}</div>` : ""}
+            <div class="trow"><div class="name">${esc(c.title || dev.name)}</div>${st}</div>
+            ${sub ? `<div class="line2"><span class="sub">${esc(sub)}</span></div>` : ""}
           </div>
         </div>
         ${zoom}
