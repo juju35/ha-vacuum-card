@@ -2,6 +2,9 @@
 
 ## 2.14.2 - 2026-11-20
 
+### Fixes
+- The page no longer moves by itself on state updates: the card is patched in place instead of being rewritten (pictures, illustration and icons stay the same nodes, animations no longer restart, the height stays the same on every frame); updates of entities the card does not show still change nothing. The confirmation popup takes the focus without scrolling the page.
+
 ### Maintenance
 - The commit-msg hook works again (the commitlint config is an ES module, as `package.json` declares).
 
