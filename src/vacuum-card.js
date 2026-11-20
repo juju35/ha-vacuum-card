@@ -4739,9 +4739,20 @@ const imgTag = (src, attrs) => {
 
 // The attributes the card sets on its nodes after a render (src of the kept pictures): never removed by a patch.
 const keptAttr = (el, name) => name === "src" && (el.hasAttribute("data-img") || el.hasAttribute("data-map"));
+// A custom element (ha-icon, ha-card…) may set attributes on itself (a style, a state): it only loses those the
+// previous render gave it (tplAttrs) and are no longer in this one.
+const isCustom = (el) => el.localName.includes("-");
+const tplAttrs = new WeakMap();
+const markTemplate = (n) => {
+  if (n.nodeType !== 1) return;
+  for (const el of [n, ...n.querySelectorAll("*")]) if (isCustom(el)) tplAttrs.set(el, new Set(el.getAttributeNames()));
+};
 const patchAttrs = (cur, next) => {
-  for (const { name } of [...cur.attributes]) if (!next.hasAttribute(name) && !keptAttr(cur, name)) cur.removeAttribute(name);
+  const custom = isCustom(cur);
+  const owned = custom ? tplAttrs.get(cur) || new Set() : null;
+  for (const name of cur.getAttributeNames()) if (!next.hasAttribute(name) && !keptAttr(cur, name) && (!custom || owned.has(name))) cur.removeAttribute(name);
   for (const { name, value } of next.attributes) if (cur.getAttribute(name) !== value) cur.setAttribute(name, value);
+  if (custom) tplAttrs.set(cur, new Set(next.getAttributeNames()));
 };
 const keyOf = (n) => (n.nodeType === 1 ? n.getAttribute("data-key") : null);
 // A picture is only reused for the same picture (its src is not in the HTML).
@@ -4772,6 +4783,7 @@ const patchChildren = (cur, next) => {
     }
     if (!sameNode(o, n) || used.has(o) || (k === null && keyOf(o) !== null)) o = null;
     if (!o) {
+      markTemplate(n);
       cur.insertBefore(n, ref);
       return;
     }
@@ -4779,14 +4791,15 @@ const patchChildren = (cur, next) => {
     if (o !== ref) cur.insertBefore(o, ref);
     if (n.nodeType === 1) {
       patchAttrs(o, n);
-      patchChildren(o, n);
+      // A custom element the template leaves empty (ha-icon) draws its own children: they are kept.
+      if (n.childNodes.length || !isCustom(o)) patchChildren(o, n);
     } else if (o.nodeValue !== n.nodeValue) o.nodeValue = n.nodeValue;
   });
   while (cur.childNodes.length > fresh.length) cur.removeChild(cur.lastChild);
 };
-// The first render (an empty shadow root) is written as is.
+// Without a DOM (the unit tests' stand-in shadow root), the HTML is only written.
 const morph = (root, html) => {
-  if (!root.firstChild) {
+  if (!root.childNodes) {
     root.innerHTML = html;
     return;
   }
@@ -4913,6 +4926,7 @@ class VacuumBase extends HTMLElement {
   // A click elsewhere on the page folds the sections back to their defaults (as in ha-carburants-france).
   // Folded on the release, not on the press: folding on press would shift the layout under the pointer before the click.
   connectedCallback() {
+    Promise.resolve().then(() => this._fitAfterCard());
     // Clicks inside a dialog (the more-info opened from the card) leave the card as it is.
     this._onOutside ??= (ev) => {
       if ((!this._toggled?.size && !this._confirm) || !isOutside(this, ev)) return;
@@ -5027,6 +5041,7 @@ class VacuumBase extends HTMLElement {
       this._html = html;
       morph(this.shadowRoot, html);
       this._fitPill();
+      this._fitAfterCard();
       this._placeImages();
       this._placeMaps();
       this._placeVectorMap();
@@ -5039,6 +5054,18 @@ class VacuumBase extends HTMLElement {
     }
     this._syncMaps();
     if (this._vectorMap) this._vectorMap.hass = this._hass;
+  }
+
+  // <ha-card> (Lit) draws its slot a microtask after it is created: until then the card's content has no size, and the
+  // status pill measured then would take the wrong line (the card then changed height once measured again). A new
+  // <ha-card> is measured once more as soon as it has rendered, before the frame is painted.
+  // Rendered before the card is on the page, <ha-card> is only upgraded once connected: called again then (see
+  // connectedCallback).
+  _fitAfterCard() {
+    const card = this.shadowRoot?.querySelector?.("ha-card");
+    if (!card?.updateComplete || card === this._fitCard) return;
+    this._fitCard = card;
+    card.updateComplete?.then?.(() => this._fitPill());
   }
 
   // The status pill goes right after the title only when the whole title and the pill's whole label fit on that row;
