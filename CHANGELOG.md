@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.14.2 - 2026-11-20
+
+### Maintenance
+- The commit-msg hook works again (the commitlint config is an ES module, as `package.json` declares).
+
 ## 2.14.1 - 2026-11-18
 
 ### Fixes
