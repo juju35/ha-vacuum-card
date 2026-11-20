@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.14.2 - 2026-11-20
+
+### Fixes
+- The page no longer moves by itself on state updates: the card is patched in place instead of being rewritten (pictures, illustration and icons stay the same nodes, animations no longer restart, the height stays the same on every frame); updates of entities the card does not show still change nothing. The status pill is measured again once Home Assistant's card frame has drawn its content: measured before (no size yet), it jumped back to the title row and the classic header lost 10 px on each update. The confirmation popup takes the focus without scrolling the page.
+
+### Maintenance
+- The commit-msg hook works again (the commitlint config is an ES module, as `package.json` declares).
+
 ## 2.14.1 - 2026-11-18
 
 ### Fixes

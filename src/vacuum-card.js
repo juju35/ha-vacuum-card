@@ -4730,6 +4730,84 @@ const imgTag = (src, attrs) => {
   return `<img data-img="${id}" ${attrs}>`;
 };
 
+// ---------------------------------------------------------------------------
+// Shadow DOM patching: a render is applied to the nodes already there (text, attributes and classes updated in
+// place) instead of replacing the whole shadow root. Replaced nodes made the card change height for a frame or more
+// on every state update (pictures without their size until decoded, icons empty until loaded, animations restarted),
+// and the dashboard's scroll anchoring then moved the page.
+// ---------------------------------------------------------------------------
+
+// The attributes the card sets on its nodes after a render (src of the kept pictures): never removed by a patch.
+const keptAttr = (el, name) => name === "src" && (el.hasAttribute("data-img") || el.hasAttribute("data-map"));
+// A custom element (ha-icon, ha-card…) may set attributes on itself (a style, a state): it only loses those the
+// previous render gave it (tplAttrs) and are no longer in this one.
+const isCustom = (el) => el.localName.includes("-");
+const tplAttrs = new WeakMap();
+const markTemplate = (n) => {
+  if (n.nodeType !== 1) return;
+  for (const el of [n, ...n.querySelectorAll("*")]) if (isCustom(el)) tplAttrs.set(el, new Set(el.getAttributeNames()));
+};
+const patchAttrs = (cur, next) => {
+  const custom = isCustom(cur);
+  const owned = custom ? tplAttrs.get(cur) || new Set() : null;
+  for (const name of cur.getAttributeNames()) if (!next.hasAttribute(name) && !keptAttr(cur, name) && (!custom || owned.has(name))) cur.removeAttribute(name);
+  for (const { name, value } of next.attributes) if (cur.getAttribute(name) !== value) cur.setAttribute(name, value);
+  if (custom) tplAttrs.set(cur, new Set(next.getAttributeNames()));
+};
+const keyOf = (n) => (n.nodeType === 1 ? n.getAttribute("data-key") : null);
+// A picture is only reused for the same picture (its src is not in the HTML).
+const sameNode = (a, b) =>
+  !!a &&
+  a.nodeType === b.nodeType &&
+  a.nodeName === b.nodeName &&
+  (a.nodeType !== 1 || (a.getAttribute("data-img") === b.getAttribute("data-img") && a.getAttribute("data-map") === b.getAttribute("data-map")));
+// The vacuum-map-card element stands where the render writes its slot (see _placeVectorMap): left as it is.
+const isVectorSlot = (o, n) => n.nodeType === 1 && n.hasAttribute("data-vector-map") && o?.localName === VECTOR_MAP;
+const patchChildren = (cur, next) => {
+  const old = [...cur.childNodes];
+  const fresh = [...next.childNodes];
+  const byKey = new Map();
+  for (const o of old) {
+    const k = keyOf(o);
+    if (k !== null && !byKey.has(k)) byKey.set(k, o);
+  }
+  const used = new Set();
+  fresh.forEach((n, i) => {
+    const k = keyOf(n);
+    let o = k !== null ? byKey.get(k) : old[i];
+    const ref = cur.childNodes[i] ?? null;
+    if (isVectorSlot(o, n) && !used.has(o)) {
+      used.add(o);
+      if (o !== ref) cur.insertBefore(o, ref);
+      return;
+    }
+    if (!sameNode(o, n) || used.has(o) || (k === null && keyOf(o) !== null)) o = null;
+    if (!o) {
+      markTemplate(n);
+      cur.insertBefore(n, ref);
+      return;
+    }
+    used.add(o);
+    if (o !== ref) cur.insertBefore(o, ref);
+    if (n.nodeType === 1) {
+      patchAttrs(o, n);
+      // A custom element the template leaves empty (ha-icon) draws its own children: they are kept.
+      if (n.childNodes.length || !isCustom(o)) patchChildren(o, n);
+    } else if (o.nodeValue !== n.nodeValue) o.nodeValue = n.nodeValue;
+  });
+  while (cur.childNodes.length > fresh.length) cur.removeChild(cur.lastChild);
+};
+// Without a DOM (the unit tests' stand-in shadow root), the HTML is only written.
+const morph = (root, html) => {
+  if (!root.childNodes) {
+    root.innerHTML = html;
+    return;
+  }
+  const tpl = document.createElement("template");
+  tpl.innerHTML = html;
+  patchChildren(root, tpl.content);
+};
+
 // Rooms as { id, name }, with a string id (the one of data-room) and a name ("#id" when it has none).
 const roomItems = (rooms) =>
   (Array.isArray(rooms) ? rooms : [])
@@ -4848,6 +4926,7 @@ class VacuumBase extends HTMLElement {
   // A click elsewhere on the page folds the sections back to their defaults (as in ha-carburants-france).
   // Folded on the release, not on the press: folding on press would shift the layout under the pointer before the click.
   connectedCallback() {
+    Promise.resolve().then(() => this._fitAfterCard());
     // Clicks inside a dialog (the more-info opened from the card) leave the card as it is.
     this._onOutside ??= (ev) => {
       if ((!this._toggled?.size && !this._confirm) || !isOutside(this, ev)) return;
@@ -4960,8 +5039,9 @@ class VacuumBase extends HTMLElement {
       // Otherwise, the element of the card that has the focus (keyboard user) gets it back once rewritten.
       const kept = this._confirm || this._byPointer ? null : this._focusedSpot();
       this._html = html;
-      this.shadowRoot.innerHTML = html;
+      morph(this.shadowRoot, html);
       this._fitPill();
+      this._fitAfterCard();
       this._placeImages();
       this._placeMaps();
       this._placeVectorMap();
@@ -4974,6 +5054,18 @@ class VacuumBase extends HTMLElement {
     }
     this._syncMaps();
     if (this._vectorMap) this._vectorMap.hass = this._hass;
+  }
+
+  // <ha-card> (Lit) draws its slot a microtask after it is created: until then the card's content has no size, and the
+  // status pill measured then would take the wrong line (the card then changed height once measured again). A new
+  // <ha-card> is measured once more as soon as it has rendered, before the frame is painted.
+  // Rendered before the card is on the page, <ha-card> is only upgraded once connected: called again then (see
+  // connectedCallback).
+  _fitAfterCard() {
+    const card = this.shadowRoot?.querySelector?.("ha-card");
+    if (!card?.updateComplete || card === this._fitCard) return;
+    this._fitCard = card;
+    card.updateComplete?.then?.(() => this._fitPill());
   }
 
   // The status pill goes right after the title only when the whole title and the pill's whole label fit on that row;
@@ -5018,8 +5110,10 @@ class VacuumBase extends HTMLElement {
   // The vacuum-map-card element outlives the renders, as the map pictures do: moved back into each new render, it
   // keeps its subscription (it only ends a few seconds after leaving the page) and its drawing.
   _placeVectorMap() {
+    // Kept in place by the patch (see isVectorSlot), or a new slot to put it in.
     const slot = this.shadowRoot.querySelector("[data-vector-map]");
-    if (!slot) return;
+    const kept = !slot && this._vectorMap && this.shadowRoot.contains(this._vectorMap);
+    if (!slot && !kept) return;
     const config = this._vectorMapConfig(slot.dataset.vectorMap);
     this._vectorMap ??= document.createElement(VECTOR_MAP);
     const key = JSON.stringify(config);
@@ -5028,7 +5122,7 @@ class VacuumBase extends HTMLElement {
       this._vectorMap.setConfig(config);
     }
     this._vectorMap.hass = this._hass;
-    slot.replaceWith(this._vectorMap);
+    if (slot) slot.replaceWith(this._vectorMap);
   }
 
   _vectorMapConfig(entity) {
@@ -5062,8 +5156,13 @@ class VacuumBase extends HTMLElement {
     this._imgNodes = new Map();
     for (const img of this.shadowRoot.querySelectorAll("img[data-img]")) {
       const key = `${img.dataset.img}|${img.className}`;
+      // Kept in place by the patch: it already has its picture.
+      if (img.hasAttribute("src")) {
+        this._imgNodes.set(key, img);
+        continue;
+      }
       const old = kept.get(key);
-      if (old) {
+      if (old && !old.isConnected) {
         kept.delete(key);
         img.replaceWith(old);
         this._imgNodes.set(key, old);
@@ -5082,14 +5181,17 @@ class VacuumBase extends HTMLElement {
     for (const img of this.shadowRoot.querySelectorAll("img[data-map]")) {
       const id = img.dataset.map;
       const old = kept.get(id);
-      if (old) {
+      if (old && old !== img && !old.isConnected) {
         old.style.cssText = img.style.cssText;
         old.alt = img.alt;
         img.replaceWith(old);
         this._mapNodes.set(id, old);
       } else {
         // Map size for the crop: read it from the image itself, each time a picture has loaded.
-        img.addEventListener("load", (ev) => this._onLoad(ev));
+        if (!img._vcLoad) {
+          img._vcLoad = true;
+          img.addEventListener("load", (ev) => this._onLoad(ev));
+        }
         this._mapNodes.set(id, img);
       }
     }
@@ -5225,7 +5327,8 @@ class VacuumBase extends HTMLElement {
     this._confirm = confirm;
     window.addEventListener("keydown", this._onKey);
     this._update();
-    this.shadowRoot.querySelector(".modal .primary")?.focus();
+    // preventScroll: the popup is at the top of the card, the page must not jump to it.
+    this.shadowRoot.querySelector(".modal .primary")?.focus({ preventScroll: true });
   }
 
   _closeConfirm() {
