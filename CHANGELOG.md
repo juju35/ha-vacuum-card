@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.15.0 - 2026-11-22
+
+### Features
+- iRobot Braava 240 set up with the [Braava 240 BLE](https://github.com/mtheli/braava_240_ble) integration (`braava_240_ble`): found like the other robots, with the iRobot logo and green buttons, the white mopping robot picture, battery, cleaning mode and statistics.
+- The command buttons follow the vacuum's supported features: Pause, Stop, Dock and Locate are left out when the vacuum does not support them; while cleaning without Pause, Stop is the main button (Start when Stop is missing too). Vacuums that report no supported features keep every button. Integrations that do not report a feature lose that button, e.g. the legacy Ecovacs vacuums (no Pause) now show Stop while cleaning.
+
 ## 2.14.3 - 2026-11-22
 
 ### Performance

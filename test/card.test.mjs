@@ -1006,6 +1006,80 @@ test("iRobot Braava: mopping picture, robot tank in percent", () => {
   assert.match(decodeURIComponent(card._picture(dev, card._status(dev))), /class="wet"/);
 });
 
+// iRobot Braava 240 set up with braava_240_ble (Bluetooth): its own translation_keys, a vacuum supporting start, stop,
+// state and locate only (no pause, no dock). Kept out of the mock states so the screenshots and the default device stay.
+const BRAAVA_240 = (() => {
+  const st = {};
+  const ent = {};
+  const add = (entity_id, translation_key, state, attributes = {}) => {
+    ent[entity_id] = { entity_id, device_id: "b240", platform: "braava_240_ble", translation_key };
+    st[entity_id] = { entity_id, state: String(state), attributes };
+  };
+  add("vacuum.braava", null, "idle", { supported_features: 8 | 4096 | 512 | 8192, cleaning_mode: "normal", friendly_name: "Braava 240" });
+  add("sensor.braava_akku", "battery", "87", { device_class: "battery", unit_of_measurement: "%" });
+  add("sensor.braava_status", "robot_state", "idle", { device_class: "enum", options: ["idle", "cleaning", "error"] });
+  add("select.braava_modus", "cleaning_mode", "normal", { options: ["normal", "spot"] });
+  add("sensor.braava_missionen", "total_missions", "42", {});
+  add("sensor.braava_reinigungszeit", "total_cleaning_time", "21", { unit_of_measurement: "h", device_class: "duration" });
+  add("binary_sensor.braava_reinigt", "cleaning", "off");
+  const devs = { ...devices, b240: { id: "b240", name: "Braava 240", model: "Braava 240", identifiers: [["braava_240_ble", "aa:bb"]], name_by_user: null } };
+  const hass = (over = {}) => {
+    const s = { ...states, ...st };
+    for (const [id, o] of Object.entries(over)) s[id] = { ...s[id], ...o, attributes: { ...s[id].attributes, ...o.attributes } };
+    return { calls: [], entities: { ...entities, ...ent }, devices: devs, states: s, language: "en", themes: { darkMode: false }, callService() {} };
+  };
+  return { hass };
+})();
+
+test("iRobot Braava 240 (braava_240_ble): found, keys mapped, iRobot logo, square white picture, statistics", () => {
+  const hass = BRAAVA_240.hass();
+  const dev = vc.resolve(hass).devices.find((d) => d.id === "b240");
+  assert.equal(dev.vacuum, "vacuum.braava");
+  assert.equal(dev.entities.battery, "sensor.braava_akku");
+  assert.equal(dev.entities.cleaning_mode, "select.braava_modus");
+  assert.equal(dev.entities.total_cleaning_count, "sensor.braava_missionen");
+  assert.equal(dev.entities.in_cleaning, "binary_sensor.braava_reinigt");
+  assert.equal(vc.deviceTypeOf(dev), "robot_mop");
+  const card = new vc.VacuumCard();
+  card.setConfig({ device: "Braava 240", collapsed: [] });
+  card.hass = hass;
+  const html = card.shadowRoot.innerHTML;
+  assert.match(html, /title="iRobot"/);
+  assert.match(html, /--vc-accent: #4a8209/);
+  assert.match(html, />87<small>/);
+  assert.match(html, /data-entity="select\.braava_modus"/);
+  assert.match(html, /Cleanings[\s\S]*?>42</);
+  assert.match(html, /21 h/);
+  assert.equal(decodeURIComponent(card._picture(dev, card._status(dev))).includes(vc.roombaSvg({ shape: "square", white: true })), true);
+});
+
+test("commands the vacuum does not support are left out (Braava 240: no pause, no dock)", () => {
+  const buttons = (hass, config = {}, Card = vc.VacuumCard) => {
+    const card = new Card();
+    card.setConfig({ device: "Braava 240", ...config });
+    card.hass = hass;
+    return [...card.shadowRoot.innerHTML.matchAll(/data-action="([a-z_]+)" data-entity="vacuum\.braava"/g)].map((m) => m[1]);
+  };
+  assert.deepEqual(buttons(BRAAVA_240.hass()), ["start", "stop", "locate"]);
+  // Cleaning without pause: Stop takes the primary place, once.
+  const cleaning = BRAAVA_240.hass({ "vacuum.braava": { state: "cleaning" }, "binary_sensor.braava_reinigt": { state: "on" } });
+  assert.deepEqual(buttons(cleaning), ["stop", "locate"]);
+  // Every feature reported, or no supported_features at all (older states): all the commands, as before.
+  assert.deepEqual(buttons(BRAAVA_240.hass({ "vacuum.braava": { attributes: { supported_features: 4 | 8 | 16 | 512 | 8192 } } })), ["start", "stop", "return_to_base", "locate"]);
+  assert.deepEqual(buttons(BRAAVA_240.hass({ "vacuum.braava": { attributes: { supported_features: undefined } } })), ["start", "stop", "return_to_base", "locate"]);
+  // Mini card: Start, or Stop while cleaning; no Dock.
+  assert.deepEqual(buttons(BRAAVA_240.hass(), {}, vc.VacuumMiniCard), ["start"]);
+  assert.deepEqual(buttons(cleaning, {}, vc.VacuumMiniCard), ["stop"]);
+  // Pause without Stop: Pause while cleaning, no Stop anywhere.
+  const pauseOnly = (state) => BRAAVA_240.hass({ "vacuum.braava": { state, attributes: { supported_features: 4 | 4096 | 8192 } } });
+  assert.deepEqual(buttons(pauseOnly("cleaning")), ["pause"]);
+  assert.deepEqual(buttons(pauseOnly("idle")), ["start"]);
+  // Neither Pause nor Stop: no Stop button that Home Assistant would reject, Start stays.
+  const startOnly = BRAAVA_240.hass({ "vacuum.braava": { state: "cleaning", attributes: { supported_features: 4096 | 8192 } } });
+  assert.deepEqual(buttons(startOnly), ["start"]);
+  assert.deepEqual(buttons(startOnly, {}, vc.VacuumMiniCard), ["start"]);
+});
+
 test("area sensors keep their own unit (ft² set in the entity settings), m² when they have none", () => {
   const ft = (id, state) => ({ ...states[id], state, attributes: { ...states[id].attributes, unit_of_measurement: "ft²" } });
   const card = new vc.VacuumCard();

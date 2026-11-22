@@ -6,7 +6,7 @@
  * (https://www.home-assistant.io/integrations/roborock/), Xiaomi Miio (https://www.home-assistant.io/integrations/xiaomi_miio/),
  * Xiaomi Home (https://github.com/XiaoMi/ha_xiaomi_home), Dreame Vacuum (https://github.com/Tasshack/dreame-vacuum),
  * Ecovacs (https://www.home-assistant.io/integrations/ecovacs/), Dyson (https://github.com/libdyson-wg/ha-dyson) or iRobot
- * (https://www.home-assistant.io/integrations/roomba/).
+ * (https://www.home-assistant.io/integrations/roomba/, and the Braava 240 through https://github.com/mtheli/braava_240_ble).
  * Entities are resolved through the entity and device registries (platform, translation_key and
  * device), so they work whatever the Home Assistant language or entity ids.
  */
@@ -446,7 +446,7 @@ const autoSvg = (dev, activity = null, white = undefined) => {
   if (dev.kind === "wetdry") return wetdrySvg({ white: white ?? !/dyad/i.test(name), activity });
   if (dev.kind !== "robot") return null;
   if (brandOf(dev.model) === "dyson" || dev.platform === "dyson_local") return dysonSvg({ visnav: /vis nav/i.test(name), white, activity });
-  if (brandOf(dev.model) === "irobot" || dev.platform === "roomba") {
+  if (brandOf(dev.model) === "irobot" || PLATFORMS[dev.platform] === "irobot") {
     const braava = /braava|\bm6\b/i.test(name);
     return roombaSvg({
       shape: braava ? "square" : /\bs9/i.test(name) ? "d" : "round",
@@ -513,6 +513,7 @@ const PLATFORMS = {
   ecovacs: "ecovacs",
   dyson_local: "dyson",
   roomba: "irobot",
+  braava_240_ble: "irobot",
 };
 // Xiaomi Miio translation_key → the Roborock integration's, so the cards read both the same way.
 // Their last clean "duration" / "area" are left aside: "clean_time" / "clean_area" hold the current
@@ -576,7 +577,10 @@ const ROOMBA_KEYS = {
   total_cleaned_area: "total_cleaning_area",
   last_mission: "last_clean_start",
 };
-const KEY_MAPS = { xiaomi_miio: MIIO_KEYS, dreame_vacuum: DREAME_KEYS, ecovacs: ECOVACS_KEYS, roomba: ROOMBA_KEYS };
+// iRobot Braava 240 (braava_240_ble, over Bluetooth) translation_key → the Roborock integration's. Its battery,
+// cleaning_mode and total_cleaning_time keys are already the card's; the cleaning binary sensor tells a job is running.
+const BRAAVA_240_KEYS = { ...ROOMBA_KEYS, cleaning: "in_cleaning" };
+const KEY_MAPS = { xiaomi_miio: MIIO_KEYS, dreame_vacuum: DREAME_KEYS, ecovacs: ECOVACS_KEYS, roomba: ROOMBA_KEYS, braava_240_ble: BRAAVA_240_KEYS };
 const PENDING_MS = 45000;
 const DEFAULT_COLLAPSED = ["stats", "dock"];
 
@@ -4840,6 +4844,9 @@ const ROOM_ADAPTERS = {
 // Key of the enlarged map's next frame in _mapNext (map ids are entity ids, which never look like this).
 const ZOOM_KEY = "#zoom";
 
+// VacuumEntityFeature bits of the vacuum's supported_features attribute.
+const VACUUM_FEATURES = { pause: 4, stop: 8, return_home: 16, locate: 512 };
+
 // Clicks that send a command to the vacuum (or open the room list to send one).
 const VACUUM_ACTIONS = new Set(["start", "open_rooms", "pause", "stop", "return_to_base", "locate", "clean_rooms", "clean_all"]);
 
@@ -5581,19 +5588,27 @@ class VacuumBase extends HTMLElement {
     const cleaning = vac.state === "cleaning";
     // Home Assistant drops a service call to an unavailable entity without a word: the buttons say it instead.
     const off = this._offline(dev);
+    // Commands the vacuum does not support (supported_features, when reported) are left out: the Braava 240 has no
+    // pause and no dock, Stop then ends the cleaning job.
+    const can = (feature) => typeof vac.attributes?.supported_features !== "number" || (vac.attributes.supported_features & feature) !== 0;
+    const pause = can(VACUUM_FEATURES.pause);
+    const stop = can(VACUUM_FEATURES.stop);
     const btn = (action, icon, label, cls = "") =>
       `<button class="btn ${round ? "round" : ""} ${cls}${off ? " disabled" : ""}" title="${esc(label)}" data-action="${action}" data-entity="${esc(vac.entity_id)}"${
         off ? " disabled" : ""
       }>${svgIcon(icon)}${
         round ? "" : `<span>${esc(label)}</span>`
       }</button>`;
+    const stopPrimary = cleaning && !pause && stop;
     const list = [
-      cleaning
+      cleaning && pause
         ? btn("pause", ICONS.pause, this._t("pause"), "primary")
-        : btn(vac.state !== "paused" && this._canSelectRooms(dev, vac) ? "open_rooms" : "start", ICONS.play, this._t("start"), "primary"),
-      round ? "" : btn("stop", ICONS.stop, this._t("stop")),
-      btn("return_to_base", ICONS.home, this._t("dock")),
-      round ? "" : btn("locate", ICONS.locate, this._t("locate")),
+        : stopPrimary
+          ? btn("stop", ICONS.stop, this._t("stop"), "primary")
+          : btn(vac.state !== "paused" && this._canSelectRooms(dev, vac) ? "open_rooms" : "start", ICONS.play, this._t("start"), "primary"),
+      round || stopPrimary || !stop ? "" : btn("stop", ICONS.stop, this._t("stop")),
+      can(VACUUM_FEATURES.return_home) ? btn("return_to_base", ICONS.home, this._t("dock")) : "",
+      round || !can(VACUUM_FEATURES.locate) ? "" : btn("locate", ICONS.locate, this._t("locate")),
     ];
     return list.join("");
   }
