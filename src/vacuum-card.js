@@ -658,6 +658,7 @@ const ROOMBA_KEYS = {
 };
 // iRobot Braava 240 (braava_240_ble, over Bluetooth) translation_key → the Roborock integration's. Its battery,
 // cleaning_mode and total_cleaning_time keys are already the card's; the cleaning binary sensor tells a job is running.
+// Its own pad_type sensor, wetness_* selects (one per pad kind) and mission counters keep their keys.
 const BRAAVA_240_KEYS = { total_missions: "total_cleaning_count", cleaning: "in_cleaning" };
 const KEY_MAPS = { xiaomi_miio: MIIO_KEYS, dreame_vacuum: DREAME_KEYS, ecovacs: ECOVACS_KEYS, roomba: ROOMBA_KEYS, braava_240_ble: BRAAVA_240_KEYS };
 const PENDING_MS = 45000;
@@ -695,6 +696,7 @@ const ICONS = {
   count:
     "M13.5,8H12V13L16.28,15.54L17,14.33L13.5,12.25V8M13,3A9,9 0 0,0 4,12H1L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.27,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3",
   stats: "M22,21H2V3H4V19H6V10H10V19H12V6H16V19H18V14H22V21Z",
+  pad: "M12,16L19.36,10.27L21,9L12,2L3,9L4.63,10.27M12,18.54L4.62,12.81L3,14.07L12,21.07L21,14.07L19.37,12.8L12,18.54Z",
   map: "M15,19L9,16.89V5L15,7.11M20.5,3C20.44,3 20.39,3 20.34,3L15,5.1L9,3L3.36,4.9C3.15,4.97 3,5.15 3,5.38V20.5A0.5,0.5 0 0,0 3.5,21C3.55,21 3.61,21 3.66,20.97L9,18.9L15,21L20.64,19.1C20.85,19 21,18.85 21,18.62V3.5A0.5,0.5 0 0,0 20.5,3Z",
   alert: "M13 14H11V9H13M13 18H11V16H13M1 21H23L12 2L1 21Z",
   chevron_down: "M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z",
@@ -747,6 +749,9 @@ const STRINGS = {
     total_count: "Cleanings",
     total_area: "Total area",
     total_time: "Total time",
+    successful_count: "Successful cleanings",
+    failed_count: "Failed cleanings",
+    average_clean: "Average clean",
     main_brush: "Main brush",
     side_brush: "Side brush",
     filter: "Filter",
@@ -910,6 +915,9 @@ const STRINGS = {
     total_count: "Nettoyages",
     total_area: "Surface totale",
     total_time: "Durée totale",
+    successful_count: "Nettoyages réussis",
+    failed_count: "Nettoyages échoués",
+    average_clean: "Nettoyage moyen",
     main_brush: "Brosse principale",
     side_brush: "Brosse latérale",
     filter: "Filtre",
@@ -1071,6 +1079,9 @@ const STRINGS = {
     total_count: "Reinigungen",
     total_area: "Gesamtfläche",
     total_time: "Gesamtdauer",
+    successful_count: "Erfolgreiche Reinigungen",
+    failed_count: "Fehlgeschlagene Reinigungen",
+    average_clean: "Durchschnittliche Reinigung",
     main_brush: "Hauptbürste",
     side_brush: "Seitenbürste",
     filter: "Filter",
@@ -1236,6 +1247,9 @@ const STRINGS = {
     total_count: "Limpiezas",
     total_area: "Superficie total",
     total_time: "Tiempo total",
+    successful_count: "Limpiezas completadas",
+    failed_count: "Limpiezas fallidas",
+    average_clean: "Limpieza media",
     main_brush: "Cepillo principal",
     side_brush: "Cepillo lateral",
     filter: "Filtro",
@@ -1399,6 +1413,9 @@ const STRINGS = {
     total_count: "Чишћења",
     total_area: "Укупна површина",
     total_time: "Укупно време",
+    successful_count: "Успешна чишћења",
+    failed_count: "Неуспела чишћења",
+    average_clean: "Просечно чишћење",
     main_brush: "Главна четка",
     side_brush: "Бочна четка",
     filter: "Филтер",
@@ -1562,6 +1579,9 @@ const STRINGS = {
     total_count: "Čišćenja",
     total_area: "Ukupna površina",
     total_time: "Ukupno vreme",
+    successful_count: "Uspešna čišćenja",
+    failed_count: "Neuspela čišćenja",
+    average_clean: "Prosečno čišćenje",
     main_brush: "Glavna četka",
     side_brush: "Bočna četka",
     filter: "Filter",
@@ -1725,6 +1745,9 @@ const STRINGS = {
     total_count: "Pulizie",
     total_area: "Superficie totale",
     total_time: "Tempo totale",
+    successful_count: "Pulizie riuscite",
+    failed_count: "Pulizie non riuscite",
+    average_clean: "Pulizia media",
     main_brush: "Spazzola principale",
     side_brush: "Spazzola laterale",
     filter: "Filtro",
@@ -1888,6 +1911,9 @@ const STRINGS = {
     total_count: "Reinigingen",
     total_area: "Totale oppervlakte",
     total_time: "Totale tijd",
+    successful_count: "Geslaagde reinigingen",
+    failed_count: "Mislukte reinigingen",
+    average_clean: "Gemiddelde reiniging",
     main_brush: "Hoofdborstel",
     side_brush: "Zijborstel",
     filter: "Filter",
@@ -2051,6 +2077,9 @@ const STRINGS = {
     total_count: "Limpezas",
     total_area: "Área total",
     total_time: "Tempo total",
+    successful_count: "Limpezas concluídas",
+    failed_count: "Limpezas falhadas",
+    average_clean: "Limpeza média",
     main_brush: "Escova principal",
     side_brush: "Escova lateral",
     filter: "Filtro",
@@ -2214,6 +2243,9 @@ const STRINGS = {
     total_count: "Sprzątania",
     total_area: "Łączna powierzchnia",
     total_time: "Łączny czas",
+    successful_count: "Udane sprzątania",
+    failed_count: "Nieudane sprzątania",
+    average_clean: "Średnie sprzątanie",
     main_brush: "Szczotka główna",
     side_brush: "Szczotka boczna",
     filter: "Filtr",
@@ -2377,6 +2409,9 @@ const STRINGS = {
     total_count: "Curățări",
     total_area: "Suprafață totală",
     total_time: "Timp total",
+    successful_count: "Curățări reușite",
+    failed_count: "Curățări eșuate",
+    average_clean: "Curățare medie",
     main_brush: "Perie principală",
     side_brush: "Perie laterală",
     filter: "Filtru",
@@ -2540,6 +2575,9 @@ const STRINGS = {
     total_count: "Rengøringer",
     total_area: "Samlet areal",
     total_time: "Samlet tid",
+    successful_count: "Gennemførte rengøringer",
+    failed_count: "Mislykkede rengøringer",
+    average_clean: "Gennemsnitlig rengøring",
     main_brush: "Hovedbørste",
     side_brush: "Sidebørste",
     filter: "Filter",
@@ -2703,6 +2741,9 @@ const STRINGS = {
     total_count: "Städningar",
     total_area: "Total yta",
     total_time: "Total tid",
+    successful_count: "Lyckade städningar",
+    failed_count: "Misslyckade städningar",
+    average_clean: "Genomsnittlig städning",
     main_brush: "Huvudborste",
     side_brush: "Sidoborste",
     filter: "Filter",
@@ -2866,6 +2907,9 @@ const STRINGS = {
     total_count: "Почиствания",
     total_area: "Обща площ",
     total_time: "Общо време",
+    successful_count: "Успешни почиствания",
+    failed_count: "Неуспешни почиствания",
+    average_clean: "Средно почистване",
     main_brush: "Основна четка",
     side_brush: "Странична четка",
     filter: "Филтър",
@@ -3029,6 +3073,9 @@ const STRINGS = {
     total_count: "Уборки",
     total_area: "Общая площадь",
     total_time: "Общее время",
+    successful_count: "Успешные уборки",
+    failed_count: "Неудачные уборки",
+    average_clean: "Средняя уборка",
     main_brush: "Основная щётка",
     side_brush: "Боковая щётка",
     filter: "Фильтр",
@@ -3192,6 +3239,9 @@ const STRINGS = {
     total_count: "Прибирання",
     total_area: "Загальна площа",
     total_time: "Загальний час",
+    successful_count: "Успішні прибирання",
+    failed_count: "Невдалі прибирання",
+    average_clean: "Середнє прибирання",
     main_brush: "Основна щітка",
     side_brush: "Бокова щітка",
     filter: "Фільтр",
@@ -3355,6 +3405,9 @@ const STRINGS = {
     total_count: "Takarítások",
     total_area: "Teljes terület",
     total_time: "Teljes idő",
+    successful_count: "Sikeres takarítások",
+    failed_count: "Sikertelen takarítások",
+    average_clean: "Átlagos takarítás",
     main_brush: "Főkefe",
     side_brush: "Oldalkefe",
     filter: "Szűrő",
@@ -3518,6 +3571,9 @@ const STRINGS = {
     total_count: "Upratovania",
     total_area: "Celková plocha",
     total_time: "Celkový čas",
+    successful_count: "Úspešné upratovania",
+    failed_count: "Neúspešné upratovania",
+    average_clean: "Priemerné upratovanie",
     main_brush: "Hlavná kefa",
     side_brush: "Bočná kefa",
     filter: "Filter",
@@ -3681,6 +3737,9 @@ const STRINGS = {
     total_count: "Úklidy",
     total_area: "Celková plocha",
     total_time: "Celkový čas",
+    successful_count: "Úspěšné úklidy",
+    failed_count: "Neúspěšné úklidy",
+    average_clean: "Průměrný úklid",
     main_brush: "Hlavní kartáč",
     side_brush: "Boční kartáč",
     filter: "Filtr",
@@ -3844,6 +3903,9 @@ const STRINGS = {
     total_count: "Čiščenja",
     total_area: "Skupna površina",
     total_time: "Skupni čas",
+    successful_count: "Uspešna čiščenja",
+    failed_count: "Neuspešna čiščenja",
+    average_clean: "Povprečno čiščenje",
     main_brush: "Glavna krtača",
     side_brush: "Stranska krtača",
     filter: "Filter",
@@ -4007,6 +4069,9 @@ const STRINGS = {
     total_count: "Uzkopšanas reizes",
     total_area: "Kopējā platība",
     total_time: "Kopējais laiks",
+    successful_count: "Veiksmīgas uzkopšanas",
+    failed_count: "Neveiksmīgas uzkopšanas",
+    average_clean: "Vidējā uzkopšana",
     main_brush: "Galvenā suka",
     side_brush: "Sānu suka",
     filter: "Filtrs",
@@ -4170,6 +4235,9 @@ const STRINGS = {
     total_count: "Καθαρισμοί",
     total_area: "Συνολική επιφάνεια",
     total_time: "Συνολικός χρόνος",
+    successful_count: "Επιτυχείς καθαρισμοί",
+    failed_count: "Αποτυχημένοι καθαρισμοί",
+    average_clean: "Μέσος καθαρισμός",
     main_brush: "Κύρια βούρτσα",
     side_brush: "Πλαϊνή βούρτσα",
     filter: "Φίλτρο",
@@ -5455,6 +5523,20 @@ class VacuumBase extends HTMLElement {
     return pretty(raw);
   }
 
+  // Attribute value translated by its integration (formatEntityAttributeValue), else the raw value made readable.
+  _attr(stateObj, name) {
+    const raw = stateObj.attributes?.[name];
+    if (this._hass.formatEntityAttributeValue) {
+      try {
+        const t = this._hass.formatEntityAttributeValue(stateObj, name);
+        if (t && t !== String(raw)) return t;
+      } catch (_e) {
+        /* older Home Assistant */
+      }
+    }
+    return pretty(raw);
+  }
+
   // Status of the device: the detailed status sensor, else the vacuum entity.
   _status(dev) {
     const e = dev.entities;
@@ -5499,9 +5581,12 @@ class VacuumBase extends HTMLElement {
     if (dev.platform !== "roborock" && vac?.attributes?.error && (vac.state === "error" || dev.platform === "roomba"))
       return { entity: vac.entity_id, text: String(vac.attributes.error) };
     // Braava 240: the vacuum is "error" when the job ended with an error, the reason in its mission_status attribute
-    // ("stuck", "low_battery", "start_refused_invalid_pad"…).
+    // ("stuck", "low_battery", "start_refused_invalid_pad"…), translated by the integration since its 0.4.0.
     if (dev.platform === "braava_240_ble" && vac?.state === "error")
-      return { entity: vac.entity_id, text: vac.attributes?.mission_status ? pretty(vac.attributes.mission_status) : this._fmt(vac, "s_") };
+      return { entity: vac.entity_id, text: vac.attributes?.mission_status ? this._attr(vac, "mission_status") : this._fmt(vac, "s_") };
+    // Braava 240: no pad attached, it will not start.
+    const pad = this._s(dev.entities.pad_type);
+    if (dev.platform === "braava_240_ble" && pad?.state === "no_pad") return { entity: pad.entity_id, text: this._fmt(pad, "e_") };
     const bin = this._s(dev.entities.bin_full);
     if (bin?.state === "on") return { entity: bin.entity_id, text: this._t("bin_full") };
     return null;
@@ -5949,7 +6034,7 @@ class VacuumCard extends VacuumBase {
     if (statusClass(status?.state) === "active") {
       const pct = num(this._s(e.clean_percent));
       // iRobot: the current clean is in the vacuum's attributes (minutes, and m² with the metric unit system, ft²
-      // with the US customary one).
+      // with the US customary one); the Braava 240 has runtime_minutes.
       const va = this._s(dev.vacuum)?.attributes || {};
       const areaSensor = this._s(e.cleaning_area);
       const sensorArea = num(areaSensor);
@@ -5957,7 +6042,8 @@ class VacuumCard extends VacuumBase {
       const area = sensorArea ?? attrArea;
       const areaUnit =
         sensorArea !== null ? areaUnitOf(areaSensor) : this._hass.config?.unit_system?.length === "mi" ? "ft²" : "m²";
-      const time = hours(this._s(e.cleaning_time)) ?? (Number.isFinite(va.cleaning_time) && va.cleaning_time > 0 ? va.cleaning_time / 60 : null);
+      const attrMin = Number.isFinite(va.cleaning_time) && va.cleaning_time > 0 ? va.cleaning_time : Number.isFinite(va.runtime_minutes) && va.runtime_minutes > 0 ? va.runtime_minutes : null;
+      const time = hours(this._s(e.cleaning_time)) ?? (attrMin !== null ? attrMin / 60 : null);
       const bits = [pct ? `${this._t("progress")} ${Math.round(pct)} %` : null, area !== null ? `${fmtNum(area, 1, this._locale())} ${areaUnit}` : null, time !== null ? fmtHours(time, this._locale()) : null];
       if (bits.some(Boolean))
         lines.push(`<div class="line clickable" role="button" tabindex="0" data-entity="${esc(e.clean_percent || e.cleaning_area || dev.vacuum || "")}">${svgIcon(ICONS.clock)}<span>${esc(bits.filter(Boolean).join(" · "))}</span></div>`);
@@ -5977,7 +6063,11 @@ class VacuumCard extends VacuumBase {
       const vac = this._s(dev.vacuum);
       const fan = vac?.attributes?.fan_speed;
       if (fan) tags.push(tag(vac.entity_id, ICONS.fan, this._fmt(vac, "v_", fan)));
-      const mop = this._s(e.mop_intensity) || this._s(e.water_flow);
+      // Braava 240: the attached pad, and the wetness of that kind of pad (none for the dry pads); "no pad" is an alert.
+      const pad = this._s(e.pad_type);
+      if (valid(pad) && pad.state !== "no_pad") tags.push(tag(pad.entity_id, ICONS.pad, this._fmt(pad)));
+      const wetness = valid(pad) ? this._s(e[`wetness_${pad.state}`]) : null;
+      const mop = this._s(e.mop_intensity) || this._s(e.water_flow) || wetness;
       if (valid(mop)) tags.push(tag(mop.entity_id, ICONS.water, this._fmt(mop)));
       const route = this._s(e.cleaning_route) || this._s(e.mop_mode);
       if (valid(route)) tags.push(tag(route.entity_id, ICONS.route, this._fmt(route)));
@@ -6191,6 +6281,13 @@ class VacuumCard extends VacuumBase {
     }
     const count = this._s(e.total_cleaning_count);
     if (valid(count) && num(count)) tiles.push(this._tile(count.entity_id, ICONS.count, this._t("total_count"), fmtNum(num(count), 0, this._locale())));
+    // Braava 240: successful / failed missions and the average mission time.
+    const ok = this._s(e.successful_missions);
+    if (valid(ok) && num(ok)) tiles.push(this._tile(ok.entity_id, ICONS.count, this._t("successful_count"), fmtNum(num(ok), 0, this._locale())));
+    const ko = this._s(e.failed_missions);
+    if (valid(ko) && num(ko)) tiles.push(this._tile(ko.entity_id, ICONS.alert, this._t("failed_count"), fmtNum(num(ko), 0, this._locale())));
+    const avg = this._s(e.average_mission_time);
+    if (valid(avg) && num(avg)) tiles.push(this._tile(avg.entity_id, ICONS.clock, this._t("average_clean"), fmtHours(hours(avg), this._locale())));
     const tArea = this._s(e.total_cleaning_area);
     if (valid(tArea) && num(tArea)) tiles.push(this._tile(tArea.entity_id, ICONS.area, this._t("total_area"), `${fmtNum(num(tArea), 0, this._locale())} ${areaUnitOf(tArea)}`));
     const tTime = this._s(e.total_cleaning_time);
