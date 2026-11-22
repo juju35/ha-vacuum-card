@@ -276,16 +276,24 @@ const roombaShape = (cx, cy, r, col, { shape = "round", camera = false, silver =
   if (camera) s += `<circle cx="${cx}" cy="${cy + ry + h * 0.5}" r="${h * 0.26}" fill="${col.lens}" stroke="#6fa8ff" stroke-width="${h * 0.07}"/>`;
   return s;
 };
-const roombaSvg = ({ shape = "round", camera = false, silver = false, white = false, base = false, combo = false, activity = null } = {}) => {
+// Braava jet sizes (radius of roombaShape), smaller than a Roomba (r 72, ≈ 34 cm): the m6 is ≈ 27 cm, the 240 ≈ 18 cm.
+const BRAAVA_R = { m6: 46, small: 38 };
+const roombaSvg = ({ shape = "round", camera = false, silver = false, white = false, base = false, combo = false, small = false, activity = null } = {}) => {
   const col = ROBOT_COLORS[white ? "white" : "dark"];
   const braava = shape === "square";
   const cleaning = ["vacuum", "mop", "vacmop"].includes(activity);
   if (!base || cleaning) {
     // What it cleans comes from the robot: a Braava mops, a Combo vacuums and mops, a Roomba vacuums.
     const act = cleaning ? (braava ? "mop" : combo ? "vacmop" : "vacuum") : null;
+    if (braava) {
+      // Drawn in the Roomba's floor box (same scale in the illustrated header), smaller, at its right end, its
+      // shadow on the floor line.
+      const r = BRAAVA_R[small ? "small" : "m6"];
+      return onFloor(roombaShape(150 - r * 0.88, 88 - r * 0.82, r, col, { shape }), act);
+    }
     let robot = roombaShape(80, 50, 72, col, { shape, camera, silver });
-    if ((act === "vacuum" || act === "vacmop") && !braava) robot += brush(128, 76, 11);
-    return onFloor(robot, act, braava ? [15, 17, 145, 100] : undefined);
+    if (act === "vacuum" || act === "vacmop") robot += brush(128, 76, 11);
+    return onFloor(robot, act);
   }
   // Clean Base: a slim tower (wider for the Combo, its water tank on the side), the robot docked in front.
   const w = combo ? 64 : 50, x = 80 - w / 2;
@@ -515,7 +523,9 @@ const autoSvg = (dev, activity = null, white = undefined) => {
   if (dev.kind !== "robot") return null;
   if (brandOf(dev.model) === "dyson" || dev.platform === "dyson_local") return dysonSvg({ visnav: /vis nav/i.test(name), white, activity });
   if (brandOf(dev.model) === "irobot" || PLATFORMS[dev.platform] === "irobot") {
-    const braava = /braava|\bm6\b/i.test(name);
+    // braava_240_ble only sets up the Braava 240, whatever its device name.
+    const b240 = dev.platform === "braava_240_ble";
+    const braava = b240 || /braava|\bm6\b/i.test(name);
     return roombaSvg({
       shape: braava ? "square" : /\bs9/i.test(name) ? "d" : "round",
       camera: /\bj\d/i.test(name),
@@ -523,6 +533,7 @@ const autoSvg = (dev, activity = null, white = undefined) => {
       white: white ?? braava,
       base: /\+|clean base/i.test(name),
       combo: /combo/i.test(name),
+      small: b240 || (braava && /\b240\b/.test(name)),
       activity,
     });
   }
@@ -553,7 +564,7 @@ const MOP_KEYS = ["mop_life", "mop_life_time_left", "mop_intensity", "water_flow
 const deviceTypeOf = (dev) => {
   if (dev.kind === "wetdry") return "wet_dry";
   if (MOP_KEYS.some((k) => dev.entities?.[k]) || Object.keys(dev.dock || {}).some((k) => /mop/.test(k))) return "robot_mop";
-  return /braava|combo|\bm6\b/i.test(modelName(dev)) ? "robot_mop" : "robot_vacuum";
+  return dev.platform === "braava_240_ble" || /braava|combo|\bm6\b/i.test(modelName(dev)) ? "robot_mop" : "robot_vacuum";
 };
 const svgUri = (svg) => svg && `data:image/svg+xml,${encodeURIComponent(svg)}`;
 // Brands: the brand of the model (brandOf), else the one of the integration (PLATFORMS) gives the logo of the
@@ -647,7 +658,7 @@ const ROOMBA_KEYS = {
 };
 // iRobot Braava 240 (braava_240_ble, over Bluetooth) translation_key → the Roborock integration's. Its battery,
 // cleaning_mode and total_cleaning_time keys are already the card's; the cleaning binary sensor tells a job is running.
-const BRAAVA_240_KEYS = { ...ROOMBA_KEYS, cleaning: "in_cleaning" };
+const BRAAVA_240_KEYS = { total_missions: "total_cleaning_count", cleaning: "in_cleaning" };
 const KEY_MAPS = { xiaomi_miio: MIIO_KEYS, dreame_vacuum: DREAME_KEYS, ecovacs: ECOVACS_KEYS, roomba: ROOMBA_KEYS, braava_240_ble: BRAAVA_240_KEYS };
 const PENDING_MS = 45000;
 const DEFAULT_COLLAPSED = ["stats", "dock"];
@@ -5487,6 +5498,10 @@ class VacuumBase extends HTMLElement {
     const vac = this._s(dev.vacuum);
     if (dev.platform !== "roborock" && vac?.attributes?.error && (vac.state === "error" || dev.platform === "roomba"))
       return { entity: vac.entity_id, text: String(vac.attributes.error) };
+    // Braava 240: the vacuum is "error" when the job ended with an error, the reason in its mission_status attribute
+    // ("stuck", "low_battery", "start_refused_invalid_pad"…).
+    if (dev.platform === "braava_240_ble" && vac?.state === "error")
+      return { entity: vac.entity_id, text: vac.attributes?.mission_status ? pretty(vac.attributes.mission_status) : this._fmt(vac, "s_") };
     const bin = this._s(dev.entities.bin_full);
     if (bin?.state === "on") return { entity: bin.entity_id, text: this._t("bin_full") };
     return null;

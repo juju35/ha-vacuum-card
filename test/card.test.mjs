@@ -1050,7 +1050,10 @@ test("iRobot Braava 240 (braava_240_ble): found, keys mapped, iRobot logo, squar
   assert.match(html, /data-entity="select\.braava_modus"/);
   assert.match(html, /Cleanings[\s\S]*?>42</);
   assert.match(html, /21 h/);
-  assert.equal(decodeURIComponent(card._picture(dev, card._status(dev))).includes(vc.roombaSvg({ shape: "square", white: true })), true);
+  assert.equal(decodeURIComponent(card._picture(dev, card._status(dev))).includes(vc.roombaSvg({ shape: "square", white: true, small: true })), true);
+  // A job ended with an error: its reason (mission_status) as the error line.
+  card.hass = BRAAVA_240.hass({ "vacuum.braava": { state: "error", attributes: { mission_status: "start_refused_invalid_pad" } } });
+  assert.match(card.shadowRoot.innerHTML, /alert-line crit[^>]*data-entity="vacuum\.braava"[\s\S]*?Start refused invalid pad/);
 });
 
 test("commands the vacuum does not support are left out (Braava 240: no pause, no dock)", () => {

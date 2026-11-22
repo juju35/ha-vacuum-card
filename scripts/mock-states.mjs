@@ -185,6 +185,8 @@ entity("vacuum.salle_de_jeux", "visnav", null, "docked", {
   status: "Inactive, charged",
   fan_speed: "Auto",
   fan_speed_list: ["Auto", "Quick", "Quiet", "Boost"],
+  // START | PAUSE | RETURN_HOME | FAN_SPEED | BATTERY | STATUS | STATE, as ha-dyson reports it: no Stop, no Locate.
+  supported_features: 12532,
   friendly_name: "Toy room robot",
 }, "dyson_local");
 
