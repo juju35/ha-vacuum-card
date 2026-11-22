@@ -237,7 +237,12 @@ test("iRobot: the SKU gives the model name and the brand, the picture follows th
   assert.equal(byModel("j715020"), roombaSvg({ camera: true }));
   assert.equal(byModel("c755020"), roombaSvg({ camera: true, base: true, combo: true }));
   assert.equal(byModel("m611020"), roombaSvg({ shape: "square", white: true }));
-  assert.equal(byModel(null, "roomba"), roombaSvg()); // no SKU reported: the integration still gives a Roomba
+  assert.equal(byModel(null, "roomba"), roombaSvg());
+  // Braava jets: smaller than a Roomba, the 240 smaller still, all drawn in the Roomba's floor box.
+  const height = (svg) => /data-box="([^"]+)"/.exec(svg)[1];
+  assert.equal(height(roombaSvg({ shape: "square" })), height(roombaSvg()));
+  assert.equal(autoSvg({ kind: "robot", rawName: "Braava 240", model: "Braava 240", platform: "braava_240_ble", dock: {} }), roombaSvg({ shape: "square", white: true, small: true }));
+  assert.notEqual(roombaSvg({ shape: "square", small: true }), roombaSvg({ shape: "square" })); // no SKU reported: the integration still gives a Roomba
   assert.equal(autoSvg({ kind: "robot", rawName: "Robot", model: "m611020", dock: {} }, null, false), roombaSvg({ shape: "square" }));
   // Animations: side brush and dust, Braava mopping, Combo both, returning to and emptying at the Clean Base.
   assert.doesNotMatch(roombaSvg({ base: true }), /<style>/);
