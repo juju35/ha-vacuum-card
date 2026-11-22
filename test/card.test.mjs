@@ -1022,6 +1022,12 @@ const BRAAVA_240 = (() => {
   add("sensor.braava_missionen", "total_missions", "42", {});
   add("sensor.braava_reinigungszeit", "total_cleaning_time", "21", { unit_of_measurement: "h", device_class: "duration" });
   add("binary_sensor.braava_reinigt", "cleaning", "off");
+  add("sensor.braava_pad", "pad_type", "wet", { device_class: "enum" });
+  add("select.braava_nass", "wetness_wet", "medium", { options: ["low", "medium", "high"] });
+  add("select.braava_feucht", "wetness_damp", "low", { options: ["low", "medium", "high"] });
+  add("sensor.braava_erfolgreich", "successful_missions", "40", {});
+  add("sensor.braava_fehlgeschlagen", "failed_missions", "2", {});
+  add("sensor.braava_durchschnitt", "average_mission_time", "34", { unit_of_measurement: "min", device_class: "duration" });
   const devs = { ...devices, b240: { id: "b240", name: "Braava 240", model: "Braava 240", identifiers: [["braava_240_ble", "aa:bb"]], name_by_user: null } };
   const hass = (over = {}) => {
     const s = { ...states, ...st };
@@ -1054,6 +1060,42 @@ test("iRobot Braava 240 (braava_240_ble): found, keys mapped, iRobot logo, squar
   // A job ended with an error: its reason (mission_status) as the error line.
   card.hass = BRAAVA_240.hass({ "vacuum.braava": { state: "error", attributes: { mission_status: "start_refused_invalid_pad" } } });
   assert.match(card.shadowRoot.innerHTML, /alert-line crit[^>]*data-entity="vacuum\.braava"[\s\S]*?Start refused invalid pad/);
+});
+
+test("iRobot Braava 240 (braava_240_ble 0.4): translated mission status, pad and wetness, mission counts, runtime", () => {
+  const render = (hass) => {
+    const card = new vc.VacuumCard();
+    card.setConfig({ device: "Braava 240", collapsed: [] });
+    card.hass = hass;
+    return card.shadowRoot.innerHTML;
+  };
+  // The attached pad and the wetness of that pad kind as tags, the mission counters as statistics.
+  let html = render(BRAAVA_240.hass());
+  assert.match(html, /data-entity="sensor\.braava_pad"[\s\S]*?<span>Wet<\/span>/);
+  assert.match(html, /data-entity="select\.braava_nass"[\s\S]*?<span>Medium<\/span>/);
+  assert.doesNotMatch(html, /select\.braava_feucht/);
+  assert.match(html, /Successful cleanings[\s\S]*?>40</);
+  assert.match(html, /Failed cleanings[\s\S]*?>2</);
+  assert.match(html, /Average clean[\s\S]*?>34 min</);
+  // A damp pad: its own wetness; a dry pad: none.
+  html = render(BRAAVA_240.hass({ "sensor.braava_pad": { state: "damp" } }));
+  assert.match(html, /data-entity="select\.braava_feucht"/);
+  assert.doesNotMatch(html, /select\.braava_nass/);
+  html = render(BRAAVA_240.hass({ "sensor.braava_pad": { state: "dry" } }));
+  assert.doesNotMatch(html, /select\.braava_(nass|feucht)/);
+  // No pad: an alert (it will not start), no pad tag.
+  html = render(BRAAVA_240.hass({ "sensor.braava_pad": { state: "no_pad" } }));
+  assert.match(html, /alert-line crit[^>]*data-entity="sensor\.braava_pad"[\s\S]*?No pad/);
+  // The mission status translated by the integration when Home Assistant can, else made readable.
+  const err = BRAAVA_240.hass({ "vacuum.braava": { state: "error", attributes: { mission_status: "start_refused_invalid_pad" } } });
+  err.formatEntityAttributeValue = (s, a) => (a === "mission_status" && s.attributes[a] === "start_refused_invalid_pad" ? "Did not start: pad not recognized" : s.attributes[a]);
+  assert.match(render(err), /alert-line crit[^>]*data-entity="vacuum\.braava"[\s\S]*?Did not start: pad not recognized/);
+  const raw = BRAAVA_240.hass({ "vacuum.braava": { state: "error", attributes: { mission_status: "stuck" } } });
+  raw.formatEntityAttributeValue = (s, a) => s.attributes[a];
+  assert.match(render(raw), /alert-line crit[\s\S]*?>Stuck</);
+  // Cleaning: the runtime of the current job from the vacuum's runtime_minutes attribute.
+  html = render(BRAAVA_240.hass({ "vacuum.braava": { state: "cleaning", attributes: { runtime_minutes: 12 } }, "binary_sensor.braava_reinigt": { state: "on" } }));
+  assert.match(html, /12 min/);
 });
 
 test("commands the vacuum does not support are left out (Braava 240: no pause, no dock)", () => {

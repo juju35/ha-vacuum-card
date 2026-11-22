@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.16.0 - 2026-11-22
+
+### Features
+- iRobot Braava 240 ([braava_240_ble](https://github.com/mtheli/braava_240_ble) 0.4.0): the attached pad (`pad_type` sensor) and the wetness of that kind of pad (`wetness_*` selects) as tags, **No pad** as an alert (the robot will not start); successful and failed missions and the average mission time in the statistics; the runtime of the current job (`runtime_minutes` attribute) while cleaning.
+
+### Fixes
+- Braava 240: the error line shows the mission status translated by the integration (`hass.formatEntityAttributeValue`), the raw value made readable with older versions.
+
 ## 2.15.0 - 2026-11-22
 
 ### Features
