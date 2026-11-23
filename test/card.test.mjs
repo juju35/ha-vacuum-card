@@ -1015,7 +1015,7 @@ const BRAAVA_240 = (() => {
     ent[entity_id] = { entity_id, device_id: "b240", platform: "braava_240_ble", translation_key };
     st[entity_id] = { entity_id, state: String(state), attributes };
   };
-  add("vacuum.braava", null, "idle", { supported_features: 8 | 4096 | 512 | 8192, cleaning_mode: "normal", friendly_name: "Braava 240" });
+  add("vacuum.braava", "braava", "idle", { supported_features: 8 | 4096 | 512 | 8192, cleaning_mode: "normal", friendly_name: "Braava 240" });
   add("sensor.braava_akku", "battery", "87", { device_class: "battery", unit_of_measurement: "%" });
   add("sensor.braava_status", "robot_state", "idle", { device_class: "enum", options: ["idle", "cleaning", "error"] });
   add("select.braava_modus", "cleaning_mode", "normal", { options: ["normal", "spot"] });
@@ -1057,6 +1057,10 @@ test("iRobot Braava 240 (braava_240_ble): found, keys mapped, iRobot logo, squar
   assert.match(html, /Cleanings[\s\S]*?>42</);
   assert.match(html, /21 h/);
   assert.equal(decodeURIComponent(card._picture(dev, card._status(dev))).includes(vc.roombaSvg({ shape: "square", white: true, small: true })), true);
+  // braava_240_ble before 0.4.1: the vacuum entity has no translation key, still found.
+  const old = BRAAVA_240.hass();
+  old.entities["vacuum.braava"] = { ...old.entities["vacuum.braava"], translation_key: null };
+  assert.equal(vc.resolve(old).devices.find((d) => d.id === "b240").vacuum, "vacuum.braava");
   // A job ended with an error: its reason (mission_status) as the error line.
   card.hass = BRAAVA_240.hass({ "vacuum.braava": { state: "error", attributes: { mission_status: "start_refused_invalid_pad" } } });
   assert.match(card.shadowRoot.innerHTML, /alert-line crit[^>]*data-entity="vacuum\.braava"[\s\S]*?Start refused invalid pad/);

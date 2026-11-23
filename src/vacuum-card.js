@@ -659,7 +659,8 @@ const ROOMBA_KEYS = {
 // iRobot Braava 240 (braava_240_ble, over Bluetooth) translation_key → the Roborock integration's. Its battery,
 // cleaning_mode and total_cleaning_time keys are already the card's; the cleaning binary sensor tells a job is running.
 // Its own pad_type sensor, wetness_* selects (one per pad kind) and mission counters keep their keys.
-const BRAAVA_240_KEYS = { total_missions: "total_cleaning_count", cleaning: "in_cleaning" };
+// braava_240_ble 0.4.1+ gives the vacuum entity a translation key ("braava") to translate its attributes.
+const BRAAVA_240_KEYS = { braava: "_vacuum", total_missions: "total_cleaning_count", cleaning: "in_cleaning" };
 const KEY_MAPS = { xiaomi_miio: MIIO_KEYS, dreame_vacuum: DREAME_KEYS, ecovacs: ECOVACS_KEYS, roomba: ROOMBA_KEYS, braava_240_ble: BRAAVA_240_KEYS };
 const PENDING_MS = 45000;
 const DEFAULT_COLLAPSED = ["stats", "dock"];
