@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.16.1 - 2026-11-23
+
+### Fixes
+- Braava 240 with [braava_240_ble](https://github.com/mtheli/braava_240_ble) 0.4.1+: the robot is found again ("Robot vacuum not found" before); the vacuum entity now has a translation key (`braava`), mapped like the Dreame and Ecovacs vacuums (#107).
+
 ## 2.16.0 - 2026-11-22
 
 ### Features
