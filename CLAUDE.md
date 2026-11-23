@@ -57,6 +57,11 @@ carries the new version, updated together in one commit:
 ## Supported integrations
 This builds on other Home Assistant integrations, so keep the `## Supported integrations` section (title verbatim) listing the HA integrations it works on top of, with a link to each.
 
+## Source layout
+- `src/` holds ES modules (entry `src/index.js`), bundled by esbuild in `scripts/build.mjs` into the flat classic script `dist/vacuum-card.js`; no `import`/`export` may be left in the bundle.
+- Translations: one file per language in `src/i18n/<lang>.js` (`export default { … };`), gathered by `src/i18n/strings.js` and inlined back into a single `STRINGS` literal at build for `scripts/i18n-split.mjs`.
+- Tests evaluate the bundle (`test/source.mjs`), not a source file.
+
 ## Translations
 - English is the source. Keep every language in sync when a user-facing string changes.
 - Languages to keep in sync: en, fr, de, es, it, nl, pt, pl, sr, sr-Latn, ro, da, sv, bg, ru, uk, hu, sk, cs, sl, lv, el (no Irish or Maltese).

@@ -4,11 +4,9 @@
 // pictures and the illustration stay the same nodes, so nothing reloads or restarts) and the card keeps its height on
 // every frame, so that the dashboard does not move.
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import { after, test } from "node:test";
 import { devices, entities, states } from "../scripts/mock-states.mjs";
-
-const source = readFileSync(new URL("../src/vacuum-card.js", import.meta.url), "utf8");
+import { source } from "./source.mjs";
 
 let chromium;
 try {
