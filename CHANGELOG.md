@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.16.2 - 2026-11-23
+
+### Maintenance
+- The card source is split into ES modules under `src/` (entry `src/index.js`: illustrations, models, integrations, helpers, styles, base card, full card, mini card, editors) and the translations into one file per language (`src/i18n/<lang>.js`). The build bundles them with esbuild into the same single `dist/vacuum-card.js` and per-language files as before (the translation files are byte-identical); the tests evaluate that bundle.
+
 ## 2.16.1 - 2026-11-23
 
 ### Fixes

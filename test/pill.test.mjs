@@ -3,11 +3,9 @@
 // next to a readable title; the mini card's expand / collapse button is a 24 px round button 5 px from the top right
 // corner of the banner.
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { devices, entities, maps, states } from "../scripts/mock-states.mjs";
-
-const source = readFileSync(new URL("../src/vacuum-card.js", import.meta.url), "utf8");
+import { source } from "./source.mjs";
 
 let chromium;
 try {

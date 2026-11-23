@@ -687,6 +687,8 @@ node scripts/models.mjs  # renders the drawn model galleries (images/models-*.sv
 npm run screenshots  # renders the cards (and one GIF per animated state, needs ffmpeg) with mock data into screenshots/
 ```
 
+The source is split into ES modules under `src/` (entry `src/index.js`, one file per language in `src/i18n/`); `npm run build` bundles them with esbuild into the single `dist/vacuum-card.js` the Marketplace serves.
+
 `dist/` is not committed: `npm run build` creates it locally, CI builds it on every push, and the release workflow attaches the built file to the release, which is where the Marketplace installs it from.
 
 ### Releasing

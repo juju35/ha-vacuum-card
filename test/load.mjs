@@ -1,9 +1,7 @@
-// Evaluates src/vacuum-card.js (a classic script, bundled as is by scripts/build.mjs) in a sandbox with
+// Evaluates the card source (src/ bundled into one classic script, see source.mjs) in a sandbox with
 // minimal DOM stand-ins and returns the names the tests need. No dependency, no browser.
-import { readFileSync } from "node:fs";
 import vm from "node:vm";
-
-const source = readFileSync(new URL("../src/vacuum-card.js", import.meta.url), "utf8");
+import { source } from "./source.mjs";
 
 // Shadow root stand-in: keeps the HTML it is given and the listeners it gets.
 const fakeRoot = () => ({

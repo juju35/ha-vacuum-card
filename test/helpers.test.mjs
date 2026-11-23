@@ -265,11 +265,10 @@ test("the README lists every recognized model (node scripts/models.mjs keeps it 
 });
 
 test("every translation key is read somewhere in the code (no orphan key)", async () => {
-  const { readFileSync } = await import("node:fs");
-  const src = readFileSync(new URL("../src/vacuum-card.js", import.meta.url), "utf8");
+  const { source: src } = await import("./source.mjs");
   // The code outside the STRINGS table: keys are always written as string literals there (also the
   // ones looked up through a variable, which come from tables of literals).
-  const start = src.indexOf("const STRINGS = {");
+  const start = src.search(/\b(?:const|var) STRINGS = \{/);
   const end = src.indexOf("\n};", start);
   const code = src.slice(0, start) + src.slice(end);
   // Keys built from a prefix (`color_${v}` over ["auto", "white", "dark"]): prefix + quoted suffix.

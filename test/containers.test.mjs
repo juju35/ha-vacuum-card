@@ -4,11 +4,9 @@
 // Rendered in Chromium when Playwright and its browser are installed (`npx playwright install chromium`); skipped
 // otherwise (the CI test job has no browser: the CSS rules themselves are checked in narrow.test.mjs).
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { devices, entities, maps, states } from "../scripts/mock-states.mjs";
-
-const source = readFileSync(new URL("../src/vacuum-card.js", import.meta.url), "utf8");
+import { source } from "./source.mjs";
 
 let chromium;
 try {

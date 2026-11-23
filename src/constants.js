@@ -1,0 +1,8 @@
+export const VERSION = "__VERSION__";
+export const IMG_LOGO = "__IMG_LOGO__";
+export const IMG_LOGO_MIHOME = "__IMG_LOGO_MIHOME__";
+export const IMG_LOGO_XIAOMI = "__IMG_LOGO_XIAOMI__";
+export const IMG_LOGO_DREAME = "__IMG_LOGO_DREAME__";
+export const IMG_LOGO_ECOVACS = "__IMG_LOGO_ECOVACS__";
+export const IMG_LOGO_DYSON = "__IMG_LOGO_DYSON__";
+export const IMG_LOGO_IROBOT = "__IMG_LOGO_IROBOT__";
