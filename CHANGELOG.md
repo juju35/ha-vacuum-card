@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.17.1 - 2026-11-24
+
+### Fixes
+- Room selector: **Whole home** with ×2 or ×3 now cleans every room of the list with that number of passes (it ran a single full cleaning before, whatever the passes shown); ×1 still starts the robot's own full cleaning.
+- Room selector: the passes buttons can be used while the robot is offline, like the room buttons (only the cleaning buttons are blocked).
+- Room selector: the passes buttons carry their own `data-passes` attribute instead of reusing `data-room`, so they can never be mistaken for a room; the room selector screenshots show ×2 selected.
+- Dutch: "Doorgangen" for the passes row.
+
 ## 2.17.0 - 2026-11-24
 
 ### Features

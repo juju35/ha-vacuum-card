@@ -450,7 +450,7 @@ export class VacuumBase extends HTMLElement {
     // No command to a vacuum that cannot take it (its buttons are drawn disabled; this also covers a click that
     // reaches a button before the card re-renders).
     if ((VACUUM_ACTIONS.has(action) || (action === "routine" && this._dev?.vacuum)) && this._offline(this._dev)) return;
-    if (this._roomAction(action, entity, el.dataset.room)) return;
+    if (this._roomAction(action, entity, el.dataset.passes ?? el.dataset.room)) return;
     if (action === "zoom_map") return this._zoomMap(entity);
     if (action === "zoom_vector") return this._vectorMap?.openFullscreen?.();
     if (action === "zoom") return this._toggleZoom(ev);
@@ -843,15 +843,21 @@ export class VacuumBase extends HTMLElement {
         return true;
       case "clean_rooms":
         if (!r?.selected.length || !ROOM_ADAPTERS[this._dev?.platform]) return true;
-        this._call(...ROOM_ADAPTERS[this._dev.platform].clean(entity, r.selected.map(Number), r.passes || 1));
+        this._call(...ROOM_ADAPTERS[this._dev.platform].clean(entity, r.selected.map(Number), r.passes));
         this._rooms = null;
         this._update();
         return true;
-      case "clean_all":
-        this._call("vacuum", "start", { entity_id: entity });
+      case "clean_all": {
+        // More than one pass: every room of the list is cleaned with that number of passes (a full cleaning has no
+        // number of passes); otherwise the robot's own full cleaning.
+        const adapter = ROOM_ADAPTERS[this._dev?.platform];
+        if (adapter?.passes && r?.passes > 1 && r.list?.length)
+          this._call(...adapter.clean(entity, r.list.map((x) => Number(x.id)), r.passes));
+        else this._call("vacuum", "start", { entity_id: entity });
         this._rooms = null;
         this._update();
         return true;
+      }
       default:
         return false;
     }
@@ -916,7 +922,7 @@ export class VacuumBase extends HTMLElement {
       <span class="passes-label">${esc(this._t("passes"))}</span>
       ${ROOM_PASSES.map(
         (n) =>
-          `<button class="room ${r.passes === n ? "on" : ""}" data-action="set_passes" data-entity="${esc(dev.vacuum)}" data-room="${n}" aria-pressed="${r.passes === n}">×${n}</button>`
+          `<button class="room ${r.passes === n ? "on" : ""}" data-action="set_passes" data-entity="${esc(dev.vacuum)}" data-passes="${n}" aria-pressed="${r.passes === n}">×${n}</button>`
       ).join("")}
     </div>`;
   }
