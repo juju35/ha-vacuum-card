@@ -450,7 +450,7 @@ export class VacuumBase extends HTMLElement {
     // No command to a vacuum that cannot take it (its buttons are drawn disabled; this also covers a click that
     // reaches a button before the card re-renders).
     if ((VACUUM_ACTIONS.has(action) || (action === "routine" && this._dev?.vacuum)) && this._offline(this._dev)) return;
-    if (this._roomAction(action, entity, el.dataset.room)) return;
+    if (this._roomAction(action, entity, el.dataset.passes ?? el.dataset.room)) return;
     if (action === "zoom_map") return this._zoomMap(entity);
     if (action === "zoom_vector") return this._vectorMap?.openFullscreen?.();
     if (action === "zoom") return this._toggleZoom(ev);
@@ -916,7 +916,7 @@ export class VacuumBase extends HTMLElement {
       <span class="passes-label">${esc(this._t("passes"))}</span>
       ${ROOM_PASSES.map(
         (n) =>
-          `<button class="room ${r.passes === n ? "on" : ""}" data-action="set_passes" data-entity="${esc(dev.vacuum)}" data-room="${n}" aria-pressed="${r.passes === n}">×${n}</button>`
+          `<button class="room ${r.passes === n ? "on" : ""}" data-action="set_passes" data-entity="${esc(dev.vacuum)}" data-passes="${n}" aria-pressed="${r.passes === n}">×${n}</button>`
       ).join("")}
     </div>`;
   }

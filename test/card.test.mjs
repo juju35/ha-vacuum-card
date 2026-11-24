@@ -1335,10 +1335,10 @@ test("room selector: the number of passes is sent by Roborock and Dreame, and no
   card.hass = hass;
   const vacuum = vc.resolve(hass).devices.find((d) => d.id === "saros").vacuum;
   click(card, { action: "open_rooms", entity: vacuum });
-  assert.match(card.shadowRoot.innerHTML, /data-action="set_passes"[^>]*data-room="1"[^>]*aria-pressed="true"/);
+  assert.match(card.shadowRoot.innerHTML, /data-action="set_passes"[^>]*data-passes="1"[^>]*aria-pressed="true"/);
   click(card, { action: "toggle_room", entity: vacuum, room: "21" });
-  click(card, { action: "set_passes", entity: vacuum, room: "2" });
-  assert.match(card.shadowRoot.innerHTML, /data-room="2" aria-pressed="true">×2</);
+  click(card, { action: "set_passes", entity: vacuum, passes: "2" });
+  assert.match(card.shadowRoot.innerHTML, /data-passes="2" aria-pressed="true">×2</);
   click(card, { action: "clean_rooms", entity: vacuum });
   assert.equal(
     JSON.stringify(hass.calls),
@@ -1352,7 +1352,7 @@ test("room selector: the number of passes is sent by Roborock and Dreame, and no
   dcard.hass = dhass;
   click(dcard, { action: "open_rooms", entity: "vacuum.etage" });
   click(dcard, { action: "toggle_room", entity: "vacuum.etage", room: "3" });
-  click(dcard, { action: "set_passes", entity: "vacuum.etage", room: "3" });
+  click(dcard, { action: "set_passes", entity: "vacuum.etage", passes: "3" });
   click(dcard, { action: "clean_rooms", entity: "vacuum.etage" });
   assert.equal(JSON.stringify(dhass.calls), JSON.stringify([["dreame_vacuum", "vacuum_clean_segment", { entity_id: "vacuum.etage", segments: [3], repeats: 3 }]]));
 
