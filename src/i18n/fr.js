@@ -20,6 +20,7 @@ export default {
   clean_rooms: "Nettoyer ({n})",
   whole_home: "Toute la maison",
   select_all: "Toutes",
+  passes: "Passages",
   cancel: "Annuler",
   rooms_loading: "Chargement des pièces…",
   rooms_error: "Impossible de récupérer les pièces du robot.",

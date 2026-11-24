@@ -20,6 +20,7 @@ export default {
   clean_rooms: "Прибрати ({n})",
   whole_home: "Увесь дім",
   select_all: "Усі",
+  passes: "Проходи",
   cancel: "Скасувати",
   rooms_loading: "Завантаження кімнат…",
   rooms_error: "Не вдалося отримати кімнати від робота.",

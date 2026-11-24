@@ -20,6 +20,7 @@ export default {
   clean_rooms: "Rengør ({n})",
   whole_home: "Hele hjemmet",
   select_all: "Alle",
+  passes: "Gennemløb",
   cancel: "Annuller",
   rooms_loading: "Indlæser rum…",
   rooms_error: "Kunne ikke hente rummene fra robotten.",

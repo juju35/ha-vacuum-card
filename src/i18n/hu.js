@@ -20,6 +20,7 @@ export default {
   clean_rooms: "Takarítás ({n})",
   whole_home: "Az egész otthon",
   select_all: "Mind",
+  passes: "Menetek",
   cancel: "Mégse",
   rooms_loading: "Helyiségek betöltése…",
   rooms_error: "Nem sikerült lekérni a helyiségeket a robottól.",

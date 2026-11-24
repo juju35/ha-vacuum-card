@@ -20,6 +20,7 @@ export default {
   clean_rooms: "Curăță ({n})",
   whole_home: "Toată locuința",
   select_all: "Toate",
+  passes: "Treceri",
   cancel: "Anulează",
   rooms_loading: "Se încarcă camerele…",
   rooms_error: "Camerele nu au putut fi obținute de la robot.",

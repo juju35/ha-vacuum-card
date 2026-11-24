@@ -20,6 +20,7 @@ export default {
   clean_rooms: "Очисти ({n})",
   whole_home: "Цела кућа",
   select_all: "Све",
+  passes: "Пролази",
   cancel: "Откажи",
   rooms_loading: "Учитавање просторија…",
   rooms_error: "Није могуће преузети просторије са робота.",
