@@ -48,7 +48,7 @@ export const ZOOM_KEY = "#zoom";
 export const VACUUM_FEATURES = { pause: 4, stop: 8, return_home: 16, locate: 512 };
 
 // Clicks that send a command to the vacuum (or open the room list to send one).
-export const VACUUM_ACTIONS = new Set(["start", "open_rooms", "pause", "stop", "return_to_base", "locate", "clean_rooms", "clean_all", "set_passes"]);
+export const VACUUM_ACTIONS = new Set(["start", "open_rooms", "pause", "stop", "return_to_base", "locate", "clean_rooms", "clean_all"]);
 
 // Elements a click acts on, and how one is told from the others across renders (see _focusedSpot).
 export const FOCUS_SELECTOR = "[data-action], [data-entity]";

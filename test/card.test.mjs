@@ -1362,3 +1362,40 @@ test("room selector: the number of passes is sent by Roborock and Dreame, and no
   click(mcard, { action: "open_rooms", entity: "vacuum.dustbusters" });
   assert.doesNotMatch(mcard.shadowRoot.innerHTML, /set_passes/);
 });
+
+test("room selector: whole home with more than one pass cleans every listed room, the passes reset on reopening", () => {
+  const hass = { ...makeHass(), callWS: () => assert.fail("get_maps called") };
+  const card = new vc.VacuumCard();
+  card.setConfig({ device: "saros", show_map: "never", rooms: [{ id: "21", name: "Lounge" }, { id: "4", name: "Hall" }] });
+  card.hass = hass;
+  const vacuum = vc.resolve(hass).devices.find((d) => d.id === "saros").vacuum;
+  // ×1: the robot's own full cleaning.
+  click(card, { action: "open_rooms", entity: vacuum });
+  click(card, { action: "clean_all", entity: vacuum });
+  // ×3: every room of the list, with that number of passes.
+  click(card, { action: "open_rooms", entity: vacuum });
+  click(card, { action: "set_passes", entity: vacuum, passes: "3" });
+  click(card, { action: "clean_all", entity: vacuum });
+  assert.equal(
+    JSON.stringify(hass.calls),
+    JSON.stringify([
+      ["vacuum", "start", { entity_id: vacuum }],
+      ["vacuum", "send_command", { entity_id: vacuum, command: "app_segment_clean", params: [{ segments: [21, 4], repeat: 3 }] }],
+    ])
+  );
+  // Reopened: back to ×1; a value outside the list is ignored.
+  click(card, { action: "open_rooms", entity: vacuum });
+  assert.equal(card._rooms.passes, 1);
+  click(card, { action: "set_passes", entity: vacuum, passes: "7" });
+  assert.equal(card._rooms.passes, 1);
+});
+
+test("room selector: no passes row for a Roborock robot on the Xiaomi Miio integration", () => {
+  const card = new vc.VacuumCard();
+  card.setConfig({ device: "q5", rooms: [{ id: 17, name: "Kitchen" }] });
+  card.hass = makeHass();
+  assert.equal(card._dev.platform, "xiaomi_miio");
+  click(card, { action: "open_rooms", entity: "vacuum.dustbusters" });
+  assert.match(card.shadowRoot.innerHTML, />Kitchen</);
+  assert.doesNotMatch(card.shadowRoot.innerHTML, /data-passes/);
+});
