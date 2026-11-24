@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.17.1 - 2026-11-24
+
+### Fixes
+- Room selector: the passes buttons carry their own `data-passes` attribute instead of reusing `data-room`, so they can never be mistaken for a room; the room selector screenshots show ×2 selected.
+
 ## 2.17.0 - 2026-11-24
 
 ### Features
