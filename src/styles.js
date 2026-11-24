@@ -79,6 +79,8 @@ export const BASE_STYLE = `
   .room.on:hover { background: color-mix(in srgb, var(--vc-accent) 24%, transparent); }
   .room.all { color: var(--secondary-text-color); }
   .room.all.on { color: var(--vc-accent-text); }
+  .passes { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .passes-label { font-size: 13px; color: var(--secondary-text-color); margin-right: 4px; }
   .rooms-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
   .zoom { all: unset; flex: none; cursor: pointer; width: 24px; height: 24px; margin: -4px -4px -4px 0; border-radius: 50%;
           display: grid; place-items: center; color: var(--secondary-text-color); }

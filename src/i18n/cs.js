@@ -20,6 +20,7 @@ export default {
   clean_rooms: "Uklidit ({n})",
   whole_home: "Celá domácnost",
   select_all: "Vše",
+  passes: "Průchody",
   cancel: "Zrušit",
   rooms_loading: "Načítání místností…",
   rooms_error: "Místnosti se nepodařilo získat z robota.",

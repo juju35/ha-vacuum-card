@@ -20,6 +20,7 @@ export default {
   clean_rooms: "Pulisci ({n})",
   whole_home: "Tutta la casa",
   select_all: "Tutte",
+  passes: "Passaggi",
   cancel: "Annulla",
   rooms_loading: "Caricamento delle stanze…",
   rooms_error: "Impossibile ottenere le stanze dal robot.",

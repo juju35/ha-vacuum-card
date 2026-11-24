@@ -20,6 +20,7 @@ export default {
   clean_rooms: "Uzkopt ({n})",
   whole_home: "Visa māja",
   select_all: "Visas",
+  passes: "Piegājieni",
   cancel: "Atcelt",
   rooms_loading: "Ielādē telpas…",
   rooms_error: "Neizdevās iegūt telpas no robota.",

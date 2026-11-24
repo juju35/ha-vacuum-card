@@ -20,6 +20,7 @@ export default {
   clean_rooms: "Sprzątaj ({n})",
   whole_home: "Cały dom",
   select_all: "Wszystkie",
+  passes: "Przejazdy",
   cancel: "Anuluj",
   rooms_loading: "Wczytywanie pomieszczeń…",
   rooms_error: "Nie można pobrać pomieszczeń z robota.",

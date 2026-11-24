@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.17.0 - 2026-11-24
+
+### Features
+- Room selector: a **Passes** row (×1, ×2, ×3) cleans the selected rooms once, twice or three times, like the robot's app — sent as `repeat` in Roborock's `app_segment_clean` and as `repeats` in `dreame_vacuum.vacuum_clean_segment` (only above ×1). Not offered with Xiaomi Miio, whose segment cleaning has no number of passes.
+
 ## 2.16.2 - 2026-11-23
 
 ### Maintenance

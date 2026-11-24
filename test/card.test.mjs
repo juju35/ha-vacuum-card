@@ -1327,3 +1327,38 @@ test("night picture: the dark theme alone, a light theme stays day after sunset;
   assert.equal(banner("below_horizon", true, "day"), '<div class="banner"', "forced day wins");
   assert.equal(banner("above_horizon", false, "night"), '<div class="banner night"', "forced night wins");
 });
+
+test("room selector: the number of passes is sent by Roborock and Dreame, and not offered by Xiaomi Miio", () => {
+  const hass = { ...makeHass(), callWS: () => assert.fail("get_maps called") };
+  const card = new vc.VacuumCard();
+  card.setConfig({ device: "saros", show_map: "never", rooms: [{ id: "21", name: "Lounge" }] });
+  card.hass = hass;
+  const vacuum = vc.resolve(hass).devices.find((d) => d.id === "saros").vacuum;
+  click(card, { action: "open_rooms", entity: vacuum });
+  assert.match(card.shadowRoot.innerHTML, /data-action="set_passes"[^>]*data-room="1"[^>]*aria-pressed="true"/);
+  click(card, { action: "toggle_room", entity: vacuum, room: "21" });
+  click(card, { action: "set_passes", entity: vacuum, room: "2" });
+  assert.match(card.shadowRoot.innerHTML, /data-room="2" aria-pressed="true">×2</);
+  click(card, { action: "clean_rooms", entity: vacuum });
+  assert.equal(
+    JSON.stringify(hass.calls),
+    JSON.stringify([["vacuum", "send_command", { entity_id: vacuum, command: "app_segment_clean", params: [{ segments: [21], repeat: 2 }] }]])
+  );
+
+  const vac = states["vacuum.etage"];
+  const dhass = makeHass({ ...states, "vacuum.etage": { ...vac, attributes: { ...vac.attributes, rooms: [{ id: 3, name: "Office" }] } } });
+  const dcard = new vc.VacuumCard();
+  dcard.setConfig({ device: "l10" });
+  dcard.hass = dhass;
+  click(dcard, { action: "open_rooms", entity: "vacuum.etage" });
+  click(dcard, { action: "toggle_room", entity: "vacuum.etage", room: "3" });
+  click(dcard, { action: "set_passes", entity: "vacuum.etage", room: "3" });
+  click(dcard, { action: "clean_rooms", entity: "vacuum.etage" });
+  assert.equal(JSON.stringify(dhass.calls), JSON.stringify([["dreame_vacuum", "vacuum_clean_segment", { entity_id: "vacuum.etage", segments: [3], repeats: 3 }]]));
+
+  const mcard = new vc.VacuumCard();
+  mcard.setConfig({ device: "q5", rooms: [{ id: 17, name: "Kitchen" }] });
+  mcard.hass = makeHass();
+  click(mcard, { action: "open_rooms", entity: "vacuum.dustbusters" });
+  assert.doesNotMatch(mcard.shadowRoot.innerHTML, /set_passes/);
+});

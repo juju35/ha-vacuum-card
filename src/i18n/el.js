@@ -20,6 +20,7 @@ export default {
   clean_rooms: "Καθαρισμός ({n})",
   whole_home: "Όλο το σπίτι",
   select_all: "Όλα",
+  passes: "Περάσματα",
   cancel: "Ακύρωση",
   rooms_loading: "Φόρτωση δωματίων…",
   rooms_error: "Δεν ήταν δυνατή η λήψη των δωματίων από το ρομπότ.",

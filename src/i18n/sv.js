@@ -20,6 +20,7 @@ export default {
   clean_rooms: "Städa ({n})",
   whole_home: "Hela hemmet",
   select_all: "Alla",
+  passes: "Omgångar",
   cancel: "Avbryt",
   rooms_loading: "Hämtar rum…",
   rooms_error: "Kunde inte hämta rummen från roboten.",

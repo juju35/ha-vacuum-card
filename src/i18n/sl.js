@@ -20,6 +20,7 @@ export default {
   clean_rooms: "Očisti ({n})",
   whole_home: "Ves dom",
   select_all: "Vse",
+  passes: "Prehodi",
   cancel: "Prekliči",
   rooms_loading: "Nalaganje prostorov…",
   rooms_error: "Prostorov ni bilo mogoče pridobiti od robota.",

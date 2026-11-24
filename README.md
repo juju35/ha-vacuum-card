@@ -467,6 +467,8 @@ The Start button opens a list of rooms to clean (or **Whole home**) when the int
 | Dreame Vacuum | the vacuum's `rooms` attribute (current map, `selected_map`) | `dreame_vacuum.vacuum_clean_segment` |
 | Xiaomi Miio | the `rooms` option only (the integration cannot list them) | `xiaomi_miio.vacuum_clean_segment` |
 
+With Roborock and Dreame Vacuum, a **Passes** row (×1, ×2, ×3) sets how many times the selected rooms are cleaned, like in the robot's app: it is sent as `repeat` (Roborock `app_segment_clean`) or `repeats` (`dreame_vacuum.vacuum_clean_segment`), and only above ×1. Xiaomi Miio's segment cleaning has no number of passes, and **Whole home** always runs the robot's own setting.
+
 The segment ids of a Xiaomi Miio robot can be read with [Xiaomi Cloud Map Extractor](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor) (`rooms` attribute of its camera) or found by trying `xiaomi_miio.vacuum_clean_segment` from the developer tools:
 
 ```yaml

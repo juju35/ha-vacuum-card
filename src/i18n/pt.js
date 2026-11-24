@@ -20,6 +20,7 @@ export default {
   clean_rooms: "Limpar ({n})",
   whole_home: "Casa toda",
   select_all: "Todas",
+  passes: "Passagens",
   cancel: "Cancelar",
   rooms_loading: "A carregar as divisões…",
   rooms_error: "Não foi possível obter as divisões do robô.",

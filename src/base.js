@@ -7,7 +7,7 @@ import { VECTOR_MAP, ago, esc, findDevice, hours, intlLocale, lang, num, pretty,
 import { vcIsNight, vcPlace, vcSceneSvg } from "./banner.js";
 import { BASE_STYLE, DIALOG_STYLE } from "./styles.js";
 import { CONFIRM_GUARD_MS, DATA_IMGS, imgTag, isOutside, morph, watchOutside } from "./dom.js";
-import { FOCUS_SELECTOR, ROOM_ADAPTERS, VACUUM_ACTIONS, VACUUM_FEATURES, ZOOM_KEY, focusKey, roomItems, sortRooms } from "./actions.js";
+import { FOCUS_SELECTOR, ROOM_ADAPTERS, ROOM_PASSES, VACUUM_ACTIONS, VACUUM_FEATURES, ZOOM_KEY, focusKey, roomItems, sortRooms } from "./actions.js";
 
 export class VacuumBase extends HTMLElement {
   constructor() {
@@ -811,11 +811,11 @@ export class VacuumBase extends HTMLElement {
         const list = this._configRooms();
         if (!list.length && adapter?.attribute) list.push(...sortRooms(adapter.attribute(vac)));
         if (list.length || !adapter?.service) {
-          this._rooms = { entity, selected: [], loading: false, list, error: !list.length };
+          this._rooms = { entity, selected: [], passes: 1, loading: false, list, error: !list.length };
           this._update();
           return true;
         }
-        this._rooms = { entity, selected: [], loading: true };
+        this._rooms = { entity, selected: [], passes: 1, loading: true };
         this._update();
         this._loadRooms(entity);
         return true;
@@ -829,6 +829,13 @@ export class VacuumBase extends HTMLElement {
         r.selected = r.selected.includes(room) ? r.selected.filter((x) => x !== room) : [...r.selected, room];
         this._update();
         return true;
+      case "set_passes": {
+        const n = Number(room);
+        if (!r || !ROOM_PASSES.includes(n)) return true;
+        r.passes = n;
+        this._update();
+        return true;
+      }
       case "all_rooms":
         if (!r?.list) return true;
         r.selected = r.selected.length === r.list.length ? [] : r.list.map((x) => x.id);
@@ -836,7 +843,7 @@ export class VacuumBase extends HTMLElement {
         return true;
       case "clean_rooms":
         if (!r?.selected.length || !ROOM_ADAPTERS[this._dev?.platform]) return true;
-        this._call(...ROOM_ADAPTERS[this._dev.platform].clean(entity, r.selected.map(Number)));
+        this._call(...ROOM_ADAPTERS[this._dev.platform].clean(entity, r.selected.map(Number), r.passes || 1));
         this._rooms = null;
         this._update();
         return true;
@@ -887,7 +894,7 @@ export class VacuumBase extends HTMLElement {
               `<button class="room ${r.selected.includes(x.id) ? "on" : ""}" data-action="toggle_room" data-entity="${esc(dev.vacuum)}" data-room="${esc(x.id)}">${esc(x.name)}</button>`
           )
           .join("")}
-      </div>`;
+      </div>${this._passesRow(dev)}`;
     return `<div class="rooms">
       <div class="rooms-title">${svgIcon(ICONS.room)}${esc(this._t("choose_rooms"))}</div>
       ${body}
@@ -898,6 +905,19 @@ export class VacuumBase extends HTMLElement {
           r.selected.length ? "" : "disabled"
         }>${svgIcon(ICONS.play)}<span>${esc(this._t("clean_rooms", { n: r.selected.length }))}</span></button>
       </div>
+    </div>`;
+  }
+
+  // Number of passes for the selected rooms, for the integrations that take one (see ROOM_ADAPTERS).
+  _passesRow(dev) {
+    if (!ROOM_ADAPTERS[dev.platform]?.passes) return "";
+    const r = this._rooms;
+    return `<div class="passes" role="group" aria-label="${esc(this._t("passes"))}">
+      <span class="passes-label">${esc(this._t("passes"))}</span>
+      ${ROOM_PASSES.map(
+        (n) =>
+          `<button class="room ${r.passes === n ? "on" : ""}" data-action="set_passes" data-entity="${esc(dev.vacuum)}" data-room="${n}" aria-pressed="${r.passes === n}">×${n}</button>`
+      ).join("")}
     </div>`;
   }
 }
