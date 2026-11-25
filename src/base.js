@@ -273,7 +273,10 @@ export class VacuumBase extends HTMLElement {
     const slot = this.shadowRoot.querySelector("[data-vector-map]");
     const kept = !slot && this._vectorMap && this.shadowRoot.contains(this._vectorMap);
     if (!slot && !kept) return;
-    const config = this._vectorMapConfig(slot.dataset.vectorMap);
+    // Kept in place: the patch wrote the robot of this render on the element (data-vm-entity), as there is no slot.
+    const entity = slot ? slot.dataset.vectorMap : this._vectorMap.getAttribute("data-vm-entity") || this._vectorEntity;
+    this._vectorEntity = entity;
+    const config = this._vectorMapConfig(entity);
     this._vectorMap ??= document.createElement(VECTOR_MAP);
     const key = JSON.stringify(config);
     if (key !== this._vectorKey) {

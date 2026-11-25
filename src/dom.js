@@ -114,6 +114,8 @@ export const patchChildren = (cur, next) => {
     const ref = cur.childNodes[i] ?? null;
     if (isVectorSlot(o, n) && !used.has(o)) {
       used.add(o);
+      // The robot the new render asks the map for, read back by _placeVectorMap (the slot itself is not inserted).
+      o.setAttribute("data-vm-entity", n.getAttribute("data-vector-map"));
       if (o !== ref) cur.insertBefore(o, ref);
       return;
     }
