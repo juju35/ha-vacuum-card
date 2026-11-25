@@ -25,11 +25,11 @@ for (const [kind, list] of [
   });
 }
 
+// Only orphans fail: a capture just added to the list is committed by the Screenshots workflow after the first push.
 test("every file in screenshots/ is rendered by the screenshot script", () => {
   const rendered = new Set([...shots.map((s) => `${s.file}.png`), ...gifs.map((g) => `${g.file}.gif`)]);
   const files = readdirSync(new URL("../screenshots/", import.meta.url));
   assert.deepEqual(files.filter((f) => !rendered.has(f)), []);
-  assert.deepEqual([...rendered].filter((f) => !files.includes(f)), []);
 });
 
 // The screenshot script rewrites a capture only when its decoded pixels change (see scripts/pixels.mjs).
