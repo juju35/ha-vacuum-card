@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.17.2 - 2026-11-25
+
+### Fixes
+- Vacuum Map: an update while the map was already shown no longer fails with `Cannot read properties of null (reading 'dataset')`. The map element kept from the previous render left no slot to read the robot from; the robot is now carried on the element itself. The error made Home Assistant swap the card for a "Configuration error" card and back, which also moved the page back to the top in Safari and the iOS app. Fixes #114.
+
 ## 2.17.1 - 2026-11-24
 
 ### Fixes

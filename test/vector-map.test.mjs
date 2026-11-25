@@ -33,6 +33,30 @@ test("with Vacuum Map, its map instead of the picture, unless vector_map is fals
   assert.doesNotMatch(render({ map_entity: "camera.dustbusters_map" }), /data-vector-map/);
 });
 
+test("an update while the map is kept in place (no new slot) keeps it, without an error", () => {
+  const card = new vc.VacuumCard();
+  card.setConfig({ device: "saros", show_map: "always", collapsed: [] });
+  card.hass = hass;
+  const configs = [];
+  const map = {
+    attrs: { "data-vm-entity": "vacuum.saros" },
+    getAttribute(n) {
+      return this.attrs[n] ?? null;
+    },
+    setConfig(c) {
+      configs.push(c);
+    },
+  };
+  card._vectorMap = map;
+  card.shadowRoot.querySelector = () => null;
+  card.shadowRoot.contains = (n) => n === map;
+  assert.doesNotThrow(() => card._placeVectorMap());
+  assert.equal(configs.at(-1).entity, "vacuum.saros");
+  assert.equal(map.hass, hass);
+  card._placeVectorMap();
+  assert.equal(configs.length, 1, "same robot: configured once");
+});
+
 test("the mini card shows the map under the robot as the full card does (show_map, while cleaning by default)", () => {
   const mini = (config) => {
     const card = new vc.VacuumMiniCard();
