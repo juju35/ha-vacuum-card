@@ -282,8 +282,9 @@ export const IROBOT_SKUS = [
 // while it mops). Docked: the K10+ / K11+ / K20+ in front of their slim auto-empty tower (the K10+ Pro Combo with its
 // handheld vacuum clipped on the side), the S1 Plus / S10 in front of a squat auto-empty base, the S20 in its
 // OmniStation (dust bin up top, the clean and dirty water tanks below). Vacuuming: the robot sways, its single side
-// brush spins and dust trails behind; mopping: the roller turns over a wet trail; returning: it slides in front of its
-// base (the integrations report no bin emptying nor mop washing / drying).
+// brush spins and dust trails behind; mopping (only when the robot says so — SwitchBot Cloud starts a vacuum-only
+// clean): the roller turns over a wet trail; returning: it slides in front of its base (the integrations report no bin
+// emptying nor mop washing / drying).
 export const SWITCHBOT_COLORS = { top: "#f6f6f4", side: "#d3d4d1", rim: "#e4e4e1", lens: "#2a2c30" };
 export const switchbotShape = (cx, cy, r, { turret = true, roller = false, mopping = false } = {}) => {
   const col = SWITCHBOT_COLORS;
@@ -307,18 +308,17 @@ export const switchbotShape = (cx, cy, r, { turret = true, roller = false, moppi
 export const SWITCHBOT_MINI_R = 52;
 export const switchbotSvg = ({ mini = false, roller = false, base = null, combo = false, activity = null } = {}) => {
   const cleaning = ["vacuum", "mop", "vacmop"].includes(activity);
-  const shape = (cx, cy, r) => switchbotShape(cx, cy, r, { roller, mopping: cleaning && roller });
+  // The roller turns only while the robot mops; a model without one only vacuums.
+  const act = cleaning ? (roller ? activity : "vacuum") : null;
+  const shape = (cx, cy, r) => switchbotShape(cx, cy, r, { roller, mopping: act === "mop" || act === "vacmop" });
   if (!base || cleaning) {
-    // What it cleans: the roller-mop models vacuum and mop at once, the others vacuum.
-    const act = cleaning ? (roller ? "vacmop" : "vacuum") : null;
     const r = mini ? SWITCHBOT_MINI_R : 72;
     const cy = 88 - r * 0.53;
     let robot = shape(80, cy, r);
-    if (act) robot += brush(80 + r * 0.72, cy + r * 0.36, r * 0.15);
+    if (act && act !== "mop") robot += brush(80 + r * 0.72, cy + r * 0.36, r * 0.15);
     return onFloor(robot, act);
   }
-  const white = ["#f4f4f2", "#d6d7d4", "#e6e6e3", "#c4c5c2"];
-  const [body, edge, lid, seam] = white;
+  const [body, edge, lid, seam] = ["#f4f4f2", "#d6d7d4", "#e6e6e3", "#c4c5c2"];
   let s = `<ellipse cx="80" cy="152" rx="66" ry="6" opacity=".22"/>`;
   s += `<path d="M18 140 L30 128 H130 L142 140 Q142 146 136 146 H24 Q18 146 18 140 Z" fill="#e6e6e3"/>`;
   // SwitchBot reports neither the bin emptying nor mop washing / drying: the base only shows its status light.
@@ -329,7 +329,7 @@ export const switchbotSvg = ({ mini = false, roller = false, base = null, combo 
     s += `<rect x="34" y="14" width="92" height="22" rx="6" fill="${lid}"/>`;
     s += `<rect x="34" y="42" width="44" height="40" rx="6" fill="#bfe1f7" stroke="${seam}"/>`;
     s += `<rect x="82" y="42" width="44" height="40" rx="6" fill="#c9c4b8" stroke="${seam}"/>`;
-    s += `<rect x="38" y="${activity === "washing" ? 60 : 52}" width="36" height="${activity === "washing" ? 18 : 26}" rx="4" fill="#6fb6e8" opacity=".75"/>`;
+    s += `<rect x="38" y="52" width="36" height="26" rx="4" fill="#6fb6e8" opacity=".75"/>`;
     s += `<rect x="86" y="68" width="36" height="10" rx="4" fill="#8a8273" opacity=".6"/>`;
     s += `<circle cx="80" cy="25" r="2.4" fill="${light}"/>`;
   } else if (base === "squat") {
@@ -356,7 +356,8 @@ export const switchbotSvg = ({ mini = false, roller = false, base = null, combo 
   return svgDoc(160, 160, s, "", activity === "returning", BASE_BOX);
 };
 // SwitchBot model ids: the Bluetooth integration (switchbot) reports pySwitchbot's model name, the Cloud one
-// (switchbot_cloud) the device type of the SwitchBot API. Lower case → commercial name.
+// (switchbot_cloud) the device type of the SwitchBot API. Lower case → commercial name. The short Cloud types (« K10+ »,
+// « S20 »…) are too generic to name the brand on their own: they count only on a SwitchBot platform (see brandOf).
 export const SWITCHBOT_MODELS = {
   "k10+ vacuum": "K10+",
   "k10+": "K10+",
@@ -385,3 +386,5 @@ export const switchbotPicture = (name, activity = null) => {
   const base = /\bs20\b/i.test(n) ? "station" : /\bs10\b|s1 plus/i.test(n) ? "squat" : /\bk\d\d\+|\bk11 plus/i.test(n) ? "tower" : null;
   return switchbotSvg({ mini, roller, base, combo: /combo/i.test(n), activity });
 };
+// A SwitchBot model id that names the brand by itself (« … Vacuum », « Robot Vacuum Cleaner … »).
+export const isSwitchbotModel = (m) => Object.hasOwn(SWITCHBOT_MODELS, m) && /vacuum/.test(m);

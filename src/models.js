@@ -2,7 +2,7 @@
 // and Xiaomi Home alike): the picture and the logo then follow the model even when the device was renamed
 // (« DustBusters »). Sources: python-roborock (const.py, device_info.yaml), python-miio, the tested vacuums of
 // python-roborock's local server and the Mijia list of Tasshack/dreame-vacuum (Xiaomi Home).
-import { IROBOT_SKUS, SWITCHBOT_MODELS, dysonSvg, irobotName, robotSvg, roombaSvg, switchbotPicture, wetdrySvg } from "./illustrations.js";
+import { IROBOT_SKUS, SWITCHBOT_MODELS, dysonSvg, isSwitchbotModel, irobotName, robotSvg, roombaSvg, switchbotPicture, wetdrySvg } from "./illustrations.js";
 import { PLATFORMS } from "./integrations.js";
 
 export const MODEL_NAMES = {
@@ -142,10 +142,15 @@ export const brandOf = (model) => {
   if (/^(deebot|ecovacs)\b/.test(m)) return "ecovacs";
   if (DYSON_MODELS.has(m)) return "dyson";
   if (irobotName(m)) return "irobot";
-  if (Object.hasOwn(SWITCHBOT_MODELS, m)) return "switchbot";
+  if (isSwitchbotModel(m)) return "switchbot";
   return /^dreame\./.test(m) ? "dreame" : null;
 };
 // Label of the brand of a model, for the editor presets.
+// Commercial name of a SwitchBot model, or "" when the model is not one of the table.
+export const switchbotName = (dev) => {
+  const m = String(dev.model || "").toLowerCase();
+  return Object.hasOwn(SWITCHBOT_MODELS, m) ? SWITCHBOT_MODELS[m] : "";
+};
 export const BRAND_LABELS = { roborock: "Roborock", xiaomi: "Xiaomi", dreame: "Dreame", ecovacs: "Ecovacs", dyson: "Dyson", irobot: "iRobot", switchbot: "SwitchBot" };
 // Model presets of the `image` option (the model id as value), one per commercial name, by brand then name.
 export const MODEL_PRESETS = Object.entries(MODEL_NAMES)
@@ -182,7 +187,7 @@ export const autoSvg = (dev, activity = null, white = undefined) => {
       activity,
     });
   }
-  if (brandOf(dev.model) === "switchbot" || PLATFORMS[dev.platform] === "switchbot") return switchbotPicture(MODEL_NAMES[String(dev.model || "").toLowerCase()] || name, activity);
+  if (brandOf(dev.model) === "switchbot" || PLATFORMS[dev.platform] === "switchbot") return switchbotPicture(switchbotName(dev) || name, activity);
   return robotSvg({
     turret: !/saros|essential|\b(e\d|c1|1c)\b/i.test(name),
     white: white ?? (/\bq\s?(revo|\d)|\bmi robot/i.test(name) || ["xiaomi", "dreame", "ecovacs"].includes(brandOf(dev.model))),
@@ -211,8 +216,9 @@ export const deviceTypeOf = (dev) => {
   if (dev.kind === "wetdry") return "wet_dry";
   if (MOP_KEYS.some((k) => dev.entities?.[k]) || Object.keys(dev.dock || {}).some((k) => /mop/.test(k))) return "robot_mop";
   const name = modelName(dev);
-  // SwitchBot: the roller-mop S10 / S20 mop, the K10+ Pro "Combo" is a robot vacuum with a handheld vacuum.
-  if (PLATFORMS[dev.platform] === "switchbot" || brandOf(dev.model) === "switchbot") return /\bs[12]0\b/i.test(name) ? "robot_mop" : "robot_vacuum";
+  // SwitchBot: the roller-mop S10 / S20 mop, the K10+ Pro "Combo" is a robot vacuum with a handheld vacuum — from the
+  // commercial name, the device name only for an unknown model (a renamed robot keeps its type).
+  if (PLATFORMS[dev.platform] === "switchbot" || brandOf(dev.model) === "switchbot") return /\bs[12]0\b/i.test(switchbotName(dev) || name) ? "robot_mop" : "robot_vacuum";
   return dev.platform === "braava_240_ble" || /braava|combo|\bm6\b/i.test(name) ? "robot_mop" : "robot_vacuum";
 };
 export const svgUri = (svg) => svg && `data:image/svg+xml,${encodeURIComponent(svg)}`;

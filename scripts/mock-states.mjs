@@ -344,9 +344,9 @@ export const switchbotCleaning = { "vacuum.bureau": { state: "cleaning" }, "sens
 // The SwitchBot K10+ Pro heading back to its auto-empty tower. Picture activity: "returning" (home).
 export const switchbotReturning = { "vacuum.bureau": { state: "returning" }, "sensor.bureau_batterie": { state: "35" } };
 
-// The SwitchBot S10 vacuuming and mopping. Picture activity: "vacmop" — side brush and dust, its roller mop rolling
-// over a wet trail.
-export const switchbotMopping = { "vacuum.salon_s10": { state: "cleaning" } };
+// The SwitchBot S10 vacuuming (SwitchBot Cloud starts a vacuum-only clean). Picture activity: "vacuum" — side brush and
+// dust, its roller mop still.
+export const switchbotS10Cleaning = { "vacuum.salon_s10": { state: "cleaning" } };
 
 // Response of the roborock.get_maps service, used by the room selector.
 export const maps = {

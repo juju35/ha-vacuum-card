@@ -199,7 +199,7 @@ language: fr
 | `show_title` | both | `true` | Show the title in the header (e.g. `false` under a section heading of your own) |
 | `show_subtitle` | both | `true` | Show the subtitle under the title |
 | `image` | both | `auto` | Device picture: `auto` (per model), a model id to draw another model (e.g. `roborock.vacuum.a72` for the Q5 Pro — the visual editor lists the models by brand and name), `none`, or the URL of your own picture (e.g. `/local/my-robot.png`). The former presets `saros_20`, `s8_maxv_ultra`, `qrevo`, `q7`, `f25_ultra` and `dyad_pro` still work |
-| `color` | both | `auto` | Color of the drawn picture: `auto` (per model), `white` or `dark` — for models sold in both colors (F25 Ultra, S7, Q5…) |
+| `color` | both | `auto` | Color of the drawn picture: `auto` (per model), `white` or `dark` — for models sold in both colors (F25 Ultra, S7, Q5…); SwitchBot robots are always drawn white |
 | `illustration` | both | `true` | Illustrated header: the device's picture in a living room, on a parquet strip; `false` keeps the classic header (icon, title, status chip) with the picture beside the battery |
 | `illustration_theme` | both | `auto` | Day or night look of the illustrated header: `auto` (follows the Home Assistant theme: night with a dark theme, day with a light theme), `day` or `night` |
 | `show_logo` | both | `true` | Show the header icon of the kind of device, colored with the device state (running: state color, at rest: grey, warning: amber, error: red), with the brand logo (opens the brand's site in a new tab), see [Brands](#brands) |
@@ -448,17 +448,17 @@ Drawn SwitchBot models — white robots with the red status light of the brand: 
 
 <p align="center"><img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/models-switchbot.svg" alt="SwitchBot device pictures" width="980"></p>
 
-Animations: the K10+ Pro vacuuming (it sways, its side brush spins and dust trails behind) and heading back to its tower, the S10 vacuuming and mopping — its roller mop rolls over a wet trail:
+Animations: the K10+ Pro vacuuming (it sways, its side brush spins and dust trails behind) and heading back to its tower, the S10 vacuuming — SwitchBot Cloud starts a vacuum-only clean, so its roller mop stays still (it turns over a wet trail only when the robot reports mopping):
 
 | | K10+ Pro cleaning | K10+ Pro returning |
 |---|---|---|
 | Light | <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/switchbot-cleaning.gif" alt="switchbot cleaning animation" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/switchbot-returning.gif" alt="switchbot returning animation" width="400"> |
 | Dark | <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/switchbot-cleaning-dark.gif" alt="switchbot cleaning animation dark" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/switchbot-returning-dark.gif" alt="switchbot returning animation dark" width="400"> |
 
-| | S10 vacuuming and mopping |
+| | S10 vacuuming |
 |---|---|
-| Dark | <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/switchbot-mopping.gif" alt="switchbot mopping animation" width="400"> |
-| Light | <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/switchbot-mopping-light.gif" alt="switchbot mopping animation light" width="400"> |
+| Dark | <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/switchbot-s10-cleaning.gif" alt="switchbot S10 cleaning animation" width="400"> |
+| Light | <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/switchbot-s10-cleaning-light.gif" alt="switchbot S10 cleaning animation light" width="400"> |
 
 ## How it works
 
@@ -541,7 +541,7 @@ Each maintenance line has a reset button when the integration exposes the matchi
 Models the cards recognize from the model id the integration reports (drawn picture, logo and buttons of their brand). Any of these model ids can also be set as the `image` option to draw that model; the visual editor lists them by brand and name. iRobot SKUs of other regions are recognized all the same.
 
 <!-- models:start -->
-<details><summary>Roborock (58)</summary>
+<details><summary>Roborock (62)</summary>
 
 | Model | Model id |
 |---|---|
@@ -557,6 +557,9 @@ Models the cards recognize from the model id the integration reports (drawn pict
 | G10S | `roborock.vacuum.a46` |
 | G10S Pro | `roborock.vacuum.a26` |
 | G30 | `roborock.vacuum.a146` |
+| K10+ | `k10+` |
+| K10+ Pro | `k10+ pro` |
+| K20+ Pro | `k20+ pro` |
 | P30 Pro | `roborock.vacuum.a306` |
 | Q5 | `roborock.vacuum.a34` |
 | Q5 Max+ | `roborock.vacuum.a125` |
@@ -594,6 +597,7 @@ Models the cards recognize from the model id the integration reports (drawn pict
 | S8 | `roborock.vacuum.a51` |
 | S8 MaxV Ultra | `roborock.vacuum.a97` |
 | S8 Pro Ultra | `roborock.vacuum.a70` |
+| S20 | `s20` |
 | Saros 10 | `roborock.vacuum.a147` |
 | Saros 10R | `roborock.vacuum.a143`, `roborock.vacuum.a144` |
 | Saros 20 | `roborock.vacuum.a288` |
@@ -719,15 +723,15 @@ Models the cards recognize from the model id the integration reports (drawn pict
 
 | Model | Model id |
 |---|---|
-| K10+ | `k10+ vacuum`, `k10+` |
-| K10+ Pro | `k10+ pro vacuum`, `k10+ pro` |
+| K10+ | `k10+ vacuum` |
+| K10+ Pro | `k10+ pro vacuum` |
 | K10+ Pro Combo | `k10+ pro combo vacuum`, `robot vacuum cleaner k10+ pro combo` |
 | K11+ | `k11+ vacuum`, `robot vacuum cleaner k11 plus` |
-| K20+ Pro | `k20 vacuum`, `k20+ pro` |
+| K20+ Pro | `k20 vacuum` |
 | S1 | `robot vacuum cleaner s1` |
 | S1 Plus | `robot vacuum cleaner s1 plus` |
 | S10 | `s10 vacuum`, `robot vacuum cleaner s10` |
-| S20 | `s20 vacuum`, `robot vacuum cleaner s20`, `s20` |
+| S20 | `s20 vacuum`, `robot vacuum cleaner s20` |
 
 </details>
 <!-- models:end -->
