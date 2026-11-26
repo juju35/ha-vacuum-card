@@ -87,6 +87,7 @@ export default {
   show_consumables: "Onderhoud tonen",
   show_stats: "Statistieken tonen",
   show_map: "Kaart tonen",
+  keep_last_map: "Kaart van de laatste schoonmaak behouden (met route)",
   collapsed: "Standaard ingeklapte secties",
   map_entity: "Kaartentiteit (optioneel, bijv. camera van Xiaomi Cloud Map Extractor)",
   vector_map: "Vacuum Map-kaart in plaats van de afbeelding (indien geïnstalleerd)",

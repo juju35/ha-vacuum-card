@@ -87,6 +87,7 @@ export default {
   show_consumables: "Rādīt apkopi",
   show_stats: "Rādīt statistiku",
   show_map: "Rādīt karti",
+  keep_last_map: "Saglabāt pēdējās tīrīšanas karti (ar maršrutu)",
   collapsed: "Pēc noklusējuma sakļautās sadaļas",
   map_entity: "Kartes vienība (neobligāta, piem., Xiaomi Cloud Map Extractor kamera)",
   vector_map: "Vacuum Map karte attēla vietā (ja instalēta)",

@@ -88,6 +88,7 @@ export default {
   show_consumables: "Wartung anzeigen",
   show_stats: "Statistik anzeigen",
   show_map: "Karte anzeigen",
+  keep_last_map: "Karte der letzten Reinigung behalten (mit Fahrweg)",
   collapsed: "Abschnitte standardmäßig eingeklappt",
   map_entity: "Karten-Entität (optional, z. B. Kamera von Xiaomi Cloud Map Extractor)",
   vector_map: "Vacuum-Map-Karte statt des Bildes (wenn installiert)",

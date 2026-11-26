@@ -206,6 +206,7 @@ export class VacuumCardEditor extends VacuumEditorBase {
       ["show_dock", true],
       ["show_consumables", true],
       ["show_stats", true],
+      ["keep_last_map", false],
       ["vector_map", true],
     ];
   }

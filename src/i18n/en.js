@@ -87,6 +87,7 @@ export default {
   show_consumables: "Show maintenance",
   show_stats: "Show statistics",
   show_map: "Show map",
+  keep_last_map: "Keep the last job's map (with its path)",
   collapsed: "Sections folded by default",
   map_entity: "Map entity (optional, e.g. Xiaomi Cloud Map Extractor camera)",
   vector_map: "Vacuum Map map instead of the picture (when installed)",

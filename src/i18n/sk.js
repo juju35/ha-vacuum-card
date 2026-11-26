@@ -87,6 +87,7 @@ export default {
   show_consumables: "Zobraziť údržbu",
   show_stats: "Zobraziť štatistiky",
   show_map: "Zobraziť mapu",
+  keep_last_map: "Ponechať mapu posledného upratovania (s trasou)",
   collapsed: "Predvolene zbalené sekcie",
   map_entity: "Entita mapy (voliteľná, napr. kamera Xiaomi Cloud Map Extractor)",
   vector_map: "Mapa Vacuum Map namiesto obrázka (ak je nainštalovaná)",
