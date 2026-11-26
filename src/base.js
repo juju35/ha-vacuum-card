@@ -364,7 +364,7 @@ export class VacuumBase extends HTMLElement {
   // to the <img> once decoded, as an <img> still loading would show nothing if a render moved it (see _placeMaps).
   // The enlarged map (see _zoomMap) follows the frames the same way, under its own key.
   _syncMaps() {
-    if (this._mapsPaused() || this._mapFrozen) return;
+    if (this._mapsPaused()) return;
     this._mapNext ??= new Map();
     const targets = [...(this._mapNodes || [])].map(([id]) => [id, id]);
     if (this._zoomImg) targets.push([ZOOM_KEY, this._zoomImg.dataset.map]);
@@ -377,6 +377,8 @@ export class VacuumBase extends HTMLElement {
         img.setAttribute("src", url);
         continue;
       }
+      // keep_last_map: a frozen map keeps the frame it shows; only a picture never loaded yet gets one.
+      if (this._mapFrozen) continue;
       if (this._mapNext.get(key)?.getAttribute("src") === url) continue;
       const next = new Image();
       next.src = url;
