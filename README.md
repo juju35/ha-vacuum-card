@@ -437,7 +437,7 @@ The Braava mops (wet trail and spray drops), the Combo models vacuum and mop at 
 
 <p><img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/switchbot-logo.png" alt="SwitchBot" height="32"></p>
 
-K10+ Pro renamed « Study robot », set up with the SwitchBot integration over Bluetooth (`switchbot`): status, battery, Start and Dock; and an S10 renamed « Lounge robot », set up with SwitchBot Cloud (`switchbot_cloud`), with its suction power and Pause:
+K10+ Pro renamed « Study robot », set up with the SwitchBot integration over Bluetooth (`switchbot`): status, battery, Start and Dock; and an S10 renamed « Sitting room robot », set up with SwitchBot Cloud (`switchbot_cloud`), with its suction power and Pause:
 
 | | Card (K10+ Pro) | Mini card (S10) |
 |---|---|---|

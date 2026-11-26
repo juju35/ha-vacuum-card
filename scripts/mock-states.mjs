@@ -223,18 +223,19 @@ roomba("sensor.salle_de_bain_derniere_mission", "m6", "last_mission", hoursAgo(3
 
 // SwitchBot K10+ Pro renamed « Study robot », set up with the SwitchBot integration over Bluetooth (switchbot): the vacuum
 // (translation_key "vacuum", Start / Return home only) and a battery sensor without translation_key. SwitchBot S10
-// renamed « Lounge robot », set up with SwitchBot Cloud (switchbot_cloud): a vacuum without translation_key, with its
-// four suction levels.
+// renamed « Sitting room robot », set up with SwitchBot Cloud (switchbot_cloud): a vacuum without translation_key, with its
+// four suction levels. Both names sort after « Roborock Saros 20 »: the cards without `device` show the first robot by
+// name, which must stay the Roborock of the default captures.
 device("k10", "Study robot", "K10+ Pro Vacuum", "aa:bb:cc:dd:ee:10", "switchbot");
 entity("vacuum.bureau", "k10", "vacuum", "docked", { supported_features: 12304, friendly_name: "Study robot" }, "switchbot");
 entity("sensor.bureau_batterie", "k10", null, "100", { device_class: "battery", unit_of_measurement: "%" }, "switchbot");
 entity("sensor.bureau_signal", "k10", "bluetooth_signal", "-62", { device_class: "signal_strength", unit_of_measurement: "dBm" }, "switchbot");
-device("s10", "Lounge robot", "Robot Vacuum Cleaner S10", "S10-6C1F", "switchbot_cloud");
+device("s10", "Sitting room robot", "Robot Vacuum Cleaner S10", "S10-6C1F", "switchbot_cloud");
 entity("vacuum.salon_s10", "s10", null, "docked", {
   fan_speed: "standard",
   fan_speed_list: ["quiet", "standard", "strong", "max"],
   supported_features: 12340,
-  friendly_name: "Lounge robot",
+  friendly_name: "Sitting room robot",
 }, "switchbot_cloud");
 
 // Same robot while it is cleaning (vacuum + mop), with the mop drying in the dock and the dirty water tank

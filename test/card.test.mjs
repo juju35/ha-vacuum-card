@@ -938,6 +938,13 @@ test("SwitchBot: Bluetooth and Cloud vacuums found, battery by device class, Swi
   assert.match(card.shadowRoot.innerHTML, /--vc-accent: #e5484d/);
 });
 
+test("the card without a device keeps the first robot by name of the mock home: the Roborock of the default captures", () => {
+  const card = new vc.VacuumCard();
+  card.setConfig({});
+  card.hass = makeHass();
+  assert.match(card.shadowRoot.innerHTML, /title="Roborock"/);
+});
+
 test("iRobot: keys mapped, battery by device class, iRobot logo and green buttons, statistics", () => {
   const hass = makeHass();
   const dev = vc.resolve(hass).devices.find((d) => d.id === "j7");
