@@ -58,7 +58,9 @@ const GALLERIES = {
   ],
   switchbot: [
     ["k10+ vacuum", "K10+"],
+    ["k10+ pro vacuum", "K10+ Pro"],
     ["k10+ pro combo vacuum", "K10+ Pro Combo"],
+    ["k11+ vacuum", "K11+"],
     ["robot vacuum cleaner k11 plus pro", "K11+ Pro"],
     ["k20 vacuum", "K20+ Pro"],
     ["robot vacuum cleaner s1", "S1"],

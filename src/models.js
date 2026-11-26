@@ -190,7 +190,7 @@ export const autoSvg = (dev, activity = null, white = undefined) => {
       activity,
     });
   }
-  if (brandOf(dev.model) === "switchbot" || PLATFORMS[dev.platform] === "switchbot") return switchbotPicture(switchbotName(dev) || name, activity);
+  if (brandOf(dev.model) === "switchbot" || PLATFORMS[dev.platform] === "switchbot") return switchbotPicture(switchbotName(dev) || name, activity, white);
   return robotSvg({
     turret: !/saros|essential|\b(e\d|c1|1c)\b/i.test(name),
     white: white ?? (/\bq\s?(revo|\d)|\bmi robot/i.test(name) || ["xiaomi", "dreame", "ecovacs"].includes(brandOf(dev.model))),

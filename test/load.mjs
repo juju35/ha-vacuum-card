@@ -109,7 +109,7 @@ export const load = () => {
   vm.createContext(sandbox);
   return vm.runInContext(
     `${source}
-    ({ fmtHours, hours, statusClass, esc, resolve, ago, lang, intlLocale, RTF, autoSvg, robotSvg, wetdrySvg, dysonSvg, roombaSvg, irobotName, switchbotSvg, IMAGES, activityOf, deviceTypeOf, brandOf, modelBrand, BRAND_LABELS, MODEL_NAMES, MODEL_PRESETS, STRINGS, VacuumCard: customElements.get("vacuum-card"),
+    ({ fmtHours, hours, statusClass, esc, resolve, ago, lang, intlLocale, RTF, autoSvg, robotSvg, wetdrySvg, dysonSvg, roombaSvg, irobotName, switchbotSvg, switchbotPicture, IMAGES, activityOf, deviceTypeOf, brandOf, modelBrand, BRAND_LABELS, MODEL_NAMES, MODEL_PRESETS, STRINGS, VacuumCard: customElements.get("vacuum-card"),
        VacuumMiniCard: customElements.get("vacuum-mini-card"), window, document })`,
     sandbox,
   );
