@@ -1,7 +1,7 @@
 // The README screenshots (PNG) and animations (GIF) rendered by scripts/screenshots.mjs.
 // Every capture has a twin in the other theme ("-dark" for a light capture, "-light" for a dark one)
 // that shows exactly the same state: only the theme differs (checked by test/screenshots.test.mjs).
-import { cleaning, returning, washing, drying, f25Cleaning, ecovacsCleaning, ecovacsReturning, ecovacsWashing, ecovacsDrying, dysonCleaning, dysonReturning, irobotCleaning, irobotReturning, irobotEmptying, braavaMopping } from "./mock-states.mjs";
+import { cleaning, returning, washing, drying, f25Cleaning, ecovacsCleaning, ecovacsReturning, ecovacsWashing, ecovacsDrying, dysonCleaning, dysonReturning, irobotCleaning, irobotReturning, irobotEmptying, braavaMopping, switchbotCleaning, switchbotReturning, switchbotS10Cleaning } from "./mock-states.mjs";
 
 export const shots = [
   { file: "card", type: "vacuum-card", theme: "light", width: 460, config: {} },
@@ -38,6 +38,10 @@ export const shots = [
   { file: "mini-card-irobot-dark", type: "vacuum-mini-card", theme: "dark", width: 380, config: { device: "Workshop robot" } },
   { file: "card-braava", type: "vacuum-card", theme: "dark", width: 460, config: { device: "Washroom robot", collapsed: [] } },
   { file: "card-braava-light", type: "vacuum-card", theme: "light", width: 460, config: { device: "Washroom robot", collapsed: [] } },
+  { file: "card-switchbot", type: "vacuum-card", theme: "light", width: 460, config: { device: "Study robot", collapsed: [] } },
+  { file: "card-switchbot-dark", type: "vacuum-card", theme: "dark", width: 460, config: { device: "Study robot", collapsed: [] } },
+  { file: "mini-card-switchbot", type: "vacuum-mini-card", theme: "dark", width: 380, config: { device: "Sitting room robot" } },
+  { file: "mini-card-switchbot-light", type: "vacuum-mini-card", theme: "light", width: 380, config: { device: "Sitting room robot" } },
   { file: "mini-card-braava", type: "vacuum-mini-card", theme: "dark", width: 380, config: { device: "Washroom robot" } },
   { file: "mini-card-braava-light", type: "vacuum-mini-card", theme: "light", width: 380, config: { device: "Washroom robot" } },
   { file: "mini-card-zoom", type: "vacuum-mini-card", theme: "light", width: 460, config: {}, clicks: [".zoom"] },
@@ -61,6 +65,8 @@ export const shots = [
 //   dyson-cleaning / dyson-returning — Dyson 360 Vis Nav: tracks rolling and dust / sliding home
 //   irobot-cleaning / -returning / -emptying — Roomba j7+: single side brush and dust / sliding in front of its
 //                      Clean Base / the base emptying the bin (evac); braava-mopping — Braava jet m6: wet trail and spray
+//   switchbot-cleaning / -returning — K10+ Pro: the mini robot vacuuming / sliding in front of its auto-empty tower;
+//                      switchbot-s10-cleaning — S10: vacuuming, its roller mop still (a vacuum-only clean)
 // Each one is followed by its twin in the other theme: "-dark" for a light capture, "-light" for a dark one.
 export const gifs = [
   { file: "cleaning", type: "vacuum-card", theme: "light", width: 460, config: {}, overrides: cleaning },
@@ -93,4 +99,10 @@ export const gifs = [
   { file: "irobot-emptying-light", type: "vacuum-card", theme: "light", width: 460, config: { device: "Workshop robot" }, overrides: irobotEmptying },
   { file: "braava-mopping", type: "vacuum-card", theme: "dark", width: 460, config: { device: "Washroom robot" }, overrides: braavaMopping },
   { file: "braava-mopping-light", type: "vacuum-card", theme: "light", width: 460, config: { device: "Washroom robot" }, overrides: braavaMopping },
+  { file: "switchbot-cleaning", type: "vacuum-card", theme: "light", width: 460, config: { device: "Study robot" }, overrides: switchbotCleaning },
+  { file: "switchbot-cleaning-dark", type: "vacuum-card", theme: "dark", width: 460, config: { device: "Study robot" }, overrides: switchbotCleaning },
+  { file: "switchbot-returning", type: "vacuum-card", theme: "light", width: 460, config: { device: "Study robot" }, overrides: switchbotReturning },
+  { file: "switchbot-returning-dark", type: "vacuum-card", theme: "dark", width: 460, config: { device: "Study robot" }, overrides: switchbotReturning },
+  { file: "switchbot-s10-cleaning", type: "vacuum-card", theme: "dark", width: 460, config: { device: "Sitting room robot" }, overrides: switchbotS10Cleaning },
+  { file: "switchbot-s10-cleaning-light", type: "vacuum-card", theme: "light", width: 460, config: { device: "Sitting room robot" }, overrides: switchbotS10Cleaning },
 ];

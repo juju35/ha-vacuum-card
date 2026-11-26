@@ -59,7 +59,7 @@ export default {
   ok: "OK",
   empty: "Da riempire",
   full: "Da svuotare",
-  no_device: "Nessun robot aspirapolvere trovato. È installata un'integrazione supportata (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot)?",
+  no_device: "Nessun robot aspirapolvere trovato. È installata un'integrazione supportata (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot, SwitchBot)?",
   unknown_device: "Robot aspirapolvere non trovato",
   no_registry: "Questa scheda richiede Home Assistant 2024.8 o successivo.",
   // Editor

@@ -59,7 +59,7 @@ export default {
   ok: "OK",
   empty: "Empty",
   full: "Full",
-  no_device: "No robot vacuum found. Is a supported integration (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot) installed?",
+  no_device: "No robot vacuum found. Is a supported integration (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot, SwitchBot) installed?",
   unknown_device: "Robot vacuum not found",
   no_registry: "This card needs Home Assistant 2024.8 or later.",
   // Editor

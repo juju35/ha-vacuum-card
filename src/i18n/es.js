@@ -59,7 +59,7 @@ export default {
   ok: "OK",
   empty: "Vacío",
   full: "Lleno",
-  no_device: "No se ha encontrado ningún robot aspirador. ¿Está instalada una integración compatible (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot)?",
+  no_device: "No se ha encontrado ningún robot aspirador. ¿Está instalada una integración compatible (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot, SwitchBot)?",
   unknown_device: "Robot aspirador no encontrado",
   no_registry: "Esta tarjeta requiere Home Assistant 2024.8 o posterior.",
   // Editor

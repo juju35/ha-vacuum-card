@@ -6,3 +6,4 @@ export const IMG_LOGO_DREAME = "__IMG_LOGO_DREAME__";
 export const IMG_LOGO_ECOVACS = "__IMG_LOGO_ECOVACS__";
 export const IMG_LOGO_DYSON = "__IMG_LOGO_DYSON__";
 export const IMG_LOGO_IROBOT = "__IMG_LOGO_IROBOT__";
+export const IMG_LOGO_SWITCHBOT = "__IMG_LOGO_SWITCHBOT__";

@@ -59,7 +59,7 @@ export default {
   ok: "OK",
   empty: "Празен",
   full: "Пълен",
-  no_device: "Не е намерена робот прахосмукачка. Инсталирана ли е поддържана интеграция (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot)?",
+  no_device: "Не е намерена робот прахосмукачка. Инсталирана ли е поддържана интеграция (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot, SwitchBot)?",
   unknown_device: "Робот прахосмукачката не е намерена",
   no_registry: "Тази карта изисква Home Assistant 2024.8 или по-нова версия.",
   // Editor

@@ -56,6 +56,15 @@ const GALLERIES = {
     ["c975020", "Combo j9+"],
     ["m611020", "Braava jet m6"],
   ],
+  switchbot: [
+    ["k10+ vacuum", "K10+"],
+    ["k10+ pro combo vacuum", "K10+ Pro Combo"],
+    ["k20 vacuum", "K20+ Pro"],
+    ["robot vacuum cleaner s1", "S1"],
+    ["robot vacuum cleaner s1 plus", "S1 Plus"],
+    ["s10 vacuum", "S10"],
+    ["s20 vacuum", "S20"],
+  ],
 };
 
 const CELL = 140;

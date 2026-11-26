@@ -59,7 +59,7 @@ export default {
   ok: "OK",
   empty: "Prázdná",
   full: "Plná",
-  no_device: "Nebyl nalezen žádný robotický vysavač. Je nainstalována podporovaná integrace (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot)?",
+  no_device: "Nebyl nalezen žádný robotický vysavač. Je nainstalována podporovaná integrace (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot, SwitchBot)?",
   unknown_device: "Robotický vysavač nebyl nalezen",
   no_registry: "Tato karta vyžaduje Home Assistant 2024.8 nebo novější.",
   // Editor

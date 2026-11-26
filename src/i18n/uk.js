@@ -59,7 +59,7 @@ export default {
   ok: "OK",
   empty: "Порожньо",
   full: "Заповнений",
-  no_device: "Робот-пилосос не знайдено. Чи встановлено підтримувану інтеграцію (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot)?",
+  no_device: "Робот-пилосос не знайдено. Чи встановлено підтримувану інтеграцію (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot, SwitchBot)?",
   unknown_device: "Робот-пилосос не знайдено",
   no_registry: "Для цієї картки потрібен Home Assistant 2024.8 або новіший.",
   // Editor

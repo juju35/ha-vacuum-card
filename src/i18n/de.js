@@ -59,7 +59,7 @@ export default {
   ok: "OK",
   empty: "Leer",
   full: "Voll",
-  no_device: "Kein Saugroboter gefunden. Ist eine unterstützte Integration (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot) installiert?",
+  no_device: "Kein Saugroboter gefunden. Ist eine unterstützte Integration (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot, SwitchBot) installiert?",
   unknown_device: "Saugroboter nicht gefunden",
   no_registry: "Diese Karte benötigt Home Assistant 2024.8 oder neuer.",
 

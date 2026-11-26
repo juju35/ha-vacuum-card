@@ -59,7 +59,7 @@ export default {
   ok: "OK",
   empty: "Üres",
   full: "Tele",
-  no_device: "Nem található robotporszívó. Telepítve van egy támogatott integráció (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot)?",
+  no_device: "Nem található robotporszívó. Telepítve van egy támogatott integráció (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot, SwitchBot)?",
   unknown_device: "A robotporszívó nem található",
   no_registry: "Ehhez a kártyához Home Assistant 2024.8 vagy újabb szükséges.",
   // Editor

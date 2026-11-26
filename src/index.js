@@ -5,8 +5,9 @@
  * Lovelace cards for robot vacuums, whatever the integration: Roborock
  * (https://www.home-assistant.io/integrations/roborock/), Xiaomi Miio (https://www.home-assistant.io/integrations/xiaomi_miio/),
  * Xiaomi Home (https://github.com/XiaoMi/ha_xiaomi_home), Dreame Vacuum (https://github.com/Tasshack/dreame-vacuum),
- * Ecovacs (https://www.home-assistant.io/integrations/ecovacs/), Dyson (https://github.com/libdyson-wg/ha-dyson) or iRobot
- * (https://www.home-assistant.io/integrations/roomba/, and the Braava 240 through https://github.com/mtheli/braava_240_ble).
+ * Ecovacs (https://www.home-assistant.io/integrations/ecovacs/), Dyson (https://github.com/libdyson-wg/ha-dyson), iRobot
+ * (https://www.home-assistant.io/integrations/roomba/, and the Braava 240 through https://github.com/mtheli/braava_240_ble) or
+ * SwitchBot (https://www.home-assistant.io/integrations/switchbot/, https://www.home-assistant.io/integrations/switchbot_cloud/).
  * Entities are resolved through the entity and device registries (platform, translation_key and
  * device), so they work whatever the Home Assistant language or entity ids.
  */
@@ -43,12 +44,12 @@ for (const card of [
   {
     type: "vacuum-card",
     name: "Vacuum Card",
-    description: "Monitor and control a Roborock, Xiaomi, Dreame, Ecovacs, Dyson or iRobot robot vacuum or wet-dry vacuum: status, battery, routines, dock, maintenance and statistics.",
+    description: "Monitor and control a Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot or SwitchBot robot vacuum or wet-dry vacuum: status, battery, routines, dock, maintenance and statistics.",
   },
   {
     type: "vacuum-mini-card",
     name: "Vacuum Mini Card",
-    description: "Compact Roborock, Xiaomi, Dreame, Ecovacs, Dyson or iRobot robot vacuum overview: status, battery, current room and quick controls.",
+    description: "Compact Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot or SwitchBot robot vacuum overview: status, battery, current room and quick controls.",
   },
 ]) {
   if (!window.customCards.some((c) => c.type === card.type))

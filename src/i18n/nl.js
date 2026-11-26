@@ -59,7 +59,7 @@ export default {
   ok: "OK",
   empty: "Leeg",
   full: "Vol",
-  no_device: "Geen robotstofzuiger gevonden. Is er een ondersteunde integratie (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot) geïnstalleerd?",
+  no_device: "Geen robotstofzuiger gevonden. Is er een ondersteunde integratie (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot, SwitchBot) geïnstalleerd?",
   unknown_device: "Robotstofzuiger niet gevonden",
   no_registry: "Deze kaart vereist Home Assistant 2024.8 of nieuwer.",
   // Editor

@@ -31,18 +31,25 @@ export const ANIM_CSS = `
   @keyframes evac { from { transform: translateY(0); opacity: 0; } 20% { opacity: .95; } 85% { opacity: .8; } to { transform: translateY(-78px); opacity: 0; } }
   @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }`;
 // Robot seen from the front, slightly from above: disc of radius r centred on (cx, cy).
-export const robotShape = (cx, cy, r, turret, col) => {
+// Its disc: shadow, skirt, lid and the lid's rim.
+export const discShape = (cx, cy, r, col) => {
   const ry = r * 0.3, h = r * 0.2;
   let s = `<ellipse cx="${cx}" cy="${cy + h + ry * 0.35}" rx="${r * 0.98}" ry="${ry * 0.7}" opacity=".22"/>`;
   s += `<path d="M${cx - r} ${cy} v${h} a${r} ${ry} 0 0 0 ${2 * r} 0 v${-h} z" fill="${col.side}"/>`;
   s += `<ellipse cx="${cx}" cy="${cy}" rx="${r}" ry="${ry}" fill="${col.top}"/>`;
-  s += `<ellipse cx="${cx}" cy="${cy}" rx="${r * 0.97}" ry="${ry * 0.93}" fill="none" stroke="${col.rim}" stroke-width="${r * 0.02}"/>`;
+  return `${s}<ellipse cx="${cx}" cy="${cy}" rx="${r * 0.97}" ry="${ry * 0.93}" fill="none" stroke="${col.rim}" stroke-width="${r * 0.02}"/>`;
+};
+// LiDAR turret of radius tr and height th, its base at (cx, ty).
+export const turretShape = (cx, ty, tr, th, col) =>
+  `<path d="M${cx - tr} ${ty} v${-th} a${tr} ${tr * 0.3} 0 0 1 ${2 * tr} 0 v${th} a${tr} ${tr * 0.3} 0 0 1 ${-2 * tr} 0 z" fill="${col.side}"/>` +
+  `<ellipse cx="${cx}" cy="${ty - th}" rx="${tr}" ry="${tr * 0.3}" fill="${col.top}"/>` +
+  `<rect x="${cx - tr * 0.55}" y="${ty - th * 0.75}" width="${tr * 1.1}" height="${th * 0.4}" rx="${th * 0.2}" fill="${col.lens}"/>`;
+export const robotShape = (cx, cy, r, turret, col) => {
+  const ry = r * 0.3, h = r * 0.2;
+  let s = discShape(cx, cy, r, col);
   s += `<rect x="${cx - r * 0.3}" y="${cy + h * 0.35}" width="${r * 0.6}" height="${h * 0.35}" rx="${h * 0.17}" fill="${col.lens}"/>`;
   if (turret) {
-    const tr = r * 0.24, th = r * 0.17, ty = cy - ry * 0.25;
-    s += `<path d="M${cx - tr} ${ty} v${-th} a${tr} ${tr * 0.3} 0 0 1 ${2 * tr} 0 v${th} a${tr} ${tr * 0.3} 0 0 1 ${-2 * tr} 0 z" fill="${col.side}"/>`;
-    s += `<ellipse cx="${cx}" cy="${ty - th}" rx="${tr}" ry="${tr * 0.3}" fill="${col.top}"/>`;
-    s += `<rect x="${cx - tr * 0.55}" y="${ty - th * 0.75}" width="${tr * 1.1}" height="${th * 0.4}" rx="${th * 0.2}" fill="${col.lens}"/>`;
+    s += turretShape(cx, cy - ry * 0.25, r * 0.24, r * 0.17, col);
   } else {
     s += `<circle cx="${cx + r * 0.55}" cy="${cy - ry * 0.25}" r="${r * 0.04}" fill="#e3212d"/>`;
   }
@@ -270,3 +277,114 @@ export const IROBOT_SKUS = [
   "r675020", "r694020", "r696020", "r960020", "r974020", "r976020", "r980020", "e515020", "i315020", "i355020", "i515020", "i555020",
   "i715020", "i755020", "s915020", "s955020", "j715020", "j755020", "j955020", "c755020", "c975020", "m611020",
 ];
+// SwitchBot: white robots — the K series is a mini robot (≈ 25 cm, against ≈ 35 cm for the others) with a small LiDAR
+// turret, the S1 a full-size one, the S10 / S20 full-size with a roller mop across the back (a light-blue drum, turning
+// while it mops). Docked: the K10+ / K11+ / K20+ in front of their slim auto-empty tower (the K10+ Pro Combo with its
+// handheld vacuum clipped on the side), the S1 Plus / S10 in front of a squat auto-empty base, the S20 in its
+// OmniStation (dust bin up top, the clean and dirty water tanks below). Vacuuming: the robot sways, its single side
+// brush spins and dust trails behind; mopping (only when the robot says so — SwitchBot Cloud starts a vacuum-only
+// clean): the roller turns over a wet trail; returning: it slides in front of its base (the integrations report no bin
+// emptying nor mop washing / drying).
+export const SWITCHBOT_COLORS = { top: "#f6f6f4", side: "#d3d4d1", rim: "#e4e4e1", lens: "#2a2c30" };
+export const switchbotShape = (cx, cy, r, { turret = true, roller = false, mopping = false } = {}) => {
+  const col = SWITCHBOT_COLORS;
+  const ry = r * 0.3, h = r * 0.2;
+  // The disc, with a matte disc in the middle of the lid, the SwitchBot look.
+  let s = discShape(cx, cy, r, col);
+  s += `<ellipse cx="${cx}" cy="${cy + ry * 0.12}" rx="${r * 0.62}" ry="${ry * 0.55}" fill="#ececea"/>`;
+  // Bumper sensor window, and the red status light of the brand.
+  s += `<rect x="${cx - r * 0.34}" y="${cy + h * 0.35}" width="${r * 0.68}" height="${h * 0.32}" rx="${h * 0.16}" fill="${col.lens}"/>`;
+  s += `<circle cx="${cx - r * 0.42}" cy="${cy + ry * 0.38}" r="${r * 0.035}" fill="#d13939"/>`;
+  // Roller mop: the light-blue drum showing under the skirt, its stripes rolling while it mops.
+  if (roller) {
+    const y = cy + h + ry * 0.72;
+    s += `<rect x="${cx - r * 0.62}" y="${y}" width="${r * 1.24}" height="${h * 0.55}" rx="${h * 0.27}" fill="#8fc9ee"/>`;
+    s += `<line class="${mopping ? "roll" : ""}" x1="${cx - r * 0.56}" y1="${y + h * 0.27}" x2="${cx + r * 0.56}" y2="${y + h * 0.27}" stroke="#e3f2ff" stroke-width="${h * 0.18}" stroke-dasharray="4 8"/>`;
+  }
+  if (turret) s += turretShape(cx, cy - ry * 0.32, r * 0.2, r * 0.13, col);
+  return s;
+};
+// Mini robot of the K series, against the full-size S series (radius on the floor: 72).
+export const SWITCHBOT_MINI_R = 52;
+export const switchbotSvg = ({ mini = false, roller = false, base = null, combo = false, activity = null } = {}) => {
+  const cleaning = ["vacuum", "mop", "vacmop"].includes(activity);
+  // The roller turns only while the robot mops; a model without one only vacuums.
+  const act = cleaning ? (roller ? activity : "vacuum") : null;
+  const shape = (cx, cy, r) => switchbotShape(cx, cy, r, { roller, mopping: act === "mop" || act === "vacmop" });
+  if (!base || cleaning) {
+    const r = mini ? SWITCHBOT_MINI_R : 72;
+    const cy = 88 - r * 0.53;
+    let robot = shape(80, cy, r);
+    if (act && act !== "mop") robot += brush(80 + r * 0.72, cy + r * 0.36, r * 0.15);
+    return onFloor(robot, act);
+  }
+  const [body, edge, lid, seam] = ["#f4f4f2", "#d6d7d4", "#e6e6e3", "#c4c5c2"];
+  let s = `<ellipse cx="80" cy="152" rx="66" ry="6" opacity=".22"/>`;
+  s += `<path d="M18 140 L30 128 H130 L142 140 Q142 146 136 146 H24 Q18 146 18 140 Z" fill="#e6e6e3"/>`;
+  // SwitchBot reports neither the bin emptying nor mop washing / drying: the base only shows its status light.
+  const light = "#43c463";
+  if (base === "station") {
+    // S20 OmniStation: a wide box, the dust bin behind the top lid, two water tanks side by side below.
+    s += `<rect x="28" y="8" width="104" height="124" rx="10" fill="${body}" stroke="${edge}" stroke-width="1.5"/>`;
+    s += `<rect x="34" y="14" width="92" height="22" rx="6" fill="${lid}"/>`;
+    s += `<rect x="34" y="42" width="44" height="40" rx="6" fill="#bfe1f7" stroke="${seam}"/>`;
+    s += `<rect x="82" y="42" width="44" height="40" rx="6" fill="#c9c4b8" stroke="${seam}"/>`;
+    s += `<rect x="38" y="52" width="36" height="26" rx="4" fill="#6fb6e8" opacity=".75"/>`;
+    s += `<rect x="86" y="68" width="36" height="10" rx="4" fill="#8a8273" opacity=".6"/>`;
+    s += `<circle cx="80" cy="25" r="2.4" fill="${light}"/>`;
+  } else if (base === "squat") {
+    // S1 Plus / S10: a low auto-empty base, its bag behind a front window.
+    s += `<rect x="38" y="30" width="84" height="102" rx="12" fill="${body}" stroke="${edge}" stroke-width="1.5"/>`;
+    s += `<rect x="44" y="36" width="72" height="16" rx="6" fill="${lid}"/>`;
+    s += `<rect x="58" y="58" width="44" height="40" rx="8" fill="${seam}" opacity=".55"/>`;
+    s += `<circle cx="80" cy="44" r="2.2" fill="${light}"/>`;
+  } else {
+    // K10+ / K11+ / K20+: a slim auto-empty tower, its dust bag behind the top lid (with the handheld vacuum of the
+    // K10+ Pro Combo clipped on its right side).
+    s += `<rect x="58" y="10" width="44" height="122" rx="9" fill="${body}" stroke="${edge}" stroke-width="1.5"/>`;
+    s += `<rect x="62" y="14" width="36" height="26" rx="6" fill="${lid}"/>`;
+    s += `<rect x="74" y="46" width="12" height="74" rx="6" fill="${seam}" opacity=".9"/>`;
+    s += `<circle cx="80" cy="27" r="2.2" fill="${light}"/>`;
+    if (combo) {
+      s += `<rect x="106" y="22" width="14" height="70" rx="6" fill="${body}" stroke="${edge}" stroke-width="1.5"/>`;
+      s += `<rect x="109" y="30" width="8" height="22" rx="3" fill="#9aa0a6" opacity=".6"/>`;
+      s += `<path d="M106 92 h14 l4 12 h-22 z" fill="${lid}" stroke="${edge}" stroke-width="1.2"/>`;
+    }
+  }
+  const r = mini ? 44 : 52;
+  s += `<g class="${activity === "returning" ? "home" : ""}">${shape(80, 148 - r * 0.5, r)}</g>`;
+  return svgDoc(160, 160, s, "", activity === "returning", BASE_BOX);
+};
+// SwitchBot model ids: the Bluetooth integration (switchbot) reports pySwitchbot's model name, the Cloud one
+// (switchbot_cloud) the device type of the SwitchBot API. Lower case → commercial name. The short Cloud types (« K10+ »,
+// « S20 »…) are too generic to name the brand on their own: they count only on a SwitchBot platform (see brandOf).
+export const SWITCHBOT_MODELS = {
+  "k10+ vacuum": "K10+",
+  "k10+": "K10+",
+  "k10+ pro vacuum": "K10+ Pro",
+  "k10+ pro": "K10+ Pro",
+  "k10+ pro combo vacuum": "K10+ Pro Combo",
+  "robot vacuum cleaner k10+ pro combo": "K10+ Pro Combo",
+  "k11+ vacuum": "K11+",
+  "robot vacuum cleaner k11 plus": "K11+",
+  "k20 vacuum": "K20+ Pro",
+  "k20+ pro": "K20+ Pro",
+  "robot vacuum cleaner s1": "S1",
+  "robot vacuum cleaner s1 plus": "S1 Plus",
+  "s10 vacuum": "S10",
+  "robot vacuum cleaner s10": "S10",
+  "s20 vacuum": "S20",
+  "robot vacuum cleaner s20": "S20",
+  s20: "S20",
+};
+// Picture of a SwitchBot model, from its commercial name (the device name only when the model is not one of the table,
+// so that a renamed robot keeps its own picture).
+export const switchbotPicture = (name, activity = null) => {
+  const n = String(name || "");
+  const mini = /\bk\d\d/i.test(n);
+  const roller = /\bs[12]0\b/i.test(n);
+  const base = /\bs20\b/i.test(n) ? "station" : /\bs10\b|s1 plus/i.test(n) ? "squat" : /\bk\d\d\+|\bk11 plus/i.test(n) ? "tower" : null;
+  return switchbotSvg({ mini, roller, base, combo: /combo/i.test(n), activity });
+};
+// A SwitchBot model id that names the brand by itself (« … Vacuum », « Robot Vacuum Cleaner … »).
+export const isSwitchbotModel = (m) => Object.hasOwn(SWITCHBOT_MODELS, m) && /vacuum/.test(m);

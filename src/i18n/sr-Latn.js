@@ -59,7 +59,7 @@ export default {
   ok: "U redu",
   empty: "Prazno",
   full: "Puno",
-  no_device: "Nije pronađen nijedan robotski usisivač. Da li je instalirana podržana integracija (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot)?",
+  no_device: "Nije pronađen nijedan robotski usisivač. Da li je instalirana podržana integracija (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot, SwitchBot)?",
   unknown_device: "Robotski usisivač nije pronađen",
   no_registry: "Ova kartica zahteva Home Assistant 2024.8 ili noviji.",
   // Editor

@@ -59,7 +59,7 @@ export default {
   ok: "OK",
   empty: "Άδειο",
   full: "Γεμάτο",
-  no_device: "Δεν βρέθηκε ρομποτική σκούπα. Είναι εγκατεστημένη μια υποστηριζόμενη ενσωμάτωση (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot);",
+  no_device: "Δεν βρέθηκε ρομποτική σκούπα. Είναι εγκατεστημένη μια υποστηριζόμενη ενσωμάτωση (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot, SwitchBot);",
   unknown_device: "Η ρομποτική σκούπα δεν βρέθηκε",
   no_registry: "Αυτή η κάρτα απαιτεί Home Assistant 2024.8 ή νεότερο.",
   // Editor
