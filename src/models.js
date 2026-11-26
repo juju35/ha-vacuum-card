@@ -142,7 +142,7 @@ export const brandOf = (model) => {
   if (/^(deebot|ecovacs)\b/.test(m)) return "ecovacs";
   if (DYSON_MODELS.has(m)) return "dyson";
   if (irobotName(m)) return "irobot";
-  if (m in SWITCHBOT_MODELS) return "switchbot";
+  if (Object.hasOwn(SWITCHBOT_MODELS, m)) return "switchbot";
   return /^dreame\./.test(m) ? "dreame" : null;
 };
 // Label of the brand of a model, for the editor presets.
@@ -182,7 +182,7 @@ export const autoSvg = (dev, activity = null, white = undefined) => {
       activity,
     });
   }
-  if (brandOf(dev.model) === "switchbot" || PLATFORMS[dev.platform] === "switchbot") return switchbotPicture(name, activity);
+  if (brandOf(dev.model) === "switchbot" || PLATFORMS[dev.platform] === "switchbot") return switchbotPicture(MODEL_NAMES[String(dev.model || "").toLowerCase()] || name, activity);
   return robotSvg({
     turret: !/saros|essential|\b(e\d|c1|1c)\b/i.test(name),
     white: white ?? (/\bq\s?(revo|\d)|\bmi robot/i.test(name) || ["xiaomi", "dreame", "ecovacs"].includes(brandOf(dev.model))),

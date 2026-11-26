@@ -278,6 +278,10 @@ test("SwitchBot: the Bluetooth model or the Cloud device type gives the name, th
   assert.match(switchbotSvg({ roller: true, base: "squat", activity: "vacuum" }), /class="roll"[\s\S]*class="drop/);
   assert.match(switchbotSvg({ mini: true, base: "tower", activity: "returning" }), /class="home"/);
   assert.doesNotMatch(switchbotSvg({ base: "station" }), /<style>/);
+  // A renamed robot keeps the picture of its model; a model id inherited from Object.prototype is no SwitchBot.
+  assert.equal(autoSvg({ kind: "robot", rawName: "S10 study", model: "K10+ Vacuum", platform: "switchbot", dock: {} }), switchbotSvg({ mini: true, base: "tower" }));
+  assert.equal(brandOf("constructor"), null);
+  assert.doesNotMatch(switchbotSvg({ mini: true, base: "tower", activity: "washing" }), /<style>/);
   // The K10+ Pro "Combo" is a robot vacuum, the roller-mop S10 a mopping robot.
   assert.equal(deviceTypeOf({ kind: "robot", model: "K10+ Pro Combo Vacuum", platform: "switchbot", entities: {}, dock: {} }), "robot_vacuum");
   assert.equal(deviceTypeOf({ kind: "robot", model: "Robot Vacuum Cleaner S10", platform: "switchbot_cloud", entities: {}, dock: {} }), "robot_mop");
