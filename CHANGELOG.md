@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.19.0 - 2026-11-26
+
+### Features
+- `keep_last_map` option (also in the visual editor): once a cleaning job ends, the map keeps its last frame of the job, with the cleaned path, instead of the integration's next picture (Dreame and others clear the path when the robot docks), until the next job starts. With `show_map: cleaning`, the map also stays on screen after the job. Off by default. Closes #118.
+
 ## 2.18.0 - 2026-11-26
 
 ### Features

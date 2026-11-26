@@ -87,6 +87,7 @@ export default {
   show_consumables: "Vis vedligeholdelse",
   show_stats: "Vis statistik",
   show_map: "Vis kort",
+  keep_last_map: "Behold kortet fra sidste rengøring (med ruten)",
   collapsed: "Sektioner foldet sammen som standard",
   map_entity: "Kortentitet (valgfri, f.eks. kamera fra Xiaomi Cloud Map Extractor)",
   vector_map: "Vacuum Map-kort i stedet for billedet (hvis installeret)",

@@ -87,6 +87,7 @@ export default {
   show_consumables: "Показване на поддръжката",
   show_stats: "Показване на статистиката",
   show_map: "Показване на картата",
+  keep_last_map: "Запази картата от последното почистване (с маршрута)",
   collapsed: "Секции, свити по подразбиране",
   map_entity: "Обект за карта (по избор, напр. камера на Xiaomi Cloud Map Extractor)",
   vector_map: "Карта на Vacuum Map вместо изображението (ако е инсталирана)",

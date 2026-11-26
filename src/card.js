@@ -418,7 +418,8 @@ export class VacuumCard extends VacuumBase {
     const m = this._config.show_map ?? "cleaning";
     if (m === true || m === "always" || m === "always_folded") return true;
     if (m !== "cleaning") return false;
-    return this._isCleaning(dev);
+    // keep_last_map: the map stays on screen after the job, with its last frame (see _trackJob).
+    return this._isCleaning(dev) || (!!this._config.keep_last_map && (this._inJob || this._mapFrozen));
   }
 
   // "always_folded": the map is wrapped in a collapsible "Map" section (default folded when idle, unfolded while
@@ -482,7 +483,8 @@ export class VacuumCard extends VacuumBase {
   // focus and gives it back on close. Its picture gets the new map frames like the card's (see _syncMaps).
   _zoomMap(id) {
     const s = this._s(id);
-    const url = s?.attributes?.entity_picture;
+    // A frozen map (keep_last_map) is enlarged as shown in the card, not with the integration's current picture.
+    const url = (this._mapFrozen && this._mapNodes?.get(id)?.getAttribute("src")) || s?.attributes?.entity_picture;
     if (!url) return;
     const size = this._mapSizes?.[id];
     const crop = this._mapCrop(id);

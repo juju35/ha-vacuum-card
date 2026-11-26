@@ -87,6 +87,7 @@ export default {
   show_consumables: "Visa underhåll",
   show_stats: "Visa statistik",
   show_map: "Visa karta",
+  keep_last_map: "Behåll kartan från senaste städningen (med rutten)",
   collapsed: "Avsnitt som är hopfällda som standard",
   map_entity: "Kartentitet (valfri, t.ex. kamera från Xiaomi Cloud Map Extractor)",
   vector_map: "Vacuum Map-karta i stället för bilden (om installerad)",

@@ -87,6 +87,7 @@ export default {
   show_consumables: "Karbantartás megjelenítése",
   show_stats: "Statisztika megjelenítése",
   show_map: "Térkép megjelenítése",
+  keep_last_map: "Az utolsó takarítás térképének megtartása (útvonallal)",
   collapsed: "Alapértelmezés szerint összecsukott szakaszok",
   map_entity: "Térkép entitás (opcionális, pl. a Xiaomi Cloud Map Extractor kamerája)",
   vector_map: "Vacuum Map térkép a kép helyett (ha telepítve van)",
