@@ -59,7 +59,7 @@ export default {
   ok: "OK",
   empty: "Brak",
   full: "Do opróżnienia",
-  no_device: "Nie znaleziono robota sprzątającego. Czy zainstalowano obsługiwaną integrację (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot)?",
+  no_device: "Nie znaleziono robota sprzątającego. Czy zainstalowano obsługiwaną integrację (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot, SwitchBot)?",
   unknown_device: "Nie znaleziono robota sprzątającego",
   no_registry: "Ta karta wymaga Home Assistant 2024.8 lub nowszego.",
   // Editor

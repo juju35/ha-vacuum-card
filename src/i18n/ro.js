@@ -59,7 +59,7 @@ export default {
   ok: "OK",
   empty: "Gol",
   full: "Plin",
-  no_device: "Niciun robot aspirator găsit. Este instalată o integrare compatibilă (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot)?",
+  no_device: "Niciun robot aspirator găsit. Este instalată o integrare compatibilă (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot, SwitchBot)?",
   unknown_device: "Robotul aspirator nu a fost găsit",
   no_registry: "Acest card necesită Home Assistant 2024.8 sau o versiune ulterioară.",
   // Editor

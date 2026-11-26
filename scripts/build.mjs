@@ -1,5 +1,5 @@
 // Bundles the ES modules of src/ (entry src/index.js) into the single Marketplace file dist/vacuum-card.js with esbuild,
-// inlining the integration logos (Roborock, Xiaomi Mi Home, Xiaomi, Dreame, Ecovacs, Dyson, iRobot) so the card needs no
+// inlining the integration logos (Roborock, Xiaomi Mi Home, Xiaomi, Dreame, Ecovacs, Dyson, iRobot, SwitchBot) so the card needs no
 // extra resource. The bundle is flat (no import/export left): a classic script, as scripts/i18n-split.mjs expects.
 // Usage: node scripts/build.mjs  (dist/ is not committed: CI and the release workflow build it)
 import { mkdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
@@ -67,7 +67,8 @@ const main = async () => {
     .replace("__IMG_LOGO_DREAME__", dataUri("dreame.png"))
     .replace("__IMG_LOGO_ECOVACS__", dataUri("ecovacs.png"))
     .replace("__IMG_LOGO_DYSON__", dataUri("dyson.png"))
-    .replace("__IMG_LOGO_IROBOT__", dataUri("irobot.png"));
+    .replace("__IMG_LOGO_IROBOT__", dataUri("irobot.png"))
+    .replace("__IMG_LOGO_SWITCHBOT__", dataUri("switchbot.png"));
 
   const target = `${root}dist/vacuum-card.js`;
   mkdirSync(`${root}dist`, { recursive: true });

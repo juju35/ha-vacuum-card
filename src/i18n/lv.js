@@ -59,7 +59,7 @@ export default {
   ok: "OK",
   empty: "Tukša",
   full: "Pilna",
-  no_device: "Netika atrasts neviens robotputekļsūcējs. Vai ir instalēta atbalstīta integrācija (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot)?",
+  no_device: "Netika atrasts neviens robotputekļsūcējs. Vai ir instalēta atbalstīta integrācija (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot, SwitchBot)?",
   unknown_device: "Robotputekļsūcējs netika atrasts",
   no_registry: "Šai kartītei nepieciešams Home Assistant 2024.8 vai jaunāka versija.",
   // Editor

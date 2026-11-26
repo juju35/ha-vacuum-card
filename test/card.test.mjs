@@ -917,6 +917,27 @@ test("a map closed with Escape or detached with the card no longer counts as par
   assert.equal(mini._zoomOverlay ?? null, null);
 });
 
+test("SwitchBot: Bluetooth and Cloud vacuums found, battery by device class, SwitchBot logo and red buttons", () => {
+  const hass = makeHass();
+  const { devices } = vc.resolve(hass);
+  const k10 = devices.find((d) => d.id === "k10");
+  assert.equal(k10.vacuum, "vacuum.bureau");
+  assert.equal(k10.platform, "switchbot");
+  const s10 = devices.find((d) => d.id === "s10");
+  assert.equal(s10.vacuum, "vacuum.salon_s10");
+  assert.equal(s10.platform, "switchbot_cloud");
+  const card = new vc.VacuumCard();
+  card.setConfig({ device: "Study robot", collapsed: [] });
+  card.hass = { ...hass, themes: { darkMode: false } };
+  const html = card.shadowRoot.innerHTML;
+  assert.match(html, /title="SwitchBot"/);
+  assert.match(html, /--vc-accent: #b8292b/);
+  assert.match(html, />100<small>/);
+  assert.doesNotMatch(html, /data-action="pause"/); // the Bluetooth integration has no pause
+  card.hass = { ...hass, themes: { darkMode: true } };
+  assert.match(card.shadowRoot.innerHTML, /--vc-accent: #e5484d/);
+});
+
 test("iRobot: keys mapped, battery by device class, iRobot logo and green buttons, statistics", () => {
   const hass = makeHass();
   const dev = vc.resolve(hass).devices.find((d) => d.id === "j7");

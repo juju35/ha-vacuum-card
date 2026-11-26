@@ -2,7 +2,7 @@
 // header and the accent color of the buttons, from the logo: [light theme, dark theme]. The light-theme shades are
 // darker so that the tinted buttons keep at least the contrast of the Roborock red (≈ 3.5:1) on a white card;
 // the dark-theme ones are the logo colors.
-import { IMG_LOGO, IMG_LOGO_DREAME, IMG_LOGO_DYSON, IMG_LOGO_ECOVACS, IMG_LOGO_IROBOT, IMG_LOGO_MIHOME, IMG_LOGO_XIAOMI } from "./constants.js";
+import { IMG_LOGO, IMG_LOGO_DREAME, IMG_LOGO_DYSON, IMG_LOGO_ECOVACS, IMG_LOGO_IROBOT, IMG_LOGO_MIHOME, IMG_LOGO_SWITCHBOT, IMG_LOGO_XIAOMI } from "./constants.js";
 import { brandOf } from "./models.js";
 
 export const BRANDS = {
@@ -13,6 +13,7 @@ export const BRANDS = {
   ecovacs: { logo: IMG_LOGO_ECOVACS, name: "Ecovacs", site: "https://www.ecovacs.com", accent: ["#0b6bc4", "#3d9be9"] },
   dyson: { logo: IMG_LOGO_DYSON, name: "Dyson", site: "https://www.dyson.com", accent: ["#4a4a4a", "#b8b8b8"] },
   irobot: { logo: IMG_LOGO_IROBOT, name: "iRobot", site: "https://www.irobot.com", accent: ["#4a8209", "#64a70b"] },
+  switchbot: { logo: IMG_LOGO_SWITCHBOT, name: "SwitchBot", site: "https://www.switch-bot.com", accent: ["#b8292b", "#e5484d"] },
 };
 export const brandFor = (dev) => BRANDS[brandOf(dev.model)] || BRANDS[PLATFORMS[dev.platform]] || BRANDS.roborock;
 // Accent of the device's brand for the current theme, overriding the default red of the shared styles.
@@ -27,6 +28,8 @@ export const PLATFORMS = {
   dyson_local: "dyson",
   roomba: "irobot",
   braava_240_ble: "irobot",
+  switchbot: "switchbot",
+  switchbot_cloud: "switchbot",
 };
 // Xiaomi Miio translation_key → the Roborock integration's, so the cards read both the same way.
 // Their last clean "duration" / "area" are left aside: "clean_time" / "clean_area" hold the current
@@ -95,6 +98,9 @@ export const ROOMBA_KEYS = {
 // Its own pad_type sensor, wetness_* selects (one per pad kind) and mission counters keep their keys.
 // braava_240_ble 0.4.1+ gives the vacuum entity a translation key ("braava") to translate its attributes.
 export const BRAAVA_240_KEYS = { braava: "_vacuum", total_missions: "total_cleaning_count", cleaning: "in_cleaning" };
-export const KEY_MAPS = { xiaomi_miio: MIIO_KEYS, dreame_vacuum: DREAME_KEYS, ecovacs: ECOVACS_KEYS, roomba: ROOMBA_KEYS, braava_240_ble: BRAAVA_240_KEYS };
+// SwitchBot (switchbot, over Bluetooth) translation_key → the card's: its vacuum has the "vacuum" key; its battery
+// sensor has none (found by its device class). SwitchBot Cloud gives its vacuum no key.
+export const SWITCHBOT_KEYS = { vacuum: "_vacuum" };
+export const KEY_MAPS = { xiaomi_miio: MIIO_KEYS, dreame_vacuum: DREAME_KEYS, ecovacs: ECOVACS_KEYS, roomba: ROOMBA_KEYS, braava_240_ble: BRAAVA_240_KEYS, switchbot: SWITCHBOT_KEYS };
 export const PENDING_MS = 45000;
 export const DEFAULT_COLLAPSED = ["stats", "dock"];

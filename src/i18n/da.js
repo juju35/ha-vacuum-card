@@ -59,7 +59,7 @@ export default {
   ok: "OK",
   empty: "Tom",
   full: "Fuld",
-  no_device: "Ingen robotstøvsuger fundet. Er en understøttet integration (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot) installeret?",
+  no_device: "Ingen robotstøvsuger fundet. Er en understøttet integration (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot, SwitchBot) installeret?",
   unknown_device: "Robotstøvsuger ikke fundet",
   no_registry: "Dette kort kræver Home Assistant 2024.8 eller nyere.",
   // Editor

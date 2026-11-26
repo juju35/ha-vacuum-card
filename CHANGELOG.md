@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.18.0 - 2026-11-26
+
+### Features
+- SwitchBot robot vacuums, from the SwitchBot integration over Bluetooth (`switchbot`) and from SwitchBot Cloud (`switchbot_cloud`): status, battery (Bluetooth), suction power and Pause (Cloud), Start and Return to dock, the SwitchBot logo and red buttons.
+- Drawn SwitchBot pictures: the K series (K10+, K10+ Pro, K10+ Pro Combo with its handheld vacuum, K11+, K20+ Pro) as a mini robot in front of its slim auto-empty tower, the S1 / S1 Plus full-size, the S10 / S20 with their roller mop (the S20 in its OmniStation); animated while vacuuming, mopping (the roller rolls) and returning. 17 Bluetooth models and Cloud device types recognized, offered in the editor's model list.
+
 ## 2.17.2 - 2026-11-25
 
 ### Fixes

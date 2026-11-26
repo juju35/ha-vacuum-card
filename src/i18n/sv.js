@@ -59,7 +59,7 @@ export default {
   ok: "OK",
   empty: "Tom",
   full: "Full",
-  no_device: "Ingen robotdammsugare hittades. Är en integration som stöds (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot) installerad?",
+  no_device: "Ingen robotdammsugare hittades. Är en integration som stöds (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot, SwitchBot) installerad?",
   unknown_device: "Robotdammsugaren hittades inte",
   no_registry: "Det här kortet kräver Home Assistant 2024.8 eller senare.",
   // Editor

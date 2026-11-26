@@ -221,6 +221,22 @@ roomba("sensor.salle_de_bain_duree_totale", "m6", "total_cleaning_time", "31", {
 roomba("sensor.salle_de_bain_missions", "m6", "total_missions", "58", { unit_of_measurement: "Missions" });
 roomba("sensor.salle_de_bain_derniere_mission", "m6", "last_mission", hoursAgo(30), { device_class: "timestamp" });
 
+// SwitchBot K10+ Pro renamed « Study robot », set up with the SwitchBot integration over Bluetooth (switchbot): the vacuum
+// (translation_key "vacuum", Start / Return home only) and a battery sensor without translation_key. SwitchBot S10
+// renamed « Lounge robot », set up with SwitchBot Cloud (switchbot_cloud): a vacuum without translation_key, with its
+// four suction levels.
+device("k10", "Study robot", "K10+ Pro Vacuum", "aa:bb:cc:dd:ee:10", "switchbot");
+entity("vacuum.bureau", "k10", "vacuum", "docked", { supported_features: 12304, friendly_name: "Study robot" }, "switchbot");
+entity("sensor.bureau_batterie", "k10", null, "100", { device_class: "battery", unit_of_measurement: "%" }, "switchbot");
+entity("sensor.bureau_signal", "k10", "bluetooth_signal", "-62", { device_class: "signal_strength", unit_of_measurement: "dBm" }, "switchbot");
+device("s10", "Lounge robot", "Robot Vacuum Cleaner S10", "S10-6C1F", "switchbot_cloud");
+entity("vacuum.salon_s10", "s10", null, "docked", {
+  fan_speed: "standard",
+  fan_speed_list: ["quiet", "standard", "strong", "max"],
+  supported_features: 12340,
+  friendly_name: "Lounge robot",
+}, "switchbot_cloud");
+
 // Same robot while it is cleaning (vacuum + mop), with the mop drying in the dock and the dirty water tank
 // full. Picture activity: "vacmop" — the robot sways, its side brushes spin and dust and water trail behind.
 export const cleaning = {
@@ -319,6 +335,17 @@ export const braavaMopping = {
   "sensor.salle_de_bain_batterie": { state: "64" },
   "sensor.salle_de_bain_reservoir": { state: "45" },
 };
+
+// The SwitchBot K10+ Pro vacuuming. Picture activity: "vacuum" — the mini robot out on the floor, its side brush
+// spinning, dust trailing behind.
+export const switchbotCleaning = { "vacuum.bureau": { state: "cleaning" }, "sensor.bureau_batterie": { state: "68" } };
+
+// The SwitchBot K10+ Pro heading back to its auto-empty tower. Picture activity: "returning" (home).
+export const switchbotReturning = { "vacuum.bureau": { state: "returning" }, "sensor.bureau_batterie": { state: "35" } };
+
+// The SwitchBot S10 vacuuming and mopping. Picture activity: "vacmop" — side brush and dust, its roller mop rolling
+// over a wet trail.
+export const switchbotMopping = { "vacuum.salon_s10": { state: "cleaning" } };
 
 // Response of the roborock.get_maps service, used by the room selector.
 export const maps = {

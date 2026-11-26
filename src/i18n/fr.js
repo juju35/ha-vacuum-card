@@ -59,7 +59,7 @@ export default {
   ok: "OK",
   empty: "Vide",
   full: "Plein",
-  no_device: "Aucun aspirateur trouvé. Une intégration prise en charge (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot) est-elle installée ?",
+  no_device: "Aucun aspirateur trouvé. Une intégration prise en charge (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot, SwitchBot) est-elle installée ?",
   unknown_device: "Aspirateur introuvable",
   no_registry: "Cette carte nécessite Home Assistant 2024.8 ou plus récent.",
   device: "Aspirateur",

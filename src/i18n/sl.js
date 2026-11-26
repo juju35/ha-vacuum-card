@@ -59,7 +59,7 @@ export default {
   ok: "OK",
   empty: "Prazen",
   full: "Poln",
-  no_device: "Ni najdenega robotskega sesalnika. Ali je nameščena podprta integracija (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot)?",
+  no_device: "Ni najdenega robotskega sesalnika. Ali je nameščena podprta integracija (Roborock, Xiaomi, Dreame, Ecovacs, Dyson, iRobot, SwitchBot)?",
   unknown_device: "Robotskega sesalnika ni mogoče najti",
   no_registry: "Ta kartica zahteva Home Assistant 2024.8 ali novejši.",
   // Editor

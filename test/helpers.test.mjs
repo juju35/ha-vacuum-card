@@ -167,7 +167,7 @@ test("every language has exactly the English keys and placeholders, and no empty
 
 test("Serbian: the Cyrillic and Latin blocks keep to their script", () => {
   // Brand names, Home Assistant, units and placeholders stay in Latin letters in the Cyrillic block.
-  const latin = (s) => String(s).replace(/\{\w+\}|Home Assistant|Roborock|Xiaomi Cloud Map Extractor|Vacuum Map|Xiaomi|Dreame|Ecovacs|Dyson|iRobot|SmartPlan|px/g, "");
+  const latin = (s) => String(s).replace(/\{\w+\}|Home Assistant|Roborock|Xiaomi Cloud Map Extractor|Vacuum Map|Xiaomi|Dreame|Ecovacs|Dyson|iRobot|SwitchBot|SmartPlan|px/g, "");
   for (const [k, v] of Object.entries(vc.STRINGS.sr)) assert.doesNotMatch(latin(v), /[A-Za-z]/, `Latin letter in sr.${k}`);
   for (const [k, v] of Object.entries(vc.STRINGS["sr-Latn"])) assert.doesNotMatch(v, /[\u0400-\u04FF]/, `Cyrillic letter in sr-Latn.${k}`);
 });
@@ -255,6 +255,34 @@ test("iRobot: the SKU gives the model name and the brand, the picture follows th
   // Every recognized SKU is an editor preset labelled iRobot.
   const labels = vc.MODEL_PRESETS.map((p) => p.label);
   assert.ok(labels.includes("iRobot Roomba j7+") && labels.includes("iRobot Braava jet m6") && labels.includes("iRobot Roomba Combo j9+"));
+});
+
+test("SwitchBot: the Bluetooth model or the Cloud device type gives the name, the brand and the picture", () => {
+  const { brandOf, autoSvg, switchbotSvg, deviceTypeOf, MODEL_NAMES } = vc;
+  assert.equal(MODEL_NAMES["k10+ pro vacuum"], "K10+ Pro");
+  assert.equal(MODEL_NAMES["robot vacuum cleaner s10"], "S10");
+  assert.equal(brandOf("K10+ Pro Combo Vacuum"), "switchbot");
+  assert.equal(brandOf("Robot Vacuum Cleaner S1 Plus"), "switchbot");
+  assert.equal(brandOf("S20"), "switchbot");
+  const byModel = (model, platform = "switchbot") => autoSvg({ kind: "robot", model, platform, dock: {} });
+  assert.equal(byModel("K10+ Vacuum"), switchbotSvg({ mini: true, base: "tower" }));
+  assert.equal(byModel("Robot Vacuum Cleaner K10+ Pro Combo", "switchbot_cloud"), switchbotSvg({ mini: true, base: "tower", combo: true }));
+  assert.equal(byModel("Robot Vacuum Cleaner S1", "switchbot_cloud"), switchbotSvg());
+  assert.equal(byModel("Robot Vacuum Cleaner S1 Plus", "switchbot_cloud"), switchbotSvg({ base: "squat" }));
+  assert.equal(byModel("S10 Vacuum"), switchbotSvg({ roller: true, base: "squat" }));
+  assert.equal(byModel("S20 Vacuum"), switchbotSvg({ roller: true, base: "station" }));
+  // An unknown model of the integration still gets a SwitchBot robot, drawn from its device name.
+  assert.equal(autoSvg({ kind: "robot", rawName: "Robot", model: "WoNew", platform: "switchbot", dock: {} }), switchbotSvg());
+  // Cleaning: out on the floor; the roller-mop models vacuum and mop, the others vacuum.
+  assert.match(switchbotSvg({ mini: true, base: "tower", activity: "vacuum" }), /class="spin"/);
+  assert.match(switchbotSvg({ roller: true, base: "squat", activity: "vacuum" }), /class="roll"[\s\S]*class="drop/);
+  assert.match(switchbotSvg({ mini: true, base: "tower", activity: "returning" }), /class="home"/);
+  assert.doesNotMatch(switchbotSvg({ base: "station" }), /<style>/);
+  // The K10+ Pro "Combo" is a robot vacuum, the roller-mop S10 a mopping robot.
+  assert.equal(deviceTypeOf({ kind: "robot", model: "K10+ Pro Combo Vacuum", platform: "switchbot", entities: {}, dock: {} }), "robot_vacuum");
+  assert.equal(deviceTypeOf({ kind: "robot", model: "Robot Vacuum Cleaner S10", platform: "switchbot_cloud", entities: {}, dock: {} }), "robot_mop");
+  const labels = vc.MODEL_PRESETS.map((p) => p.label);
+  assert.ok(labels.includes("SwitchBot K10+ Pro") && labels.includes("SwitchBot S20"));
 });
 
 test("the README lists every recognized model (node scripts/models.mjs keeps it in sync)", async () => {
