@@ -188,6 +188,7 @@ export class VacuumBase extends HTMLElement {
       return;
     }
     this._dirty = false;
+    this._trackJob();
     let html = this._render();
     if (this._confirm) {
       html = html.replace(/<ha-card>([\s\S]*)<\/ha-card>\s*$/, (_, inner) => `<ha-card class="dialog-open">${inner}${this._confirmHtml()}</ha-card>`);
@@ -376,6 +377,8 @@ export class VacuumBase extends HTMLElement {
         img.setAttribute("src", url);
         continue;
       }
+      // keep_last_map: a frozen map keeps the frame it shows; only a picture never loaded yet gets one.
+      if (this._mapFrozen) continue;
       if (this._mapNext.get(key)?.getAttribute("src") === url) continue;
       const next = new Image();
       next.src = url;
@@ -387,6 +390,24 @@ export class VacuumBase extends HTMLElement {
         () => {},
       );
     }
+  }
+
+  // keep_last_map: once a job ends (the robot leaves "cleaning" / "returning"), the map keeps the last frame drawn
+  // during the job — with its path — instead of the integration's next picture (Dreame, Roborock… clear the path
+  // when the robot docks). Its new frames are shown again as soon as the next job starts. In memory only: a page
+  // reload, or a card that never saw the job, shows the integration's current picture.
+  _trackJob() {
+    if (!this._config.keep_last_map) {
+      this._mapFrozen = false;
+      return;
+    }
+    const { dev } = findDevice(this._hass, this._config);
+    if (!dev) return;
+    const st = this._s(dev.vacuum)?.state;
+    const inJob = st === "cleaning" || st === "returning" || this._s(dev.entities.in_cleaning)?.state === "on";
+    if (inJob) this._mapFrozen = false;
+    else if (this._inJob) this._mapFrozen = true;
+    this._inJob = inJob;
   }
 
   _mapsPaused() {

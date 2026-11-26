@@ -87,6 +87,7 @@ export default {
   show_consumables: "Prikaži održavanje",
   show_stats: "Prikaži statistiku",
   show_map: "Prikaži mapu",
+  keep_last_map: "Zadrži mapu poslednjeg čišćenja (sa putanjom)",
   collapsed: "Odeljci su podrazumevano skupljeni",
   map_entity: "Entitet mape (opciono, npr. Xiaomi Cloud Map Extractor kamera)",
   vector_map: "Vacuum Map mapa umesto slike (ako je instalirana)",

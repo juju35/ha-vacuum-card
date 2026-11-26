@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.19.0 - 2026-11-26
+## 2.20.0 - 2026-11-26
 
 ### Features
 - A picture for every SwitchBot model: the K11+ / K11+ Pro in front of their compact base under its wooden lid (black with `color: dark`), the K20+ Pro under its FusionPlatform, the S10 with its separate water station, the S30 in its compact dock with the mini water station.
@@ -8,6 +8,11 @@
 
 ### Fixes
 - The model list files the short SwitchBot Cloud types (`K10+`, `K10+ Pro`, `K20+ Pro`, `S20`) under SwitchBot, not Roborock.
+
+## 2.19.0 - 2026-11-26
+
+### Features
+- `keep_last_map` option (also in the visual editor): once a cleaning job ends, the map keeps its last frame of the job, with the cleaned path, instead of the integration's next picture (Dreame and others clear the path when the robot docks), until the next job starts. With `show_map: cleaning`, the map also stays on screen after the job. Off by default. Closes #118.
 
 ## 2.18.0 - 2026-11-26
 

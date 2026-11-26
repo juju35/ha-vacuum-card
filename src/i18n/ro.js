@@ -87,6 +87,7 @@ export default {
   show_consumables: "Afișează întreținerea",
   show_stats: "Afișează statisticile",
   show_map: "Afișează harta",
+  keep_last_map: "Păstrează harta ultimei curățenii (cu traseul)",
   collapsed: "Secțiuni restrânse implicit",
   map_entity: "Entitate hartă (opțional, de ex. camera Xiaomi Cloud Map Extractor)",
   vector_map: "Harta Vacuum Map în locul imaginii (dacă este instalată)",
