@@ -80,7 +80,7 @@ The cards work on top of the integrations you already use — [Roborock](https:/
 | <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/irobot.png" alt="" width="16"> [iRobot Roomba and Braava](https://www.home-assistant.io/integrations/roomba/) (core, `roomba`) | iRobot Roomba (600, 900, e, i, s, j, Combo) and Braava jet m6 | Status (Clean Base emptying the bin included), battery, current clean, errors and bin full, fan speed or mopping behavior, water tanks, controls, statistics |
 | <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/irobot.png" alt="" width="16"> [iRobot Braava 240 BLE](https://github.com/mtheli/braava_240_ble) (custom, `braava_240_ble`) | iRobot Braava jet 240 (Bluetooth) | Status and error reason, battery, cleaning mode, pad and its wetness, current job runtime, controls (start, stop, locate), statistics (missions, successful / failed, average time) |
 | <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/switchbot.png" alt="" width="16"> [SwitchBot Bluetooth](https://www.home-assistant.io/integrations/switchbot/) (core, `switchbot`) | SwitchBot K10+, K10+ Pro, K10+ Pro Combo, K11+, K20+ Pro, S10, S20 (Bluetooth) | Status, battery, controls (start, return to dock) |
-| <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/switchbot.png" alt="" width="16"> [SwitchBot Cloud](https://www.home-assistant.io/integrations/switchbot_cloud/) (core, `switchbot_cloud`) | SwitchBot K10+, K10+ Pro, K10+ Pro Combo, K11+, K20+ Pro, S1, S1 Plus, S10, S20 | Status, suction power (quiet / standard / strong / max), controls (start, pause, return to dock) |
+| <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/switchbot.png" alt="" width="16"> [SwitchBot Cloud](https://www.home-assistant.io/integrations/switchbot_cloud/) (core, `switchbot_cloud`) | SwitchBot K10+, K10+ Pro, K10+ Pro Combo, K11+, K11+ Pro, K20+ Pro, S1, S1 Plus, S10, S20, S30 (the K11+ Pro and S30 as soon as the integration lists them) | Status, suction power (quiet / standard / strong / max), controls (start, pause, return to dock) |
 
 Only robot vacuums and wet-dry vacuums are listed: the other devices of these integrations (fans, purifiers, air conditioners, lamps, mowers, the Roborock Zeo washing machine…) are skipped. Details in [Integrations](#integrations).
 
@@ -444,7 +444,7 @@ K10+ Pro renamed « Study robot », set up with the SwitchBot integration over B
 | Light | <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-switchbot.png" alt="card switchbot" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-switchbot-light.png" alt="mini card switchbot light" width="400"> |
 | Dark | <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/card-switchbot-dark.png" alt="card switchbot dark" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/screenshots/mini-card-switchbot.png" alt="mini card switchbot" width="400"> |
 
-Drawn SwitchBot models — white robots with the red status light of the brand: the K series a mini robot (≈ 25 cm) in front of its slim auto-empty tower (the K10+ Pro Combo with its handheld vacuum clipped on the side), the S1 full-size (the S1 Plus in front of its auto-empty base), the S10 / S20 with their roller mop, the S20 in its OmniStation:
+Drawn SwitchBot models — white robots with the red status light of the brand: the K series a mini robot (≈ 25 cm) in front of its slim auto-empty tower (the K10+ Pro Combo with its handheld vacuum clipped on the side), the S1 full-size (the S1 Plus in front of its auto-empty base), the S10 / S20 / S30 with their roller mop, the S20 / S30 in their OmniStation:
 
 <p align="center"><img src="https://raw.githubusercontent.com/juju35/ha-vacuum-card/main/images/models-switchbot.svg" alt="SwitchBot device pictures" width="980"></p>
 
@@ -487,9 +487,9 @@ The Ecovacs and Dyson logos are drawn on a white rounded tile, so that they stay
 
 ### Device pictures
 
-The picture is drawn from the device name and the commercial name of its model id (`roborock.vacuum.a72` → Q5 Pro…), for about 130 models compatible with the integrations: Roborock E2 / S4 to S8, Q5 to Q10, the Qrevo range (Edge, Curv 2, S Pro…), Saros 10 / 20, G10 / G30, Dyad and F25; Xiaomi / Mijia Mi Robot Vacuum, 1S, Vacuum-Mop Essential / 1C / P / 2 / 2 Pro+ / 2 Ultra, X10 / X10+ / X20+, S10+, Omni 2, M40…; Dreame F9, D9, Z10 Pro, L10 Pro, D10 Plus, L10s Ultra; Ecovacs DEEBOT N8, OZMO, T8 to T30, X1 / X2 / X5 (Omni, Turbo); Dyson 360 Eye, 360 Heurist, 360 Vis Nav; iRobot Roomba 600 / 900, e5, i3 / i5 / i7, s9, j7 / j9, Combo j7+ / j9+ (with or without Clean Base) and Braava jet m6 — from their SKU, whatever the region (`…020` Europe, `…840` America…); SwitchBot K10+, K10+ Pro (Combo), K11+, K20+ Pro, S1, S1 Plus, S10 and S20, from the Bluetooth model or the Cloud device type. A renamed device keeps the right picture. The full list is in [Recognized models](#recognized-models).
+The picture is drawn from the device name and the commercial name of its model id (`roborock.vacuum.a72` → Q5 Pro…), for about 130 models compatible with the integrations: Roborock E2 / S4 to S8, Q5 to Q10, the Qrevo range (Edge, Curv 2, S Pro…), Saros 10 / 20, G10 / G30, Dyad and F25; Xiaomi / Mijia Mi Robot Vacuum, 1S, Vacuum-Mop Essential / 1C / P / 2 / 2 Pro+ / 2 Ultra, X10 / X10+ / X20+, S10+, Omni 2, M40…; Dreame F9, D9, Z10 Pro, L10 Pro, D10 Plus, L10s Ultra; Ecovacs DEEBOT N8, OZMO, T8 to T30, X1 / X2 / X5 (Omni, Turbo); Dyson 360 Eye, 360 Heurist, 360 Vis Nav; iRobot Roomba 600 / 900, e5, i3 / i5 / i7, s9, j7 / j9, Combo j7+ / j9+ (with or without Clean Base) and Braava jet m6 — from their SKU, whatever the region (`…020` Europe, `…840` America…); SwitchBot K10+, K10+ Pro (Combo), K11+, K11+ Pro, K20+ Pro, S1, S1 Plus, S10, S20 and S30, from the Bluetooth model or the Cloud device type. A renamed device keeps the right picture. The full list is in [Recognized models](#recognized-models).
 
-Saros robots, the E / C1 series and the Mi Vacuum-Mop Essential / 1C have no LiDAR turret; the Q series (Q5…Q10, Qrevo), the Xiaomi, Dreame and Ecovacs robots are white, the other robots (S series…) are dark; the dock is drawn when the integration reports one or the name implies it (Ultra, Plus / +, Qrevo, Saros, Omni, Self-Cleaning, G10 / G30). Wet-dry vacuums (`roborock.wdv.*`, `roborock.wetdryvac.*`) show an upright vacuum, dark for the Dyad series. iRobot robots have their own drawing: Roombas dark (the s9 D-shaped, the j series with its front camera) and in front of their Clean Base for the "+" models, the Braava jet white. SwitchBot robots are white: the K series a mini robot in front of its auto-empty tower, the S10 / S20 with their roller mop (the S20 in its OmniStation).
+Saros robots, the E / C1 series and the Mi Vacuum-Mop Essential / 1C have no LiDAR turret; the Q series (Q5…Q10, Qrevo), the Xiaomi, Dreame and Ecovacs robots are white, the other robots (S series…) are dark; the dock is drawn when the integration reports one or the name implies it (Ultra, Plus / +, Qrevo, Saros, Omni, Self-Cleaning, G10 / G30). Wet-dry vacuums (`roborock.wdv.*`, `roborock.wetdryvac.*`) show an upright vacuum, dark for the Dyad series. iRobot robots have their own drawing: Roombas dark (the s9 D-shaped, the j series with its front camera) and in front of their Clean Base for the "+" models, the Braava jet white. SwitchBot robots are white: the K series a mini robot in front of its auto-empty tower, the S10 / S20 / S30 with their roller mop (the S20 / S30 in their OmniStation).
 
 The picture is animated by the current activity, from the status, the cleaning mode and the dock drying: vacuuming (side brushes and dust), mopping (wet trail and drops), both, returning to the dock, washing the mops (bubbles) and drying them (heat waves), emptying the bin into an iRobot Clean Base (dust rising up the base); it stays still otherwise and with the reduced-motion setting. Use the `image` option to pick another model or your own picture, and `color` (`white` / `dark`) when your model exists in both colors.
 
@@ -531,7 +531,7 @@ The option can be set on the mini card too. It is YAML only (the visual editor k
 - **Dyson** (`dyson_local`): the vacuum entity only — status, power mode, controls — and the battery from its `battery_level` attribute. The picture is a dedicated Dyson 360 drawing.
 - **iRobot** (`roomba`): the vacuum (status, fan speed — Automatic / Eco / Performance on the Roombas with Carpet Boost — or mopping behavior of the Braava, controls), the battery sensor, the current clean (time and area, attributes of the vacuum while it cleans; the area in m², or ft² with the US customary unit system), the error (`error` attribute) and the **Bin full** sensor as alerts, the statistics (`total_missions`, `total_cleaned_area`, `total_cleaning_time`, `last_mission`), the robot's water tank (`tank_level`, Braava and Combo) and the Clean Base's (`dock_tank_level`, Combo j9+). The vacuum's `status` attribute tells the Clean Base emptying the bin (`Emptying Bin`, shown and animated) and the robot charging. No map and no maintenance counters (the integration has none).
 - **iRobot Braava 240** (`braava_240_ble`, over Bluetooth): the vacuum (status, controls), the battery sensor, the cleaning mode (`cleaning_mode` select), the statistics (`total_missions`, `successful_missions`, `failed_missions`, `total_cleaning_time`, `average_mission_time`), the `cleaning` binary sensor for a running job and its runtime (`runtime_minutes` attribute of the vacuum), the attached pad (`pad_type` sensor) with the wetness of that kind of pad (`wetness_*` selects; none for the dry pads) as tags — **No pad** is an alert, the robot will not start — and the reason of a job ended with an error (`mission_status` attribute of the vacuum: stuck, low battery, invalid pad…) as the error line, translated by the integration since its 0.4.0. The robot has no dock and no pause: the full card shows Start, Stop and Locate only (the mini card Start, or Stop while cleaning), and Stop ends a running job. Drawn as a small white mopping robot with the iRobot logo.
-- **SwitchBot** (`switchbot`, over Bluetooth): the vacuum (`vacuum` key: status, Start and Return to dock — the integration has no pause) and the battery sensor (by its device class). **SwitchBot Cloud** (`switchbot_cloud`): the vacuum (status, Start, Pause, Return to dock, suction power `quiet` / `standard` / `strong` / `max`); the robot reports no battery to Home Assistant there. No map, no maintenance counters, no statistics (neither integration has them). The K10+ Pro Combo is a robot vacuum (its "Combo" is the handheld vacuum on the dock); the S10 / S20 mop with their roller.
+- **SwitchBot** (`switchbot`, over Bluetooth): the vacuum (`vacuum` key: status, Start and Return to dock — the integration has no pause) and the battery sensor (by its device class). **SwitchBot Cloud** (`switchbot_cloud`): the vacuum (status, Start, Pause, Return to dock, suction power `quiet` / `standard` / `strong` / `max`); the robot reports no battery to Home Assistant there. No map, no maintenance counters, no statistics (neither integration has them). The K10+ Pro Combo is a robot vacuum (its "Combo" is the handheld vacuum on the dock); the S10 / S20 / S30 mop with their roller.
 - Xiaomi Home, Ecovacs, Dyson, iRobot and SwitchBot have no room cleaning the cards know: the Start button starts a full cleaning (no room selector). Only Roborock has the routine and dock sections.
 
 Each maintenance line has a reset button when the integration exposes the matching reset button, and asks for confirmation before resetting the counter. The remaining time turns orange under 10 % of the part lifetime (or under 10 h when the lifetime is unknown), and red when it reaches 0; a percentage (Ecovacs, Roborock wet-dry vacuums) turns orange under 10 % and red at 0 %. Bars use the robot lifetimes: main brush 300 h, side brush 200 h, filter 150 h, sensors 30 h.
@@ -541,7 +541,7 @@ Each maintenance line has a reset button when the integration exposes the matchi
 Models the cards recognize from the model id the integration reports (drawn picture, logo and buttons of their brand). Any of these model ids can also be set as the `image` option to draw that model; the visual editor lists them by brand and name. iRobot SKUs of other regions are recognized all the same.
 
 <!-- models:start -->
-<details><summary>Roborock (62)</summary>
+<details><summary>Roborock (58)</summary>
 
 | Model | Model id |
 |---|---|
@@ -557,9 +557,6 @@ Models the cards recognize from the model id the integration reports (drawn pict
 | G10S | `roborock.vacuum.a46` |
 | G10S Pro | `roborock.vacuum.a26` |
 | G30 | `roborock.vacuum.a146` |
-| K10+ | `k10+` |
-| K10+ Pro | `k10+ pro` |
-| K20+ Pro | `k20+ pro` |
 | P30 Pro | `roborock.vacuum.a306` |
 | Q5 | `roborock.vacuum.a34` |
 | Q5 Max+ | `roborock.vacuum.a125` |
@@ -597,7 +594,6 @@ Models the cards recognize from the model id the integration reports (drawn pict
 | S8 | `roborock.vacuum.a51` |
 | S8 MaxV Ultra | `roborock.vacuum.a97` |
 | S8 Pro Ultra | `roborock.vacuum.a70` |
-| S20 | `s20` |
 | Saros 10 | `roborock.vacuum.a147` |
 | Saros 10R | `roborock.vacuum.a143`, `roborock.vacuum.a144` |
 | Saros 20 | `roborock.vacuum.a288` |
@@ -719,19 +715,21 @@ Models the cards recognize from the model id the integration reports (drawn pict
 
 </details>
 
-<details><summary>SwitchBot (9)</summary>
+<details><summary>SwitchBot (11)</summary>
 
 | Model | Model id |
 |---|---|
-| K10+ | `k10+ vacuum` |
-| K10+ Pro | `k10+ pro vacuum` |
+| K10+ | `k10+ vacuum`, `k10+` |
+| K10+ Pro | `k10+ pro vacuum`, `k10+ pro` |
 | K10+ Pro Combo | `k10+ pro combo vacuum`, `robot vacuum cleaner k10+ pro combo` |
-| K11+ | `k11+ vacuum`, `robot vacuum cleaner k11 plus` |
-| K20+ Pro | `k20 vacuum` |
+| K11+ | `k11+ vacuum`, `robot vacuum cleaner k11 plus`, `robot vacuum cleaner k11+` |
+| K11+ Pro | `robot vacuum cleaner k11 plus pro` |
+| K20+ Pro | `k20 vacuum`, `k20+ pro`, `robot vacuum cleaner k20 plus pro`, `robot vacuum cleaner k20+ pro` |
 | S1 | `robot vacuum cleaner s1` |
 | S1 Plus | `robot vacuum cleaner s1 plus` |
 | S10 | `s10 vacuum`, `robot vacuum cleaner s10` |
-| S20 | `s20 vacuum`, `robot vacuum cleaner s20` |
+| S20 | `s20 vacuum`, `robot vacuum cleaner s20`, `s20` |
+| S30 | `robot vacuum cleaner s30` |
 
 </details>
 <!-- models:end -->

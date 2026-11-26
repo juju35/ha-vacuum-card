@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 import { load } from "../test/load.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
-const { autoSvg, brandOf, BRAND_LABELS, MODEL_NAMES } = load();
+const { autoSvg, modelBrand, BRAND_LABELS, MODEL_NAMES } = load();
 
 // [model id, label] per brand: a robot of each look (turret or not, dock or not, white or dark) and the wet-dry vacuums.
 const GALLERIES = {
@@ -59,11 +59,13 @@ const GALLERIES = {
   switchbot: [
     ["k10+ vacuum", "K10+"],
     ["k10+ pro combo vacuum", "K10+ Pro Combo"],
+    ["robot vacuum cleaner k11 plus pro", "K11+ Pro"],
     ["k20 vacuum", "K20+ Pro"],
     ["robot vacuum cleaner s1", "S1"],
     ["robot vacuum cleaner s1 plus", "S1 Plus"],
     ["s10 vacuum", "S10"],
     ["s20 vacuum", "S20"],
+    ["robot vacuum cleaner s30", "S30"],
   ],
 };
 
@@ -88,7 +90,7 @@ for (const [brand, models] of Object.entries(GALLERIES)) {
 // galleries), then by name.
 const rows = {};
 for (const [id, name] of Object.entries(MODEL_NAMES)) {
-  const brand = brandOf(id) || "roborock";
+  const brand = modelBrand(id) || "roborock";
   const list = (rows[brand] ||= new Map());
   list.set(name, [...(list.get(name) || []), id]);
 }

@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.19.0 - 2026-11-26
+
+### Features
+- More SwitchBot robots recognized: the K11+ Pro (`Robot Vacuum Cleaner K11 Plus Pro`) and the S30 (`Robot Vacuum Cleaner S30`, roller mop and OmniStation like the S20), plus the other spellings of the SwitchBot API for the K11+ and the K20+ Pro — as soon as the integration lists them.
+
+### Fixes
+- The model list files the short SwitchBot Cloud types (`K10+`, `K10+ Pro`, `K20+ Pro`, `S20`) under SwitchBot, not Roborock.
+
 ## 2.18.0 - 2026-11-26
 
 ### Features

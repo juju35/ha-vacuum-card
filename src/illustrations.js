@@ -278,10 +278,10 @@ export const IROBOT_SKUS = [
   "i715020", "i755020", "s915020", "s955020", "j715020", "j755020", "j955020", "c755020", "c975020", "m611020",
 ];
 // SwitchBot: white robots — the K series is a mini robot (≈ 25 cm, against ≈ 35 cm for the others) with a small LiDAR
-// turret, the S1 a full-size one, the S10 / S20 full-size with a roller mop across the back (a light-blue drum, turning
-// while it mops). Docked: the K10+ / K11+ / K20+ in front of their slim auto-empty tower (the K10+ Pro Combo with its
-// handheld vacuum clipped on the side), the S1 Plus / S10 in front of a squat auto-empty base, the S20 in its
-// OmniStation (dust bin up top, the clean and dirty water tanks below). Vacuuming: the robot sways, its single side
+// turret, the S1 a full-size one, the S10 / S20 / S30 full-size with a roller mop across the back (a light-blue drum, turning
+// while it mops). Docked: the K10+ / K11+ (Pro) / K20+ in front of their slim auto-empty tower (the K10+ Pro Combo with its
+// handheld vacuum clipped on the side), the S1 Plus / S10 in front of a squat auto-empty base, the S20 / S30 in
+// their OmniStation (dust bin up top, the clean and dirty water tanks below). Vacuuming: the robot sways, its single side
 // brush spins and dust trails behind; mopping (only when the robot says so — SwitchBot Cloud starts a vacuum-only
 // clean): the roller turns over a wet trail; returning: it slides in front of its base (the integrations report no bin
 // emptying nor mop washing / drying).
@@ -367,8 +367,12 @@ export const SWITCHBOT_MODELS = {
   "robot vacuum cleaner k10+ pro combo": "K10+ Pro Combo",
   "k11+ vacuum": "K11+",
   "robot vacuum cleaner k11 plus": "K11+",
+  "robot vacuum cleaner k11+": "K11+",
+  "robot vacuum cleaner k11 plus pro": "K11+ Pro",
   "k20 vacuum": "K20+ Pro",
   "k20+ pro": "K20+ Pro",
+  "robot vacuum cleaner k20 plus pro": "K20+ Pro",
+  "robot vacuum cleaner k20+ pro": "K20+ Pro",
   "robot vacuum cleaner s1": "S1",
   "robot vacuum cleaner s1 plus": "S1 Plus",
   "s10 vacuum": "S10",
@@ -376,14 +380,15 @@ export const SWITCHBOT_MODELS = {
   "s20 vacuum": "S20",
   "robot vacuum cleaner s20": "S20",
   s20: "S20",
+  "robot vacuum cleaner s30": "S30",
 };
 // Picture of a SwitchBot model, from its commercial name (the device name only when the model is not one of the table,
 // so that a renamed robot keeps its own picture).
 export const switchbotPicture = (name, activity = null) => {
   const n = String(name || "");
   const mini = /\bk\d\d/i.test(n);
-  const roller = /\bs[12]0\b/i.test(n);
-  const base = /\bs20\b/i.test(n) ? "station" : /\bs10\b|s1 plus/i.test(n) ? "squat" : /\bk\d\d\+|\bk11 plus/i.test(n) ? "tower" : null;
+  const roller = /\bs[123]0\b/i.test(n);
+  const base = /\bs[23]0\b/i.test(n) ? "station" : /\bs10\b|s1 plus/i.test(n) ? "squat" : /\bk\d\d\+|\bk11 plus/i.test(n) ? "tower" : null;
   return switchbotSvg({ mini, roller, base, combo: /combo/i.test(n), activity });
 };
 // A SwitchBot model id that names the brand by itself (« … Vacuum », « Robot Vacuum Cleaner … »).
