@@ -271,7 +271,7 @@ test("SwitchBot: the Bluetooth model or the Cloud device type gives the name, th
   assert.equal(byModel("Robot Vacuum Cleaner K10+ Pro Combo", "switchbot_cloud"), switchbotSvg({ mini: true, base: "tower", combo: true }));
   assert.equal(byModel("Robot Vacuum Cleaner S1", "switchbot_cloud"), switchbotSvg());
   assert.equal(byModel("Robot Vacuum Cleaner S1 Plus", "switchbot_cloud"), switchbotSvg({ base: "squat" }));
-  assert.equal(byModel("S10 Vacuum"), switchbotSvg({ roller: true, base: "squat" }));
+  assert.equal(byModel("S10 Vacuum"), switchbotSvg({ roller: true, base: "squat_water" }));
   assert.equal(byModel("S20 Vacuum"), switchbotSvg({ roller: true, base: "station" }));
   // An unknown model of the integration still gets a SwitchBot robot, drawn from its device name.
   assert.equal(autoSvg({ kind: "robot", rawName: "Robot", model: "WoNew", platform: "switchbot", dock: {} }), switchbotSvg());
@@ -295,8 +295,26 @@ test("SwitchBot: the Bluetooth model or the Cloud device type gives the name, th
   // A renamed robot keeps its type; an unknown model falls back on the device name.
   assert.equal(deviceTypeOf({ kind: "robot", rawName: "S10 study", model: "K10+ Vacuum", platform: "switchbot", entities: {}, dock: {} }), "robot_vacuum");
   assert.equal(deviceTypeOf({ kind: "robot", rawName: "S20", model: "WoNew", platform: "switchbot", entities: {}, dock: {} }), "robot_mop");
+  // The model list files the short Cloud types under SwitchBot, not Roborock.
+  for (const id of ["k10+", "k10+ pro", "k20+ pro", "s20"]) assert.equal(vc.modelBrand(id), "switchbot", id);
+  assert.equal(vc.modelBrand("roborock.vacuum.a70"), "roborock");
+  assert.equal(MODEL_NAMES["robot vacuum cleaner k11 plus pro"], "K11+ Pro");
+  assert.equal(MODEL_NAMES["robot vacuum cleaner k20 plus pro"], "K20+ Pro");
+  assert.equal(byModel("Robot Vacuum Cleaner K11 Plus Pro", "switchbot_cloud"), switchbotSvg({ mini: true, base: "compact" }));
+  assert.equal(byModel("K11+ Vacuum"), switchbotSvg({ mini: true, base: "compact" }));
+  // The K20+ Pro carries its FusionPlatform; the black K11+ with `color: dark`, the other models stay white.
+  assert.equal(byModel("K20 Vacuum"), switchbotSvg({ mini: true, base: "tower", platform: true }));
+  assert.equal(vc.autoSvg({ kind: "robot", model: "K11+ Vacuum", platform: "switchbot", dock: {} }, null, false), switchbotSvg({ mini: true, base: "compact", dark: true }));
+  assert.equal(vc.autoSvg({ kind: "robot", model: "K10+ Vacuum", platform: "switchbot", dock: {} }, null, false), switchbotSvg({ mini: true, base: "tower" }));
+  // Every model has its own picture, but the K10+ / K10+ Pro and the K11+ / K11+ Pro (the same robots, more suction).
+  const pics = new Map();
+  for (const n of ["K10+", "K10+ Pro Combo", "K11+", "K20+ Pro", "S1", "S1 Plus", "S10", "S20", "S30"]) pics.set(vc.switchbotPicture(n), n);
+  assert.equal(pics.size, 9);
+  assert.equal(byModel("Robot Vacuum Cleaner S30", "switchbot_cloud"), switchbotSvg({ roller: true, base: "station_compact" }));
+  assert.equal(deviceTypeOf({ kind: "robot", model: "Robot Vacuum Cleaner S30", platform: "switchbot_cloud", entities: {}, dock: {} }), "robot_mop");
   const labels = vc.MODEL_PRESETS.map((p) => p.label);
-  assert.ok(labels.includes("SwitchBot K10+ Pro") && labels.includes("SwitchBot S20"));
+  for (const n of ["K10+", "K10+ Pro", "K10+ Pro Combo", "K11+", "K11+ Pro", "K20+ Pro", "S1", "S1 Plus", "S10", "S20", "S30"]) assert.ok(labels.includes(`SwitchBot ${n}`), n);
+  assert.ok(!labels.some((l) => /^Roborock (K1|S[123]0\b|S1\b)/.test(l)), "no SwitchBot model under Roborock");
 });
 
 test("the README lists every recognized model (node scripts/models.mjs keeps it in sync)", async () => {

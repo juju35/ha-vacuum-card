@@ -278,20 +278,22 @@ export const IROBOT_SKUS = [
   "i715020", "i755020", "s915020", "s955020", "j715020", "j755020", "j955020", "c755020", "c975020", "m611020",
 ];
 // SwitchBot: white robots — the K series is a mini robot (≈ 25 cm, against ≈ 35 cm for the others) with a small LiDAR
-// turret, the S1 a full-size one, the S10 / S20 full-size with a roller mop across the back (a light-blue drum, turning
-// while it mops). Docked: the K10+ / K11+ / K20+ in front of their slim auto-empty tower (the K10+ Pro Combo with its
-// handheld vacuum clipped on the side), the S1 Plus / S10 in front of a squat auto-empty base, the S20 in its
-// OmniStation (dust bin up top, the clean and dirty water tanks below). Vacuuming: the robot sways, its single side
+// turret, the S1 a full-size one, the S10 / S20 / S30 full-size with a roller mop across the back (a light-blue drum, turning
+// while it mops). Docked: the K10+ / K11+ (Pro) / K20+ in front of their slim auto-empty tower (the K10+ Pro Combo with its
+// handheld vacuum clipped on the side), the S1 Plus / S10 in front of a squat auto-empty base, the S20 / S30 in
+// their OmniStation (dust bin up top, the clean and dirty water tanks below). Vacuuming: the robot sways, its single side
 // brush spins and dust trails behind; mopping (only when the robot says so — SwitchBot Cloud starts a vacuum-only
 // clean): the roller turns over a wet trail; returning: it slides in front of its base (the integrations report no bin
 // emptying nor mop washing / drying).
-export const SWITCHBOT_COLORS = { top: "#f6f6f4", side: "#d3d4d1", rim: "#e4e4e1", lens: "#2a2c30" };
-export const switchbotShape = (cx, cy, r, { turret = true, roller = false, mopping = false } = {}) => {
-  const col = SWITCHBOT_COLORS;
+export const SWITCHBOT_COLORS = { top: "#f6f6f4", side: "#d3d4d1", rim: "#e4e4e1", lens: "#2a2c30", lid: "#ececea" };
+// The black K11+ / K11+ Pro.
+export const SWITCHBOT_DARK = { top: "#34363a", side: "#1f2124", rim: "#45484d", lens: "#0e0f11", lid: "#2c2e32" };
+export const switchbotShape = (cx, cy, r, { turret = true, roller = false, mopping = false, dark = false, platform = false } = {}) => {
+  const col = dark ? SWITCHBOT_DARK : SWITCHBOT_COLORS;
   const ry = r * 0.3, h = r * 0.2;
   // The disc, with a matte disc in the middle of the lid, the SwitchBot look.
   let s = discShape(cx, cy, r, col);
-  s += `<ellipse cx="${cx}" cy="${cy + ry * 0.12}" rx="${r * 0.62}" ry="${ry * 0.55}" fill="#ececea"/>`;
+  s += `<ellipse cx="${cx}" cy="${cy + ry * 0.12}" rx="${r * 0.62}" ry="${ry * 0.55}" fill="${col.lid}"/>`;
   // Bumper sensor window, and the red status light of the brand.
   s += `<rect x="${cx - r * 0.34}" y="${cy + h * 0.35}" width="${r * 0.68}" height="${h * 0.32}" rx="${h * 0.16}" fill="${col.lens}"/>`;
   s += `<circle cx="${cx - r * 0.42}" cy="${cy + ry * 0.38}" r="${r * 0.035}" fill="#d13939"/>`;
@@ -302,15 +304,25 @@ export const switchbotShape = (cx, cy, r, { turret = true, roller = false, moppi
     s += `<line class="${mopping ? "roll" : ""}" x1="${cx - r * 0.56}" y1="${y + h * 0.27}" x2="${cx + r * 0.56}" y2="${y + h * 0.27}" stroke="#e3f2ff" stroke-width="${h * 0.18}" stroke-dasharray="4 8"/>`;
   }
   if (turret) s += turretShape(cx, cy - ry * 0.32, r * 0.2, r * 0.13, col);
+  // K20+ Pro: the FusionPlatform clipped on top like a hat — a wider round tray on its own little wheels, its
+  // ClawLock arms gripping the robot.
+  if (platform) {
+    const py = cy - r * 0.34, pr = r * 1.12, pry = pr * 0.28, ph = r * 0.1;
+    s += `<path d="M${cx - r * 0.5} ${cy - ry * 0.1} L${cx - r * 0.42} ${py + ph}M${cx + r * 0.5} ${cy - ry * 0.1} L${cx + r * 0.42} ${py + ph}" stroke="#9fa3a8" stroke-width="${r * 0.05}" stroke-linecap="round"/>`;
+    for (const dx of [-0.92, 0.92]) s += `<circle cx="${cx + dx * pr}" cy="${cy + h * 0.9}" r="${r * 0.09}" fill="#3a3d42"/><line x1="${cx + dx * pr}" y1="${py + ph}" x2="${cx + dx * pr}" y2="${cy + h * 0.9}" stroke="#b9bcc0" stroke-width="${r * 0.05}"/>`;
+    s += `<path d="M${cx - pr} ${py} v${ph} a${pr} ${pry} 0 0 0 ${2 * pr} 0 v${-ph} z" fill="#c7cacd"/>`;
+    s += `<ellipse cx="${cx}" cy="${py}" rx="${pr}" ry="${pry}" fill="#eef0f1" stroke="#c7cacd" stroke-width="${r * 0.02}"/>`;
+    s += `<ellipse cx="${cx}" cy="${py}" rx="${pr * 0.55}" ry="${pry * 0.55}" fill="none" stroke="#d4d7da" stroke-width="${r * 0.03}"/>`;
+  }
   return s;
 };
 // Mini robot of the K series, against the full-size S series (radius on the floor: 72).
 export const SWITCHBOT_MINI_R = 52;
-export const switchbotSvg = ({ mini = false, roller = false, base = null, combo = false, activity = null } = {}) => {
+export const switchbotSvg = ({ mini = false, roller = false, base = null, combo = false, platform = false, dark = false, activity = null } = {}) => {
   const cleaning = ["vacuum", "mop", "vacmop"].includes(activity);
   // The roller turns only while the robot mops; a model without one only vacuums.
   const act = cleaning ? (roller ? activity : "vacuum") : null;
-  const shape = (cx, cy, r) => switchbotShape(cx, cy, r, { roller, mopping: act === "mop" || act === "vacmop" });
+  const shape = (cx, cy, r) => switchbotShape(cx, cy, r, { roller, mopping: act === "mop" || act === "vacmop", dark, platform });
   if (!base || cleaning) {
     const r = mini ? SWITCHBOT_MINI_R : 72;
     const cy = 88 - r * 0.53;
@@ -318,9 +330,9 @@ export const switchbotSvg = ({ mini = false, roller = false, base = null, combo 
     if (act && act !== "mop") robot += brush(80 + r * 0.72, cy + r * 0.36, r * 0.15);
     return onFloor(robot, act);
   }
-  const [body, edge, lid, seam] = ["#f4f4f2", "#d6d7d4", "#e6e6e3", "#c4c5c2"];
+  const [body, edge, lid, seam] = dark ? ["#2f3135", "#1c1e21", "#3b3e42", "#55585d"] : ["#f4f4f2", "#d6d7d4", "#e6e6e3", "#c4c5c2"];
   let s = `<ellipse cx="80" cy="152" rx="66" ry="6" opacity=".22"/>`;
-  s += `<path d="M18 140 L30 128 H130 L142 140 Q142 146 136 146 H24 Q18 146 18 140 Z" fill="#e6e6e3"/>`;
+  s += `<path d="M18 140 L30 128 H130 L142 140 Q142 146 136 146 H24 Q18 146 18 140 Z" fill="${dark ? "#3b3e42" : "#e6e6e3"}"/>`;
   // SwitchBot reports neither the bin emptying nor mop washing / drying: the base only shows its status light.
   const light = "#43c463";
   if (base === "station") {
@@ -332,15 +344,44 @@ export const switchbotSvg = ({ mini = false, roller = false, base = null, combo 
     s += `<rect x="38" y="52" width="36" height="26" rx="4" fill="#6fb6e8" opacity=".75"/>`;
     s += `<rect x="86" y="68" width="36" height="10" rx="4" fill="#8a8273" opacity=".6"/>`;
     s += `<circle cx="80" cy="25" r="2.4" fill="${light}"/>`;
+  } else if (base === "station_compact") {
+    // S30: its compact all-in-one dock, lower and narrower — the clean water tank behind a window on top, the dust bin
+    // below — with the optional mini water station alongside, its hoses to the wall.
+    s += `<rect x="40" y="38" width="80" height="94" rx="12" fill="${body}" stroke="${edge}" stroke-width="1.5"/>`;
+    s += `<rect x="46" y="44" width="68" height="26" rx="6" fill="#bfe1f7" stroke="${seam}"/>`;
+    s += `<rect x="50" y="54" width="60" height="13" rx="4" fill="#6fb6e8" opacity=".75"/>`;
+    s += `<rect x="52" y="76" width="56" height="22" rx="6" fill="${lid}"/>`;
+    s += `<circle cx="80" cy="104" r="2.2" fill="${light}"/>`;
+    s += `<rect x="124" y="70" width="24" height="62" rx="6" fill="${body}" stroke="${edge}" stroke-width="1.3"/>`;
+    s += `<path d="M136 70 V58 Q136 52 142 52 H152" fill="none" stroke="${seam}" stroke-width="2.4" stroke-linecap="round"/>`;
   } else if (base === "squat") {
-    // S1 Plus / S10: a low auto-empty base, its bag behind a front window.
+    // S1 Plus: a low auto-empty base, its bag behind a front window.
     s += `<rect x="38" y="30" width="84" height="102" rx="12" fill="${body}" stroke="${edge}" stroke-width="1.5"/>`;
     s += `<rect x="44" y="36" width="72" height="16" rx="6" fill="${lid}"/>`;
     s += `<rect x="58" y="58" width="44" height="40" rx="8" fill="${seam}" opacity=".55"/>`;
     s += `<circle cx="80" cy="44" r="2.2" fill="${light}"/>`;
+  } else if (base === "squat_water") {
+    // S10: the low auto-empty base, and its separate water station (plumbed in: fills and drains the robot) on the
+    // left, its clean water window and its hoses to the wall.
+    s += `<rect x="52" y="30" width="80" height="102" rx="12" fill="${body}" stroke="${edge}" stroke-width="1.5"/>`;
+    s += `<rect x="58" y="36" width="68" height="16" rx="6" fill="${lid}"/>`;
+    s += `<rect x="72" y="58" width="40" height="38" rx="8" fill="${seam}" opacity=".55"/>`;
+    s += `<circle cx="92" cy="44" r="2.2" fill="${light}"/>`;
+    s += `<rect x="12" y="58" width="34" height="74" rx="8" fill="${body}" stroke="${edge}" stroke-width="1.3"/>`;
+    s += `<rect x="17" y="66" width="24" height="26" rx="5" fill="#bfe1f7" stroke="${seam}"/>`;
+    s += `<rect x="20" y="76" width="18" height="13" rx="3" fill="#6fb6e8" opacity=".75"/>`;
+    s += `<path d="M24 58 V48 Q24 42 18 42 H8M34 58 V46 Q34 38 26 38 H8" fill="none" stroke="${seam}" stroke-width="2.2" stroke-linecap="round"/>`;
+  } else if (base === "compact") {
+    // K11+ / K11+ Pro: the compact auto-empty base — smaller than an A4 sheet, a low rounded block under its
+    // wooden lid.
+    s += `<rect x="46" y="60" width="68" height="72" rx="14" fill="${body}" stroke="${edge}" stroke-width="1.5"/>`;
+    s += `<rect x="46" y="56" width="68" height="14" rx="7" fill="#c9a27a" stroke="#9c7650" stroke-width="1"/>`;
+    s += `<path d="M52 63 H108" stroke="#e2c29f" stroke-width="1" opacity=".8"/>`;
+    s += `<rect x="72" y="80" width="16" height="30" rx="6" fill="${seam}" opacity=".7"/>`;
+    s += `<circle cx="80" cy="76" r="2.2" fill="${light}"/>`;
   } else {
-    // K10+ / K11+ / K20+: a slim auto-empty tower, its dust bag behind the top lid (with the handheld vacuum of the
-    // K10+ Pro Combo clipped on its right side).
+    // K10+ / K10+ Pro / K20+ Pro: a slim auto-empty tower, its dust bag behind the top lid (with the handheld vacuum of
+    // the K10+ Pro Combo clipped on its right side).
     s += `<rect x="58" y="10" width="44" height="122" rx="9" fill="${body}" stroke="${edge}" stroke-width="1.5"/>`;
     s += `<rect x="62" y="14" width="36" height="26" rx="6" fill="${lid}"/>`;
     s += `<rect x="74" y="46" width="12" height="74" rx="6" fill="${seam}" opacity=".9"/>`;
@@ -367,8 +408,12 @@ export const SWITCHBOT_MODELS = {
   "robot vacuum cleaner k10+ pro combo": "K10+ Pro Combo",
   "k11+ vacuum": "K11+",
   "robot vacuum cleaner k11 plus": "K11+",
+  "robot vacuum cleaner k11+": "K11+",
+  "robot vacuum cleaner k11 plus pro": "K11+ Pro",
   "k20 vacuum": "K20+ Pro",
   "k20+ pro": "K20+ Pro",
+  "robot vacuum cleaner k20 plus pro": "K20+ Pro",
+  "robot vacuum cleaner k20+ pro": "K20+ Pro",
   "robot vacuum cleaner s1": "S1",
   "robot vacuum cleaner s1 plus": "S1 Plus",
   "s10 vacuum": "S10",
@@ -376,15 +421,30 @@ export const SWITCHBOT_MODELS = {
   "s20 vacuum": "S20",
   "robot vacuum cleaner s20": "S20",
   s20: "S20",
+  "robot vacuum cleaner s30": "S30",
 };
 // Picture of a SwitchBot model, from its commercial name (the device name only when the model is not one of the table,
 // so that a renamed robot keeps its own picture).
-export const switchbotPicture = (name, activity = null) => {
+// `white`: the colour option (auto / white / dark) — only the K11+ / K11+ Pro also come in black.
+export const switchbotPicture = (name, activity = null, white = undefined) => {
   const n = String(name || "");
   const mini = /\bk\d\d/i.test(n);
-  const roller = /\bs[12]0\b/i.test(n);
-  const base = /\bs20\b/i.test(n) ? "station" : /\bs10\b|s1 plus/i.test(n) ? "squat" : /\bk\d\d\+|\bk11 plus/i.test(n) ? "tower" : null;
-  return switchbotSvg({ mini, roller, base, combo: /combo/i.test(n), activity });
+  const roller = /\bs[123]0\b/i.test(n);
+  const k11 = /\bk11(\+| plus)/i.test(n);
+  const base = /\bs20\b/i.test(n)
+    ? "station"
+    : /\bs30\b/i.test(n)
+      ? "station_compact"
+      : /\bs10\b/i.test(n)
+        ? "squat_water"
+        : /s1 plus/i.test(n)
+          ? "squat"
+          : k11
+            ? "compact"
+            : /\bk\d\d\+/i.test(n)
+              ? "tower"
+              : null;
+  return switchbotSvg({ mini, roller, base, combo: /combo/i.test(n), platform: /\bk20/i.test(n), dark: k11 && white === false, activity });
 };
 // A SwitchBot model id that names the brand by itself (« … Vacuum », « Robot Vacuum Cleaner … »).
 export const isSwitchbotModel = (m) => Object.hasOwn(SWITCHBOT_MODELS, m) && /vacuum/.test(m);

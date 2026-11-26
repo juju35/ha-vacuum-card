@@ -151,11 +151,14 @@ export const switchbotName = (dev) => {
   const m = String(dev.model || "").toLowerCase();
   return Object.hasOwn(SWITCHBOT_MODELS, m) ? SWITCHBOT_MODELS[m] : "";
 };
+// Brand of a model id of the tables (model list, presets): brandOf, plus the short SwitchBot Cloud types it leaves to
+// the platform (« K10+ », « S20 »…).
+export const modelBrand = (id) => brandOf(id) || (Object.hasOwn(SWITCHBOT_MODELS, String(id).toLowerCase()) ? "switchbot" : null);
 export const BRAND_LABELS = { roborock: "Roborock", xiaomi: "Xiaomi", dreame: "Dreame", ecovacs: "Ecovacs", dyson: "Dyson", irobot: "iRobot", switchbot: "SwitchBot" };
 // Model presets of the `image` option (the model id as value), one per commercial name, by brand then name.
 export const MODEL_PRESETS = Object.entries(MODEL_NAMES)
   .filter(([, name], i, all) => all.findIndex(([, n]) => n === name) === i)
-  .map(([value, name]) => ({ value, label: `${BRAND_LABELS[brandOf(value)] || "Roborock"} ${name}` }))
+  .map(([value, name]) => ({ value, label: `${BRAND_LABELS[modelBrand(value)] || "Roborock"} ${name}` }))
   .sort((a, b) => a.label.localeCompare(b.label, "en", { numeric: true }));
 // Device of a model preset, drawn like an automatic picture (without the dock the integration reports).
 export const presetDevice = (model) => ({ kind: /\.(wdv|wetdryvac)\./.test(model) ? "wetdry" : "robot", model, dock: {} });
@@ -187,7 +190,7 @@ export const autoSvg = (dev, activity = null, white = undefined) => {
       activity,
     });
   }
-  if (brandOf(dev.model) === "switchbot" || PLATFORMS[dev.platform] === "switchbot") return switchbotPicture(switchbotName(dev) || name, activity);
+  if (brandOf(dev.model) === "switchbot" || PLATFORMS[dev.platform] === "switchbot") return switchbotPicture(switchbotName(dev) || name, activity, white);
   return robotSvg({
     turret: !/saros|essential|\b(e\d|c1|1c)\b/i.test(name),
     white: white ?? (/\bq\s?(revo|\d)|\bmi robot/i.test(name) || ["xiaomi", "dreame", "ecovacs"].includes(brandOf(dev.model))),
@@ -216,9 +219,9 @@ export const deviceTypeOf = (dev) => {
   if (dev.kind === "wetdry") return "wet_dry";
   if (MOP_KEYS.some((k) => dev.entities?.[k]) || Object.keys(dev.dock || {}).some((k) => /mop/.test(k))) return "robot_mop";
   const name = modelName(dev);
-  // SwitchBot: the roller-mop S10 / S20 mop, the K10+ Pro "Combo" is a robot vacuum with a handheld vacuum — from the
+  // SwitchBot: the roller-mop S10 / S20 / S30 mop, the K10+ Pro "Combo" is a robot vacuum with a handheld vacuum — from the
   // commercial name, the device name only for an unknown model (a renamed robot keeps its type).
-  if (PLATFORMS[dev.platform] === "switchbot" || brandOf(dev.model) === "switchbot") return /\bs[12]0\b/i.test(switchbotName(dev) || name) ? "robot_mop" : "robot_vacuum";
+  if (PLATFORMS[dev.platform] === "switchbot" || brandOf(dev.model) === "switchbot") return /\bs[123]0\b/i.test(switchbotName(dev) || name) ? "robot_mop" : "robot_vacuum";
   return dev.platform === "braava_240_ble" || /braava|combo|\bm6\b/i.test(name) ? "robot_mop" : "robot_vacuum";
 };
 export const svgUri = (svg) => svg && `data:image/svg+xml,${encodeURIComponent(svg)}`;

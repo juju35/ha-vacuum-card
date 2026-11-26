@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.20.0 - 2026-11-26
+
+### Features
+- A picture for every SwitchBot model: the K11+ / K11+ Pro in front of their compact base under its wooden lid (black with `color: dark`), the K20+ Pro under its FusionPlatform, the S10 with its separate water station, the S30 in its compact dock with the mini water station.
+- More SwitchBot robots recognized: the K11+ Pro (`Robot Vacuum Cleaner K11 Plus Pro`) and the S30 (`Robot Vacuum Cleaner S30`), plus the other spellings of the SwitchBot API for the K11+ and the K20+ Pro — as soon as the integration lists them.
+
+### Fixes
+- The model list files the short SwitchBot Cloud types (`K10+`, `K10+ Pro`, `K20+ Pro`, `S20`) under SwitchBot, not Roborock.
+
 ## 2.19.0 - 2026-11-26
 
 ### Features
