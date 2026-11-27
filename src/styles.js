@@ -1,6 +1,6 @@
 export const BASE_STYLE = `
   :host { --vc-accent: #ea0029; --vc-ok: var(--success-color, #43a047); --vc-warn: var(--warning-color, #ffa600);
-          --vc-crit: var(--error-color, #db4437); --vc-idle: var(--disabled-text-color, #9e9e9e); --vc-active: var(--info-color, #039be5);
+          --vc-crit: var(--error-color, #db4437); --vc-idle: var(--secondary-text-color, #9e9e9e); --vc-active: var(--info-color, #039be5);
           /* Text in a state or brand color is mixed with the text color (darker on a light theme, lighter on a dark
              one) so that it reads at 4.5:1 at least; dots, bars and icons keep the plain color. */
           --vc-accent-text: color-mix(in srgb, var(--vc-accent) 50%, var(--primary-text-color)); }
