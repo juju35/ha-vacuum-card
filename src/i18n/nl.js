@@ -56,6 +56,7 @@ export default {
   robot_tank: "Tank van de robot",
   drying: "Drogen",
   dust_mode: "Automatisch legen",
+  dust_bag: "Stofzak",
   ok: "OK",
   empty: "Leeg",
   full: "Vol",

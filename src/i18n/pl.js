@@ -56,6 +56,7 @@ export default {
   robot_tank: "Zbiornik robota",
   drying: "Suszenie",
   dust_mode: "Auto-opróżnianie",
+  dust_bag: "Worek na kurz",
   ok: "OK",
   empty: "Brak",
   full: "Do opróżnienia",

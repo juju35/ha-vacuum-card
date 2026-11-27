@@ -56,6 +56,7 @@ export default {
   robot_tank: "Резервоар робота",
   drying: "Сушење",
   dust_mode: "Аутоматско пражњење",
+  dust_bag: "Кеса за прашину",
   ok: "У реду",
   empty: "Празно",
   full: "Пуно",

@@ -56,6 +56,7 @@ export default {
   robot_tank: "Δοχείο ρομπότ",
   drying: "Στέγνωμα",
   dust_mode: "Αυτόματο άδειασμα",
+  dust_bag: "Σακούλα σκόνης",
   ok: "OK",
   empty: "Άδειο",
   full: "Γεμάτο",

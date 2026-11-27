@@ -56,6 +56,7 @@ export default {
   robot_tank: "Robotens tank",
   drying: "Torkar",
   dust_mode: "Automatisk tömning",
+  dust_bag: "Dammpåse",
   ok: "OK",
   empty: "Tom",
   full: "Full",

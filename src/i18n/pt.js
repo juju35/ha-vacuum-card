@@ -56,6 +56,7 @@ export default {
   robot_tank: "Depósito do robô",
   drying: "A secar",
   dust_mode: "Esvaziamento auto",
+  dust_bag: "Saco do pó",
   ok: "OK",
   empty: "Reabastecer",
   full: "Esvaziar",

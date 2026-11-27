@@ -1,6 +1,6 @@
 // Consumables: [translation_key, label, icon, lifetime in hours for the robot ("pct" when the sensor is a percentage),
 //               translation_key of the integration's reset button]
-import { KEY_MAPS, PLATFORMS } from "./integrations.js";
+import { DREAME_DOCK_KEYS, KEY_MAPS, PLATFORMS } from "./integrations.js";
 import { ICONS } from "./icons.js";
 import { STRINGS } from "./i18n/strings.js";
 
@@ -132,6 +132,34 @@ export const _cache = new WeakMap();
  * Entities are keyed by translation_key ("_<domain>" when they have none). Dock entities live on a
  * separate "<name> Dock" device and are merged into their robot under the "dock" map.
  */
+// Dreame Vacuum station tiles: [key, icon, label], and the class of a state (null: not shown). Installed / idle
+// read "OK"; a missing or full tank, a missing dust bag are critical; low water or detergent, a bag to check warn.
+export const DREAME_DOCK_TILES = [
+  ["auto_empty_status", ICONS.bin, "dust_mode"],
+  ["clean_water_tank_status", ICONS.water, "clean_water"],
+  ["dirty_water_tank_status", ICONS.water_off, "dirty_water"],
+  ["dust_bag_status", ICONS.bin, "dust_bag"],
+  ["detergent_status", ICONS.fluid, "cleaning_fluid"],
+];
+export const dreameDockClass = (key, state) => {
+  if (state === undefined || state === "unknown" || state === "unavailable" || state === "not_available") return null;
+  if (key === "auto_empty_status") return { idle: "ok", not_performed: "warn" }[state] ?? "active";
+  if (key === "detergent_status" && state === "disabled") return null;
+  if (state === "installed") return "ok";
+  return { low_water: "warn", low_detergent: "warn", check: "warn" }[state] ?? "crit";
+};
+
+// Dreame Vacuum station entities, taken out of the robot's entities.
+const dreameDock = (entities) => {
+  const dock = {};
+  for (const k of DREAME_DOCK_KEYS)
+    if (k in entities) {
+      dock[k] = entities[k];
+      delete entities[k];
+    }
+  return dock;
+};
+
 export const resolve = (hass) => {
   if (!hass.entities || !hass.devices) return null;
   const cached = _cache.get(hass.entities);
@@ -142,7 +170,8 @@ export const resolve = (hass) => {
     if (!(e.platform in PLATFORMS) || !e.device_id || e.hidden) continue;
     const domain = e.entity_id.split(".")[0];
     const item = byDevice.get(e.device_id) || { platform: e.platform, entities: {}, extra: {} };
-    const key = KEY_MAPS[e.platform]?.[e.translation_key] || e.translation_key;
+    let key = KEY_MAPS[e.platform]?.[e.translation_key] || e.translation_key;
+    if (e.platform === "dreame_vacuum" && domain === "button" && DREAME_DOCK_KEYS.includes(`${key}_button`)) key = `${key}_button`;
     if (key && key !== "map") {
       if (!(key in item.entities)) item.entities[key] = e.entity_id;
     } else {
@@ -178,7 +207,7 @@ export const resolve = (hass) => {
         vacuum,
         entities: item.entities,
         extra: item.extra,
-        dock: {},
+        dock: item.platform === "dreame_vacuum" ? dreameDock(item.entities) : {},
       });
     }
   }

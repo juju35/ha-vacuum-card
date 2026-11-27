@@ -485,6 +485,7 @@ export class VacuumBase extends HTMLElement {
       this._toggled = new Map(this._toggled).set(key, !this._isCollapsed(key));
       return this._update();
     }
+    if (action === "dock_press") return this._call("button", "press", { entity_id: entity });
     if (action === "dock_toggle") {
       const on = this._isOn(entity);
       this._setPending(entity, on ? "off" : "on");
@@ -659,6 +660,9 @@ export class VacuumBase extends HTMLElement {
     // Ecovacs: the station state tells when the mops are washed or dried (the robot is then docked).
     const station = { washing_mop: "washing", drying_mop: "drying" }[this._s(dev.entities.ecovacs_station)?.state];
     if (station && !activity) activity = station;
+    // Dreame Vacuum: the self-wash base washing or drying the mops (the robot is then docked).
+    const base = { washing: "washing", clean_add_water: "washing", drying: "drying" }[this._s(d.self_wash_base_status)?.state];
+    if (base && !activity) activity = base;
     // iRobot: the Clean Base emptying the bin (only drawn by the iRobot picture).
     if (status?.state === "emptying_the_bin" && dev.platform === "roomba") activity = "emptying";
     const white = colorOf(this._config.color);

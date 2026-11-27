@@ -56,6 +56,7 @@ export default {
   robot_tank: "Rezervorul robotului",
   drying: "Uscare",
   dust_mode: "Golire automată",
+  dust_bag: "Sac de praf",
   ok: "OK",
   empty: "Gol",
   full: "Plin",

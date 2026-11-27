@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------------------
 import { DEFAULT_COLLAPSED, accentStyle } from "./integrations.js";
 import { ICONS } from "./icons.js";
-import { CONSUMABLES, areaUnitOf, esc, findDevice, fmtHours, fmtNum, hours, mapIds, num, resolve, statusClass, svgIcon, tankClass, valid, vectorMapOn } from "./helpers.js";
+import { CONSUMABLES, DREAME_DOCK_TILES, areaUnitOf, dreameDockClass, esc, findDevice, fmtHours, fmtNum, hours, mapIds, num, resolve, statusClass, svgIcon, tankClass, valid, vectorMapOn } from "./helpers.js";
 import { BANNER_STYLE } from "./banner.js";
 import { BASE_STYLE } from "./styles.js";
 import { ZOOM_KEY } from "./actions.js";
@@ -272,6 +272,18 @@ export class VacuumCard extends VacuumBase {
     flag("clean_box_empty", ICONS.water, "clean_water", "empty");
     flag("dirty_box_full", ICONS.water_off, "dirty_water", "full");
     flag("clean_fluid_empty", ICONS.fluid, "cleaning_fluid", "empty");
+    // Dreame Vacuum: enum status sensors of the station, shown with the integration's own wording.
+    const station = this._s(d.self_wash_base_status);
+    if (valid(station)) {
+      const cls = { idle: "ok", paused: "warn" }[station.state] ?? "active";
+      tiles.push(this._tile(station.entity_id, ICONS.dock, this._t("dock_state"), this._fmt(station), cls));
+    }
+    for (const [key, icon, label] of DREAME_DOCK_TILES) {
+      const s = this._s(d[key]);
+      if (!valid(s)) continue;
+      const cls = dreameDockClass(key, s.state);
+      if (cls) tiles.push(this._tile(s.entity_id, icon, this._t(label), cls === "ok" ? this._t("ok") : this._fmt(s), cls));
+    }
     // iRobot Combo j9+: water tank of the Clean Base, in percent.
     const dockTank = this._s(dev.entities.dock_tank_level);
     const tankPct = valid(dockTank) ? num(dockTank) : null;
@@ -283,9 +295,14 @@ export class VacuumCard extends VacuumBase {
     // the dryer starts), so the tile also shows while the drying switch or status is on.
     const dry = this._s(d.mop_drying_remaining_time);
     const dryH = hours(dry);
-    const drying = [d.mop_drying, d.mop_drying_status].some((id) => this._isOn(id));
-    if (dryH > 0 || drying)
-      tiles.push(this._tile(dry?.entity_id || d.mop_drying, ICONS.fan, this._t("drying"), dryH > 0 ? fmtHours(dryH, this._locale()) : this._t("running"), "active"));
+    // Dreame Vacuum: the station drying, with its progress in percent.
+    const dreameDry = station?.state === "drying" ? this._s(d.drying_progress) : null;
+    const dryPct = valid(dreameDry) ? num(dreameDry) : null;
+    const drying = [d.mop_drying, d.mop_drying_status].some((id) => this._isOn(id)) || station?.state === "drying";
+    if (dryH > 0 || drying) {
+      const value = dryH > 0 ? fmtHours(dryH, this._locale()) : dryPct !== null ? `${Math.round(dryPct)} %` : this._t("running");
+      tiles.push(this._tile(dry?.entity_id || dreameDry?.entity_id || d.mop_drying || station?.entity_id, ICONS.fan, this._t("drying"), value, "active"));
+    }
     const actions = this._dockActions(dev);
     if (!tiles.length && !actions) return "";
     return `<div>
@@ -298,7 +315,10 @@ export class VacuumCard extends VacuumBase {
     const d = dev.dock;
     const err = this._s(d.dock_error);
     if (valid(err) && err.state !== "ok") return true;
-    return ["clean_box_empty", "dirty_box_full", "clean_fluid_empty"].some((k) => this._s(d[k])?.state === "on");
+    if (["clean_box_empty", "dirty_box_full", "clean_fluid_empty"].some((k) => this._s(d[k])?.state === "on")) return true;
+    if (DREAME_DOCK_TILES.some(([k]) => dreameDockClass(k, this._s(d[k])?.state) === "crit")) return true;
+    const low = this._s(d.low_water_warning)?.state;
+    return valid(this._s(d.low_water_warning)) && low !== "no_warning";
   }
 
   // Dock action switches of the integration: on while the action runs, the dock stops it on its own.
@@ -317,6 +337,17 @@ export class VacuumCard extends VacuumBase {
           data-action="dock_toggle" data-entity="${esc(s.entity_id)}">${svgIcon(on ? ICONS.stop : icon)}<span>${esc(this._t(label))}</span></button>`;
       })
       .filter(Boolean);
+    // Dreame Vacuum: the station actions are buttons (no running state of their own).
+    for (const [key, icon, label] of [
+      ["start_auto_empty_button", ICONS.bin, "empty_bin"],
+      ["self_clean_button", ICONS.water, "wash_mop"],
+      ["manual_drying_button", ICONS.fan, "dry_mop"],
+    ]) {
+      const s = this._s(dev.dock[key]);
+      if (!s || s.state === "unavailable") continue;
+      btns.push(`<button class="btn" title="${esc(this._t("start_action", { name: this._t(label) }))}"
+          data-action="dock_press" data-entity="${esc(s.entity_id)}">${svgIcon(icon)}<span>${esc(this._t(label))}</span></button>`);
+    }
     return btns.length ? `<div class="dock-actions">${btns.join("")}</div>` : "";
   }
 

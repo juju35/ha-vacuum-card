@@ -56,6 +56,7 @@ export default {
   robot_tank: "Nádrž robota",
   drying: "Sušenie",
   dust_mode: "Automatické vyprázdňovanie",
+  dust_bag: "Vrecko na prach",
   ok: "OK",
   empty: "Prázdna",
   full: "Plná",

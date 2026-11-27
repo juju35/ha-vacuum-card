@@ -456,6 +456,44 @@ test("Dreame Vacuum: vacuum discovered, keys mapped, Dreame logo, map camera; Xi
   assert.match(card2.shadowRoot.innerHTML, /title="Xiaomi"/);
 });
 
+test("Dreame Vacuum: station entities of the robot fill the Station section, its buttons are pressed", () => {
+  const ent = { ...entities };
+  const st = { ...states };
+  const add = (entity_id, translation_key, state, attributes = {}) => {
+    ent[entity_id] = { entity_id, device_id: "x50", platform: "dreame_vacuum", translation_key };
+    st[entity_id] = { entity_id, state, attributes };
+  };
+  add("vacuum.x50", null, "docked");
+  add("sensor.x50_self_wash_base_status", "self_wash_base_status", "drying");
+  add("sensor.x50_drying_progress", "drying_progress", "40", { unit_of_measurement: "%" });
+  add("sensor.x50_auto_empty_status", "auto_empty_status", "idle");
+  add("sensor.x50_clean_water_tank_status", "clean_water_tank_status", "installed");
+  add("sensor.x50_dirty_water_tank_status", "dirty_water_tank_status", "not_installed_or_full");
+  add("sensor.x50_dust_bag_status", "dust_bag_status", "installed");
+  add("sensor.x50_detergent_status", "detergent_status", "disabled");
+  add("switch.x50_self_clean", "self_clean", "on");
+  add("button.x50_self_clean", "self_clean", "unknown");
+  add("button.x50_start_auto_empty", "start_auto_empty", "unknown");
+  const devs = { ...devices, x50: { id: "x50", name: "Living room robot", model: "dreame.vacuum.r2532", identifiers: [["dreame_vacuum", "x50"]] } };
+  const hass = { ...makeHass(st), entities: ent, devices: devs };
+  const dev = vc.resolve(hass).devices.find((d) => d.id === "x50");
+  assert.equal(dev.dock.self_wash_base_status, "sensor.x50_self_wash_base_status");
+  assert.equal(dev.dock.self_clean_button, "button.x50_self_clean");
+  assert.equal(dev.entities.self_clean, "switch.x50_self_clean"); // the switch stays a setting of the robot
+  assert.equal(dev.entities.self_wash_base_status, undefined);
+  const card = new vc.VacuumCard();
+  card.setConfig({ device: "x50", collapsed: [], show_map: "never" });
+  card.hass = hass;
+  const html = card.shadowRoot.innerHTML;
+  assert.match(html, /data-entity="sensor\.x50_dirty_water_tank_status"/);
+  assert.match(html, /data-entity="sensor\.x50_drying_progress"[\s\S]*?40 %/);
+  assert.doesNotMatch(html, /sensor\.x50_detergent_status/); // detergent disabled: no tile
+  assert.equal(card._dockProblem(dev), true); // dirty water tank full
+  assert.equal(card._picture(dev, { state: "docked" }), `data:image/svg+xml,${encodeURIComponent(vc.autoSvg(dev, "drying"))}`);
+  click(card, { action: "dock_press", entity: "button.x50_start_auto_empty" });
+  assert.equal(JSON.stringify(hass.calls.at(-1).slice(0, 3)), JSON.stringify(["button", "press", { entity_id: "button.x50_start_auto_empty" }]));
+});
+
 test("Dreame Vacuum: discovers a vacuum with the dreame_vacuum translation key", () => {
   const vacuum = "vacuum.etage";
   const hass = {

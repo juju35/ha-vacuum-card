@@ -56,6 +56,7 @@ export default {
   robot_tank: "A robot tartálya",
   drying: "Szárítás",
   dust_mode: "Automatikus ürítés",
+  dust_bag: "Porzsák",
   ok: "OK",
   empty: "Üres",
   full: "Tele",

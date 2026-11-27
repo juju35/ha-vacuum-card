@@ -56,6 +56,7 @@ export default {
   robot_tank: "Serbatoio del robot",
   drying: "Asciugatura",
   dust_mode: "Svuotamento auto",
+  dust_bag: "Sacchetto polvere",
   ok: "OK",
   empty: "Da riempire",
   full: "Da svuotare",

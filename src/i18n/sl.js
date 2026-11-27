@@ -56,6 +56,7 @@ export default {
   robot_tank: "Rezervoar robota",
   drying: "Sušenje",
   dust_mode: "Samodejno praznjenje",
+  dust_bag: "Vrečka za prah",
   ok: "OK",
   empty: "Prazen",
   full: "Poln",

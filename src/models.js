@@ -103,6 +103,8 @@ export const MODEL_NAMES = {
   "dreame.vacuum.p2029": "L10 Pro",
   "dreame.vacuum.r2205": "D10 Plus",
   "dreame.vacuum.r2228o": "L10s Ultra",
+  "dreame.vacuum.r2518": "X50 Ultra",
+  "dreame.vacuum.r2532": "X50 Ultra Complete",
   // Ecovacs: the integration reports the commercial name (deviceName) as the model.
   "deebot n8": "DEEBOT N8",
   "deebot n8 pro": "DEEBOT N8 Pro",
