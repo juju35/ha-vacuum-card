@@ -101,6 +101,22 @@ export const BRAAVA_240_KEYS = { braava: "_vacuum", total_missions: "total_clean
 // SwitchBot (switchbot, over Bluetooth) translation_key → the card's: its vacuum has the "vacuum" key; its battery
 // sensor has none (found by its device class). SwitchBot Cloud gives its vacuum no key.
 export const SWITCHBOT_KEYS = { vacuum: "_vacuum" };
+// Dreame Vacuum: the integration has no separate dock device, its station entities live on the robot. These
+// translation keys are moved to the "dock" map so the Station section and the picture read them like a dock's.
+// Its buttons sharing a key with a switch (self_clean) are keyed "<key>_button".
+export const DREAME_DOCK_KEYS = [
+  "self_wash_base_status",
+  "auto_empty_status",
+  "clean_water_tank_status",
+  "dirty_water_tank_status",
+  "dust_bag_status",
+  "detergent_status",
+  "low_water_warning",
+  "drying_progress",
+  "start_auto_empty_button",
+  "self_clean_button",
+  "manual_drying_button",
+];
 export const KEY_MAPS = { xiaomi_miio: MIIO_KEYS, dreame_vacuum: DREAME_KEYS, ecovacs: ECOVACS_KEYS, roomba: ROOMBA_KEYS, braava_240_ble: BRAAVA_240_KEYS, switchbot: SWITCHBOT_KEYS };
 export const PENDING_MS = 45000;
 export const DEFAULT_COLLAPSED = ["stats", "dock"];

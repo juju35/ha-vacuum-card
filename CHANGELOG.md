@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.21.0 - 2026-11-27
+
+### Features
+- Dreame Vacuum: the Station section reads the station sensors the integration puts on the robot — self-wash base status, auto-empty, clean and dirty water tanks, dust bag, detergent, low water warning and drying progress — with Empty bin, Wash mop and Dry mop buttons; a full or missing tank turns the header icon red, and the picture draws the robot in front of its station, washing or drying its mops (#122).
+- Dreame X50 Ultra (`dreame.vacuum.r2518`) and X50 Ultra Complete (`dreame.vacuum.r2532`) recognized, in the model list of the editor (white by default, black with `color: dark`) (#122).
+
 ## 2.20.1 - 2026-11-27
 
 ### Fixes

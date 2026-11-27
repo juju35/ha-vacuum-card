@@ -56,6 +56,7 @@ export default {
   robot_tank: "Бак робота",
   drying: "Сушка",
   dust_mode: "Автоопустошение",
+  dust_bag: "Мешок для пыли",
   ok: "OK",
   empty: "Пусто",
   full: "Заполнен",

@@ -56,6 +56,7 @@ export default {
   robot_tank: "Бак робота",
   drying: "Сушіння",
   dust_mode: "Автоспорожнення",
+  dust_bag: "Мішок для пилу",
   ok: "OK",
   empty: "Порожньо",
   full: "Заповнений",

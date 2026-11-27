@@ -56,6 +56,7 @@ export default {
   robot_tank: "Robotertank",
   drying: "Trocknet",
   dust_mode: "Automatische Staubentleerung",
+  dust_bag: "Staubbeutel",
   ok: "OK",
   empty: "Leer",
   full: "Voll",

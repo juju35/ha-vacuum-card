@@ -209,7 +209,7 @@ language: fr
 | `zoom` | mini | `true` | Detail button at the top right of the mini card: it shows the full card's content (with the same options, so `show_modes`, `show_dock`, `show_map`, `collapsed`, `map_entity`, `crop`… can be set on the mini card too, in YAML or in its visual editor) and switches back to the compact view; a click outside the card also brings the compact view back. `false` removes the button |
 | `show_modes` | both | `true` | Cleaning mode, suction power, mop intensity and route |
 | `show_routines` | both | `true` | Routines buttons (Roborock integration) |
-| `show_dock` | both | `true` | Dock status (Roborock integration; the Clean Base water tank of the iRobot Combo j9+) |
+| `show_dock` | both | `true` | Dock status (Roborock integration; the station sensors and buttons of Dreame Vacuum — self-wash base, auto-empty, clean / dirty water tanks, dust bag, detergent, drying; the Clean Base water tank of the iRobot Combo j9+) |
 | `show_consumables` | both | `true` | Maintenance (remaining time of brushes, filter, sensors…) |
 | `show_stats` | both | `true` | Cleaning statistics |
 | `show_map` | both | `cleaning` | Map of the current floor: `cleaning` (only while the robot is cleaning), `always` (or `true`), `always_folded` (always shown, as a collapsible **Map** section that is folded while the robot is idle and unfolds while it cleans — fold or unfold it by hand anytime) or `never` (or `false`). On the mini card, under the robot in the compact view |
@@ -488,7 +488,7 @@ The Ecovacs and Dyson logos are drawn on a white rounded tile, so that they stay
 
 ### Device pictures
 
-The picture is drawn from the device name and the commercial name of its model id (`roborock.vacuum.a72` → Q5 Pro…), for about 130 models compatible with the integrations: Roborock E2 / S4 to S8, Q5 to Q10, the Qrevo range (Edge, Curv 2, S Pro…), Saros 10 / 20, G10 / G30, Dyad and F25; Xiaomi / Mijia Mi Robot Vacuum, 1S, Vacuum-Mop Essential / 1C / P / 2 / 2 Pro+ / 2 Ultra, X10 / X10+ / X20+, S10+, Omni 2, M40…; Dreame F9, D9, Z10 Pro, L10 Pro, D10 Plus, L10s Ultra; Ecovacs DEEBOT N8, OZMO, T8 to T30, X1 / X2 / X5 (Omni, Turbo); Dyson 360 Eye, 360 Heurist, 360 Vis Nav; iRobot Roomba 600 / 900, e5, i3 / i5 / i7, s9, j7 / j9, Combo j7+ / j9+ (with or without Clean Base) and Braava jet m6 — from their SKU, whatever the region (`…020` Europe, `…840` America…); SwitchBot K10+, K10+ Pro (Combo), K11+, K11+ Pro, K20+ Pro, S1, S1 Plus, S10, S20 and S30, from the Bluetooth model or the Cloud device type. A renamed device keeps the right picture. The full list is in [Recognized models](#recognized-models).
+The picture is drawn from the device name and the commercial name of its model id (`roborock.vacuum.a72` → Q5 Pro…), for about 130 models compatible with the integrations: Roborock E2 / S4 to S8, Q5 to Q10, the Qrevo range (Edge, Curv 2, S Pro…), Saros 10 / 20, G10 / G30, Dyad and F25; Xiaomi / Mijia Mi Robot Vacuum, 1S, Vacuum-Mop Essential / 1C / P / 2 / 2 Pro+ / 2 Ultra, X10 / X10+ / X20+, S10+, Omni 2, M40…; Dreame F9, D9, Z10 Pro, L10 Pro, D10 Plus, L10s Ultra, X50 Ultra (Complete); Ecovacs DEEBOT N8, OZMO, T8 to T30, X1 / X2 / X5 (Omni, Turbo); Dyson 360 Eye, 360 Heurist, 360 Vis Nav; iRobot Roomba 600 / 900, e5, i3 / i5 / i7, s9, j7 / j9, Combo j7+ / j9+ (with or without Clean Base) and Braava jet m6 — from their SKU, whatever the region (`…020` Europe, `…840` America…); SwitchBot K10+, K10+ Pro (Combo), K11+, K11+ Pro, K20+ Pro, S1, S1 Plus, S10, S20 and S30, from the Bluetooth model or the Cloud device type. A renamed device keeps the right picture. The full list is in [Recognized models](#recognized-models).
 
 Saros robots, the E / C1 series and the Mi Vacuum-Mop Essential / 1C have no LiDAR turret; the Q series (Q5…Q10, Qrevo), the Xiaomi, Dreame and Ecovacs robots are white, the other robots (S series…) are dark; the dock is drawn when the integration reports one or the name implies it (Ultra, Plus / +, Qrevo, Saros, Omni, Self-Cleaning, G10 / G30). Wet-dry vacuums (`roborock.wdv.*`, `roborock.wetdryvac.*`) show an upright vacuum, dark for the Dyad series. iRobot robots have their own drawing: Roombas dark (the s9 D-shaped, the j series with its front camera) and in front of their Clean Base for the "+" models, the Braava jet white. SwitchBot robots are white (the K11+ / K11+ Pro black on demand): the K10+ / K20+ in front of their auto-empty tower (the K20+ Pro under its FusionPlatform), the K11+ in front of its compact wooden-lid base, the S10 / S20 / S30 with their roller mop (the S10 with its water station, the S20 in its OmniStation, the S30 in its compact dock).
 
@@ -640,7 +640,7 @@ Models the cards recognize from the model id the integration reports (drawn pict
 
 </details>
 
-<details><summary>Dreame (6)</summary>
+<details><summary>Dreame (8)</summary>
 
 | Model | Model id |
 |---|---|
@@ -649,6 +649,8 @@ Models the cards recognize from the model id the integration reports (drawn pict
 | F9 | `dreame.vacuum.p2008` |
 | L10 Pro | `dreame.vacuum.p2029` |
 | L10s Ultra | `dreame.vacuum.r2228o` |
+| X50 Ultra | `dreame.vacuum.r2518` |
+| X50 Ultra Complete | `dreame.vacuum.r2532` |
 | Z10 Pro | `dreame.vacuum.p2028` |
 
 </details>

@@ -56,6 +56,7 @@ export default {
   robot_tank: "Réservoir du robot",
   drying: "Séchage",
   dust_mode: "Vidage auto",
+  dust_bag: "Sac à poussière",
   ok: "OK",
   empty: "Vide",
   full: "Plein",

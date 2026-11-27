@@ -56,6 +56,7 @@ export default {
   robot_tank: "Robot tank",
   drying: "Drying",
   dust_mode: "Auto-empty",
+  dust_bag: "Dust bag",
   ok: "OK",
   empty: "Empty",
   full: "Full",

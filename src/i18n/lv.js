@@ -56,6 +56,7 @@ export default {
   robot_tank: "Robota tvertne",
   drying: "Žāvēšana",
   dust_mode: "Automātiska iztukšošana",
+  dust_bag: "Putekļu maiss",
   ok: "OK",
   empty: "Tukša",
   full: "Pilna",
